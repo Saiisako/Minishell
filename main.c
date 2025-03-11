@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/03/11 21:54:04 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/11 22:47:39 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,24 +80,29 @@ char	*get_last_path(t_ms *minishell)
 	int		j;
 	char	*current_path;
 
+	tmp = minishell->env_lst;
 	i = 0;
 	j = 0;
 	while (tmp)
 	{
-		if (ft_strcmp(tmp->key, "PWD"))
+		if (!ft_strcmp(tmp->key, "PWD"))
 		{
-			while (tmp->value)
+			while (tmp->value[i])
 				i++;
 			current_path = ft_calloc(sizeof(char), i);
-			while (tmp->value != "\\")
+			while (tmp->value[i] != '\\')
 				i--;
 			while (tmp->value)
 				current_path[j++] = tmp->value[i++];
-
+			printf("%s\n", current_path);
+			exit(1);
+			return (current_path);
 		}
 		tmp = tmp->next;
 	}
+	return (NULL);
 }
+
 
 int	main(int ac, char **av, char **envp)
 {
@@ -110,10 +115,12 @@ int	main(int ac, char **av, char **envp)
 	if (ac == 1)
 	{
 		fill_env_cpy(minishell, envp); // recupère le envp, malloc et le met dans une liste chainer.
+		printf("%s\n", get_last_path(minishell));
+		exit(1);
 		printf("\033[H\033[J"); // permet de faire un clear avant de pouvoir écrire.
 		while (1)
 		{
-			input = readline("lazyshell (%s) ➜ $", get_last_path(minishell)); // fonction qui permet de recuperer ce que l'on ecrit.
+			input = readline("lazyshell ➜ $"); // fonction qui permet de recuperer ce que l'on ecrit.
 			if (input && *input)
 				add_history(input); // permet avec la flèche du haut de récuperer le dernier input.
 			if (!ft_strcmp(input, "env"))
