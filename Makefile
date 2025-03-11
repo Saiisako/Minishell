@@ -8,6 +8,8 @@ RDL_FLAG = -lreadline
 
 SRCS	=	main.c\
 			parsing/env.c\
+			builtin/env.c\
+			builtin/pwd.c\
 
 RED = \033[0;31m
 GREEN = \033[0;32m

@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/03/10 20:07:17 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/11 19:28:47 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,20 +27,36 @@
 # include <sys/wait.h>
 # include <termcap.h>
 # include <unistd.h>
+# include <stdbool.h>
 # include "library/libft/libft.h"
 
 typedef struct s_env
 {
-	char			*key;
-	char			*value;
-	int				index;
+	char			*key;	// Avant le =.
+	char			*value;	// Apres le =.
+	int				index;	// Ca sert a rien mais je le met toujours si ca ne sert pas on tej.
 	struct s_env	*next;
 }					t_env;
+
+typedef struct d_squote
+{
+	char	*word;
+	char	*dollar;
+}			t_quote;
+
+typedef struct d_token
+{
+	bool	pipe;
+	char	*single_quote;
+	t_quote	*double_quote;
+	char	cmd;
+}			t_token;
 
 typedef struct s_ms
 {
 	char	**envp;
 	t_env	*env_lst;
+	t_token	*token;
 }			t_ms;
 
 ///////////////// PARSING /////////////////
@@ -54,5 +70,11 @@ char	*cpy_right(char *env_var);
 void	fill_env_cpy(t_ms *ms, char **envp);
 
 //
+
+///////////////// BUILTIN /////////////////
+
+void	print_env(t_ms *minishell);
+void	print_pwd(void);
+
 
 #endif
