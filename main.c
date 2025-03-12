@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/03/12 11:56:30 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/12 14:10:22 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,62 +68,6 @@ int	parsing_input(char *input, t_ms *ms)
 	return (1);
 }
 
-void	cd(t_ms *minishell)
-{
-	(void)minishell;
-}
-
-char	*return_last_folder(const char *path)
-{
-	int		i;
-	int		j;
-	char	*current_path;
-
-	current_path = NULL;
-	i = 0;
-	while (path[i])
-		i++;
-	j = i;
-	while (path[i] != '/')
-		i--;
-	i++;
-	current_path = malloc(sizeof(char) * (j - i + 1));
-	if (!current_path)
-		exit(1);
-	j = 0;
-	while (path[i])
-		current_path[j++] = path[i++];
-	current_path[j] = '\0';
-	return (current_path);
-}
-
-char	*get_last_path(t_ms *minishell)
-{
-	char 	*current_path;
-	t_env	*tmp;
-
-	tmp = minishell->env_lst;
-	while (tmp)
-	{
-		if (!ft_strcmp(tmp->key, "PWD"))
-		{
-			current_path = return_last_folder(tmp->value);
-			return (current_path);
-		}
-		tmp = tmp->next;
-	}
-	return (NULL);
-}
-
-void	get_input_prompt(t_ms *minishell)
-{
-	char	base[] = "\033[0;36mlazy\033[0mshell:";
-	char	base_2[] = " ➜ $";
-	minishell->prompt_msg = ft_strjoin(base, get_last_path(minishell));
-	minishell->prompt_msg = ft_strjoin(minishell->prompt_msg, base_2);
-	
-}
-
 int	main(int ac, char **av, char **envp)
 {
 	t_ms	*minishell;
@@ -148,6 +92,8 @@ int	main(int ac, char **av, char **envp)
 				break ;
 			if (!ft_strcmp(input, "pwd"))
 				print_pwd();
+			if (!ft_strncmp(input, "cd", 2))
+				cd(minishell, input);
 			if (!parsing_input(input, minishell))
 				print_error_message("error");
 			printf("\n%s\n", input);

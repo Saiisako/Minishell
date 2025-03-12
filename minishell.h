@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/03/12 11:45:08 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/12 17:03:39 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ typedef struct s_env
 {
 	char			*key;	// Avant le =.
 	char			*value;	// Apres le =.
-	int				index;	// Ca sert a rien mais je le met toujours si ca ne sert pas on tej.
+	int				index;
 	struct s_env	*next;
 }					t_env;
 
@@ -70,12 +70,35 @@ char	*cpy_left(char	*env_var);
 char	*cpy_right(char *env_var);
 void	fill_env_cpy(t_ms *ms, char **envp);
 
+// PROMPT
+
+char	*return_last_folder(const char *path);
+char	*get_last_path(t_ms *minishell);
+void	get_input_prompt(t_ms *minishell);
+
 //
 
 ///////////////// BUILTIN /////////////////
 
-void	print_env(t_ms *minishell);
-void	print_pwd(void);
+// CD
 
+void	update_pwd(t_ms *minishell);
+void	cd(t_ms *minishell, char *input);
+char	*get_last_folder(char *path);
+char	*get_user(t_ms *minishell);
+char	*get_oldpwd(t_ms *minishell);
+void	go_back(t_ms *minishell);
+void	go_tilde(t_ms *minishell);
+void	go_root(t_ms *minishell);
+void	go_old(t_ms *minishell);
+void	cd(t_ms *minishell, char *input);
+
+// ENV
+
+void	print_env(t_ms *minishell);
+
+// PWD
+
+void	print_pwd(void);
 
 #endif

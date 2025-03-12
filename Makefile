@@ -1,15 +1,18 @@
 NAME = minishell
 CC = cc
-FLAGS = -Wall -Werror -Wextra #-g3 -fsanitize=address
+FLAGS = -Wall -Werror -Wextra -g3 -fsanitize=address
 RM = rm -rf
 LIBFT = library/libft/libft.a
 LIBFT_FLAGS = -L./library/libft -lft
 RDL_FLAG = -lreadline
 
 SRCS	=	main.c\
+			parsing/prompt.c\
 			parsing/env.c\
 			builtin/env.c\
 			builtin/pwd.c\
+			builtin/cd.c\
+			builtin/cd_utils.c\
 
 RED = \033[0;31m
 GREEN = \033[0;32m

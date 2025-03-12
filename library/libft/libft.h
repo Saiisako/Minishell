@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 15:21:24 by skock             #+#    #+#             */
-/*   Updated: 2025/01/10 13:56:46 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/12 14:14:16 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,14 @@ int		ft_iswhitespace(int c);
 char	**ft_split(char const *s, char c);
 char	*ft_strdup(const char *s);
 char	*ft_itoa(int n);
+char	*ft_strjoin_slash(char *s1, char const *s2);
 void	*ft_calloc(size_t nmemb, size_t size);
 void	ft_putstr_fd(char *s, int fd);
 void	ft_putchar_fd(char c, int fd);
 void	ft_bzero(void *s, size_t n);
 size_t	ft_strlen(const char *str);
 int		ft_strnlen(const char *str, char cut);
+int		ft_strncmp(const char *s1, const char *s2, size_t n);
 size_t	ft_strlcpy(char *dest, const char *src, size_t size);
 
 #endif
