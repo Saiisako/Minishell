@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/03/11 19:28:47 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/12 11:45:08 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ typedef struct d_token
 
 typedef struct s_ms
 {
+	char	*prompt_msg;
 	char	**envp;
 	t_env	*env_lst;
 	t_token	*token;

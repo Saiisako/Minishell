@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/03/11 22:47:39 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/12 11:56:30 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,29 +73,41 @@ void	cd(t_ms *minishell)
 	(void)minishell;
 }
 
-char	*get_last_path(t_ms *minishell)
+char	*return_last_folder(const char *path)
 {
-	t_env	*tmp;
 	int		i;
 	int		j;
 	char	*current_path;
 
-	tmp = minishell->env_lst;
+	current_path = NULL;
 	i = 0;
+	while (path[i])
+		i++;
+	j = i;
+	while (path[i] != '/')
+		i--;
+	i++;
+	current_path = malloc(sizeof(char) * (j - i + 1));
+	if (!current_path)
+		exit(1);
 	j = 0;
+	while (path[i])
+		current_path[j++] = path[i++];
+	current_path[j] = '\0';
+	return (current_path);
+}
+
+char	*get_last_path(t_ms *minishell)
+{
+	char 	*current_path;
+	t_env	*tmp;
+
+	tmp = minishell->env_lst;
 	while (tmp)
 	{
 		if (!ft_strcmp(tmp->key, "PWD"))
 		{
-			while (tmp->value[i])
-				i++;
-			current_path = ft_calloc(sizeof(char), i);
-			while (tmp->value[i] != '\\')
-				i--;
-			while (tmp->value)
-				current_path[j++] = tmp->value[i++];
-			printf("%s\n", current_path);
-			exit(1);
+			current_path = return_last_folder(tmp->value);
 			return (current_path);
 		}
 		tmp = tmp->next;
@@ -103,6 +115,14 @@ char	*get_last_path(t_ms *minishell)
 	return (NULL);
 }
 
+void	get_input_prompt(t_ms *minishell)
+{
+	char	base[] = "\033[0;36mlazy\033[0mshell:";
+	char	base_2[] = " ➜ $";
+	minishell->prompt_msg = ft_strjoin(base, get_last_path(minishell));
+	minishell->prompt_msg = ft_strjoin(minishell->prompt_msg, base_2);
+	
+}
 
 int	main(int ac, char **av, char **envp)
 {
@@ -115,12 +135,11 @@ int	main(int ac, char **av, char **envp)
 	if (ac == 1)
 	{
 		fill_env_cpy(minishell, envp); // recupère le envp, malloc et le met dans une liste chainer.
-		printf("%s\n", get_last_path(minishell));
-		exit(1);
 		printf("\033[H\033[J"); // permet de faire un clear avant de pouvoir écrire.
 		while (1)
 		{
-			input = readline("lazyshell ➜ $"); // fonction qui permet de recuperer ce que l'on ecrit.
+			get_input_prompt(minishell);
+			input = readline(minishell->prompt_msg); // fonction qui permet de recuperer ce que l'on ecrit.
 			if (input && *input)
 				add_history(input); // permet avec la flèche du haut de récuperer le dernier input.
 			if (!ft_strcmp(input, "env"))
