@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 14:08:59 by skock             #+#    #+#             */
-/*   Updated: 2025/03/12 17:01:55 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/12 17:09:06 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,11 @@ void	cd(t_ms *minishell, char *input)
 	if (!ft_strcmp(input_splited[1], ".."))
 	{
 		go_back(minishell);
+		return ;
+	}
+	if (!chdir(input_splited[1]))
+	{
+		update_pwd(minishell);
 		return ;
 	}
 	if (!chdir(ft_strjoin_slash(getcwd(NULL, 0), input_splited[1])))
