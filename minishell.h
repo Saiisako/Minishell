@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/03/12 17:03:39 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/14 16:37:17 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,16 @@
 # include <stdbool.h>
 # include "library/libft/libft.h"
 
+typedef enum e_token_type
+{
+	WORD, // Commande, argument, fichier
+	PIPE, // |
+	REDIR_IN, // <
+	REDIR_OUT, // >
+	APPEND, // >>
+	HEREDOC // <<
+}		t_token_type;
+
 typedef struct s_env
 {
 	char			*key;	// Avant le =.
@@ -42,6 +52,7 @@ typedef struct d_squote
 {
 	char	*word;
 	char	*dollar;
+	bool	is_dollar;
 }			t_quote;
 
 typedef struct d_token

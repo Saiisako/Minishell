@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/03/12 14:10:22 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/13 10:36:21 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,15 +58,39 @@ int	does_have_double_quotes(const char *input)
 	return (0);
 }
 
-int	parsing_input(char *input, t_ms *ms)
+
+int	is_builtin(char *input)
 {
-	(void)ms;
+	if (!ft_strcmp(input, "cd"))
+	return (1);
+	if (!ft_strcmp(input, "echo"))
+	return (1);
+	if (!ft_strcmp(input, "export"))
+	return (1);
+	if (!ft_strcmp(input, "pwd"))
+	return (1);
+	if (!ft_strcmp(input, "env"))
+	return (1);
+	if (!ft_strcmp(input, "unset"))
+	return (1);
+	if (!ft_strcmp(input, "exit"))
+	return (1);
+	return (0);
+}
+
+int	parsing_input(char *input, t_ms *minishell)
+{
+	(void)minishell;
+	if (is_builtin(input))
+	{
+		printf("is builtin\n");
+		return (0);
+	}
 	if (does_have_double_quotes(input))
 		search_dollar(input);
-
-
 	return (1);
 }
+
 
 int	main(int ac, char **av, char **envp)
 {
@@ -86,6 +110,8 @@ int	main(int ac, char **av, char **envp)
 			input = readline(minishell->prompt_msg); // fonction qui permet de recuperer ce que l'on ecrit.
 			if (input && *input)
 				add_history(input); // permet avec la flèche du haut de récuperer le dernier input.
+			if (!parsing_input(input, minishell))
+				print_error_message("error");
 			if (!ft_strcmp(input, "env"))
 				print_env(minishell); // builtin env (pas encore dans l'environnement mais fonctionnel).
 			if (!ft_strcmp(input, "bozo"))
@@ -94,8 +120,6 @@ int	main(int ac, char **av, char **envp)
 				print_pwd();
 			if (!ft_strncmp(input, "cd", 2))
 				cd(minishell, input);
-			if (!parsing_input(input, minishell))
-				print_error_message("error");
 			printf("\n%s\n", input);
 			free(input);
 		}

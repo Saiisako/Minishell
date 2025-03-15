@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 14:08:59 by skock             #+#    #+#             */
-/*   Updated: 2025/03/12 17:09:06 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/13 11:55:27 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,11 @@ void	cd(t_ms *minishell, char *input)
 	char	**input_splited;
 
 	input_splited = ft_split(input, ' ');
+	// if (!ft_strcmp(input_splited[0], "cd"))
+	// {
+	// 	go_tilde(minishell);
+	// 	return ;
+	// }
 	if (!ft_strcmp(input_splited[1], "-"))
 	{
 		go_old(minishell);
