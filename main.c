@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/03/13 10:36:21 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/15 15:10:22 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,34 +62,73 @@ int	does_have_double_quotes(const char *input)
 int	is_builtin(char *input)
 {
 	if (!ft_strcmp(input, "cd"))
-	return (1);
+		return (1);
 	if (!ft_strcmp(input, "echo"))
-	return (1);
+		return (1);
 	if (!ft_strcmp(input, "export"))
-	return (1);
+		return (1);
 	if (!ft_strcmp(input, "pwd"))
-	return (1);
+		return (1);
 	if (!ft_strcmp(input, "env"))
-	return (1);
+		return (1);
 	if (!ft_strcmp(input, "unset"))
-	return (1);
+		return (1);
 	if (!ft_strcmp(input, "exit"))
-	return (1);
+		return (1);
+	return (0);
+}
+void	create_token(t_ms *minishell, char *read)
+{
+	(void)minishell;
+	if (read)
+		printf("%s\n", read);
+}
+
+int	is_special_char(char cur, char next)
+{
+	if (next == cur)
+		return (2);
+	if (cur == '|' || cur == '>' || cur == '<')
+		return (1);
 	return (0);
 }
 
-int	parsing_input(char *input, t_ms *minishell)
+int parsing_input(char *input, t_ms *minishell)
 {
-	(void)minishell;
-	if (is_builtin(input))
+	int i;
+	int j;
+	char *read;
+
+	i = 0;
+	j = 0;
+	read = malloc(sizeof(char) * 50);
+	while (input[i])
 	{
-		printf("is builtin\n");
-		return (0);
+		while (ft_iswhitespace(input[i]))
+			i++;
+		if ((input[i] >= 'a' && input[i] <= 'z') || (input[i] >= 'A' && input[i] <= 'Z')
+			|| input[i] == '"' || input[i] >= '\'')
+		{
+			while (input[i] && !ft_iswhitespace(input[i]) && !is_special_char(input[i], input[i + 1]))
+			{
+				read[j] = input[i];
+				i++;
+				j++;
+				if (j >= 49)
+					break;
+			}
+			read[j] = '\0';
+			create_token(minishell, read);
+			j = 0;
+		}
+		else
+			i++;
 	}
-	if (does_have_double_quotes(input))
-		search_dollar(input);
+	free(read);
 	return (1);
 }
+
+
 
 
 int	main(int ac, char **av, char **envp)
@@ -112,14 +151,14 @@ int	main(int ac, char **av, char **envp)
 				add_history(input); // permet avec la flèche du haut de récuperer le dernier input.
 			if (!parsing_input(input, minishell))
 				print_error_message("error");
-			if (!ft_strcmp(input, "env"))
-				print_env(minishell); // builtin env (pas encore dans l'environnement mais fonctionnel).
-			if (!ft_strcmp(input, "bozo"))
-				break ;
-			if (!ft_strcmp(input, "pwd"))
-				print_pwd();
-			if (!ft_strncmp(input, "cd", 2))
-				cd(minishell, input);
+			// if (!ft_strcmp(input, "env"))
+			// 	print_env(minishell); // builtin env (pas encore dans l'environnement mais fonctionnel).
+			// if (!ft_strcmp(input, "bozo"))
+			// 	break ;
+			// if (!ft_strcmp(input, "pwd"))
+			// 	print_pwd();
+			// if (!ft_strncmp(input, "cd", 2))
+				// cd(minishell, input);
 			printf("\n%s\n", input);
 			free(input);
 		}
