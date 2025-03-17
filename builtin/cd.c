@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 14:08:59 by skock             #+#    #+#             */
-/*   Updated: 2025/03/13 11:55:27 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/17 14:04:53 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,11 @@ void	cd(t_ms *minishell, char *input)
 	// 	go_tilde(minishell);
 	// 	return ;
 	// }
+	if (!ft_strcmp(input_splited[1], ".."))
+	{
+		go_back(minishell);
+		return ;
+	}
 	if (!ft_strcmp(input_splited[1], "-"))
 	{
 		go_old(minishell);
@@ -64,11 +69,6 @@ void	cd(t_ms *minishell, char *input)
 	if (!ft_strcmp(input_splited[1], "/"))
 	{
 		go_root(minishell);
-		return ;
-	}
-	if (!ft_strcmp(input_splited[1], ".."))
-	{
-		go_back(minishell);
 		return ;
 	}
 	if (!chdir(input_splited[1]))

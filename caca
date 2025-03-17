@@ -26,21 +26,7 @@ OBJS = $(SRCS:.c=.o)
 
 TARGET = $(NAME)
 
-define PRINT_LOADING
-	@echo -n "$(GREEN)Compiling... [                    ] 0%%$(RESET)\r"
-	@for i in $(shell seq 1 20); do \
-		sleep 0.035; \
-		printf "\r$(GREEN)Compiling... ["; \
-		printf "%*s" $$i | tr ' ' '#'; \
-		printf "%*s" $$((20-$$i)) | tr ' ' ' '; \
-		printf "] $$(($$i*5))%%$(RESET)"; \
-	done
-	@echo "\r$(GREEN)Compiling... [####################] 100%%$(RESET)"
-	@clear
-endef
-
 $(NAME): $(LIBFT) $(OBJS)
-	@$(PRINT_LOADING) # Cette ligne affiche une barre de progression
 	@$(CC) $(FLAGS) -o $(NAME) $(OBJS) $(LIBFT_FLAGS) $(RDL_FLAG)
 	@echo "$(CYAN)██╗      █████╗ ███████╗██╗   ██╗$(RESET)███████╗██╗  ██╗███████╗██╗     ██╗"
 	@echo "$(CYAN)██║     ██╔══██╗╚══███╔╝╚██╗ ██╔╝$(RESET)██╔════╝██║  ██║██╔════╝██║     ██║"
@@ -50,23 +36,22 @@ $(NAME): $(LIBFT) $(OBJS)
 	@echo "$(CYAN)╚══════╝╚═╝  ╚═╝╚══════╝   ╚═╝   $(RESET)╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝"
 
 $(LIBFT):
-	@make -s -C library/libft
+	make -C library/libft
 
 .c.o:
-	@$(CC) $(FLAGS) -c -o $@ $<
+	$(CC) $(FLAGS) -c -o $@ $<
 
 all: $(NAME)
 
-clear:
-	@$(RM) $(OBJS)
-
-clean: clear
+clean:
+	@$(RM) $(OBJS) $(OBJS_BONUS)
 	@make -s -C library/libft clean
+	@echo "files erased successfully"
 
 fclean: clean
-	@$(RM) $(NAME)
+	@$(RM) $(NAME) $(NAME_BONUS)
 	@make -s -C library/libft fclean
 
 re: fclean all
 
-.PHONY: all clean fclean re clear
+.PHONY: all clean fclean re bonus minilibx

@@ -13,10 +13,10 @@ SRCS	=		ft_split.c ft_atoi.c ft_isalpha.c ft_isdigit.c ft_isascii.c ft_isalnum.c
 OBJS = $(SRCS:.c=.o)
 
 $(NAME): $(OBJS)
-	ar rcs $(NAME) $(OBJS)
+	@ar rcs $(NAME) $(OBJS)
 
 .c.o:
-	cc $(FLAGS) -c $< -o $@
+	@cc $(FLAGS) -c $< -o $@
 all: $(NAME)
 
 clean:

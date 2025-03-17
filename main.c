@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/03/15 15:10:22 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/17 14:39:47 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,43 +93,65 @@ int	is_special_char(char cur, char next)
 	return (0);
 }
 
+char *clean_string(const char *str)
+{
+	int i = 0, j = 0;
+	int flg = 0;
+	char *result;
+
+	result = malloc(ft_strlen(str) + 1);
+	i = 0;
+	while (str[i] == ' ' || str[i] == '\t')
+		i++;
+	while (str[i])
+	{
+		if (str[i] == ' ' || str[i] == '\t')
+			flg = 1;
+		else
+		{
+			if (flg)
+			{
+				result[j++] = ' ';
+				flg = 0;
+			}
+			result[j++] = str[i];
+		}
+		i++;
+	}
+	result[j] = '\0';
+	return result;
+}
+
 int parsing_input(char *input, t_ms *minishell)
 {
 	int i;
 	int j;
 	char *read;
+	(void)minishell;
 
+	read = clean_string(input);
+	printf("%s\n", read);
 	i = 0;
 	j = 0;
-	read = malloc(sizeof(char) * 50);
-	while (input[i])
-	{
-		while (ft_iswhitespace(input[i]))
-			i++;
-		if ((input[i] >= 'a' && input[i] <= 'z') || (input[i] >= 'A' && input[i] <= 'Z')
-			|| input[i] == '"' || input[i] >= '\'')
-		{
-			while (input[i] && !ft_iswhitespace(input[i]) && !is_special_char(input[i], input[i + 1]))
-			{
-				read[j] = input[i];
-				i++;
-				j++;
-				if (j >= 49)
-					break;
-			}
-			read[j] = '\0';
-			create_token(minishell, read);
-			j = 0;
-		}
-		else
-			i++;
-	}
-	free(read);
+	// while (ft_iswhitespace(input[i]))
+	// 	i++;
+	// while (input[i])
+	// {
+	// 	if (input[i] == '\"')
+	// 	{
+	// 		i++;
+	// 		while (input[i] && input[i] != '\"')
+	// 		{
+	// 			if (input[i] == ' ')
+	// 				input[i] = '\\';
+	// 			i++;
+	// 		}
+	// 	}
+	// 	i++;
+	// }
+	printf("%s\n", input);
 	return (1);
 }
-
-
-
 
 int	main(int ac, char **av, char **envp)
 {
@@ -151,14 +173,14 @@ int	main(int ac, char **av, char **envp)
 				add_history(input); // permet avec la flèche du haut de récuperer le dernier input.
 			if (!parsing_input(input, minishell))
 				print_error_message("error");
-			// if (!ft_strcmp(input, "env"))
-			// 	print_env(minishell); // builtin env (pas encore dans l'environnement mais fonctionnel).
-			// if (!ft_strcmp(input, "bozo"))
-			// 	break ;
-			// if (!ft_strcmp(input, "pwd"))
-			// 	print_pwd();
+			if (!ft_strcmp(input, "env"))
+				print_env(minishell); // builtin env (pas encore dans l'environnement mais fonctionnel).
+			if (!ft_strcmp(input, "bozo"))
+				break ;
+			if (!ft_strcmp(input, "pwd"))
+				print_pwd();
 			// if (!ft_strncmp(input, "cd", 2))
-				// cd(minishell, input);
+			// 	cd(minishell, input);
 			printf("\n%s\n", input);
 			free(input);
 		}
