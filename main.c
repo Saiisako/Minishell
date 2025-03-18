@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/03/18 18:11:50 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/18 18:16:12 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,32 @@ void	search_dollar(const char *input)
 	printf("number of dollar : %d", j);
 }
 
+int	does_have_double_quotes(const char *input)
+{
+	int i;
+
+	i = 0;
+	while (input[i])
+	{
+		if (input[i] == '\"')
+		{
+			i++;
+			while (input[i] != '\"')
+			{
+				i++;
+				if (input[i] == '\"')
+				{
+					printf("double quotes detected !\n");
+					return (1);
+				}
+			}
+		}
+		i++;
+	}
+	return (0);
+}
+
+
 int	is_builtin(char *input)
 {
 	if (!ft_strcmp(input, "cd"))
@@ -51,7 +77,6 @@ int	is_builtin(char *input)
 		return (1);
 	return (0);
 }
-
 void	create_token(t_ms *minishell, char *read)
 {
 	(void)minishell;
@@ -78,47 +103,17 @@ int	is_special_char(char cur, char next)
 	return (0);
 }
 
-t_token	*new_token(char *str)
-{
-	t_token		*token;
-
-	token = malloc(sizeof(t_token));
-	token->value = str;
-	token->next = NULL;
-	return (token);
-}
-
-void	token_add_back(t_token **lst, t_token *new)
-{
-	t_token	*last;
-
-	if (!*lst)
-		*lst = new;
-	else
-	{
-		last = *lst;
-		while (last->next != NULL)
-			last = last->next;
-		last->next = new;
-	}
-}
-
-void	fill_token_list(t_ms *minishell, char *str)
-{
-	t_token	*token;
-
-	minishell->token = NULL;
-	token = new_token(str);
-	if (!token)
-		return ;
-	token_add_back(&minishell->token, token);
-}
+// void	fill_token_lst(t_ms *minishell, char *token)
+// {
+	
+// }
 
 int parsing_input(char *input, t_ms *minishell)
 {	
 	int		i;
 	int		start;
 	char	*token;
+	(void)minishell;
 	i = 0;
 
 	while (input[i] && ft_iswhitespace(input[i]))
@@ -132,6 +127,7 @@ int parsing_input(char *input, t_ms *minishell)
 			while (input[i] && input[i] != 34)
 				i++;
 			token = ft_substr(input, start, (i - start) + 1);
+			// printf("node [%s]\n", ft_substr(input, start, (i - start) + 1));
 		}
 		else if (input[i] == 39)
 		{
@@ -140,6 +136,7 @@ int parsing_input(char *input, t_ms *minishell)
 			while (input[i] && input[i] != 39) // 39 = single quote
 				i++;
 			token = ft_substr(input, start, (i - start) + 1);
+			// printf("node [%s]\n", ft_substr(input, start, (i - start) + 1));
 		}
 		else if (ft_isascii(input[i]))
 		{
@@ -152,9 +149,11 @@ int parsing_input(char *input, t_ms *minishell)
 				i++;
 			}
 			token = ft_substr(input, start, (i - start) + 1);
+			// printf("node [%s]\n", ft_substr(input, start, (i - start) + 1));
 		}
 		printf("%s\n", token);
-		fill_token_list(minishell, token);
+		// fill_token_list(minishell, token);
+		// free(token);
 		if (!input[i])
 			break ;
 		i++;
