@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 14:24:15 by skock             #+#    #+#             */
-/*   Updated: 2025/03/12 12:58:06 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/18 11:32:03 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	ft_strchr(const char *str, int c)
 	return (0);
 }
 
-char	*ft_strjoin(char *s1, char const *s2)
+char	*ft_strjoin(const char *s1, char const *s2)
 {
 	char	*str;
 	size_t	i;

@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/03/17 14:39:47 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/18 18:11:50 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,32 +33,6 @@ void	search_dollar(const char *input)
 	printf("number of dollar : %d", j);
 }
 
-int	does_have_double_quotes(const char *input)
-{
-	int i;
-
-	i = 0;
-	while (input[i])
-	{
-		if (input[i] == '\"')
-		{
-			i++;
-			while (input[i] != '\"')
-			{
-				i++;
-				if (input[i] == '\"')
-				{
-					printf("double quotes detected !\n");
-					return (1);
-				}
-			}
-		}
-		i++;
-	}
-	return (0);
-}
-
-
 int	is_builtin(char *input)
 {
 	if (!ft_strcmp(input, "cd"))
@@ -77,6 +51,7 @@ int	is_builtin(char *input)
 		return (1);
 	return (0);
 }
+
 void	create_token(t_ms *minishell, char *read)
 {
 	(void)minishell;
@@ -86,70 +61,104 @@ void	create_token(t_ms *minishell, char *read)
 
 int	is_special_char(char cur, char next)
 {
-	if (next == cur)
+	if (next == cur && (cur == '>' || cur == '<'))
+	{
+		if (cur == '>')
+			return (APPEND);
+		if (cur == '<')
+			return (HEREDOC);
+	}
 		return (2);
-	if (cur == '|' || cur == '>' || cur == '<')
-		return (1);
+	if (cur == '|')
+		return (PIPE);
+	if (cur == '>')
+		return (REDIR_OUT);
+	if (cur == '<')
+		return (REDIR_IN);
 	return (0);
 }
 
-char *clean_string(const char *str)
+t_token	*new_token(char *str)
 {
-	int i = 0, j = 0;
-	int flg = 0;
-	char *result;
+	t_token		*token;
 
-	result = malloc(ft_strlen(str) + 1);
-	i = 0;
-	while (str[i] == ' ' || str[i] == '\t')
-		i++;
-	while (str[i])
+	token = malloc(sizeof(t_token));
+	token->value = str;
+	token->next = NULL;
+	return (token);
+}
+
+void	token_add_back(t_token **lst, t_token *new)
+{
+	t_token	*last;
+
+	if (!*lst)
+		*lst = new;
+	else
 	{
-		if (str[i] == ' ' || str[i] == '\t')
-			flg = 1;
-		else
-		{
-			if (flg)
-			{
-				result[j++] = ' ';
-				flg = 0;
-			}
-			result[j++] = str[i];
-		}
-		i++;
+		last = *lst;
+		while (last->next != NULL)
+			last = last->next;
+		last->next = new;
 	}
-	result[j] = '\0';
-	return result;
+}
+
+void	fill_token_list(t_ms *minishell, char *str)
+{
+	t_token	*token;
+
+	minishell->token = NULL;
+	token = new_token(str);
+	if (!token)
+		return ;
+	token_add_back(&minishell->token, token);
 }
 
 int parsing_input(char *input, t_ms *minishell)
-{
-	int i;
-	int j;
-	char *read;
-	(void)minishell;
-
-	read = clean_string(input);
-	printf("%s\n", read);
+{	
+	int		i;
+	int		start;
+	char	*token;
 	i = 0;
-	j = 0;
-	// while (ft_iswhitespace(input[i]))
-	// 	i++;
-	// while (input[i])
-	// {
-	// 	if (input[i] == '\"')
-	// 	{
-	// 		i++;
-	// 		while (input[i] && input[i] != '\"')
-	// 		{
-	// 			if (input[i] == ' ')
-	// 				input[i] = '\\';
-	// 			i++;
-	// 		}
-	// 	}
-	// 	i++;
-	// }
-	printf("%s\n", input);
+
+	while (input[i] && ft_iswhitespace(input[i]))
+		i++;
+	while (input[i])
+	{
+		if (input[i] == 34) // 34 = double quote
+		{
+			start = i;
+			i++;
+			while (input[i] && input[i] != 34)
+				i++;
+			token = ft_substr(input, start, (i - start) + 1);
+		}
+		else if (input[i] == 39)
+		{
+			start = i;
+			i++;
+			while (input[i] && input[i] != 39) // 39 = single quote
+				i++;
+			token = ft_substr(input, start, (i - start) + 1);
+		}
+		else if (ft_isascii(input[i]))
+		{
+			start = i;
+			i++;
+			while (!ft_iswhitespace(input[i]) && (input[i] != 39 && input[i] != 34))
+			{
+				if (!input[i])
+					break ;
+				i++;
+			}
+			token = ft_substr(input, start, (i - start) + 1);
+		}
+		printf("%s\n", token);
+		fill_token_list(minishell, token);
+		if (!input[i])
+			break ;
+		i++;
+	}
 	return (1);
 }
 
@@ -168,7 +177,7 @@ int	main(int ac, char **av, char **envp)
 		while (1)
 		{
 			get_input_prompt(minishell);
-			input = readline(minishell->prompt_msg); // fonction qui permet de recuperer ce que l'on ecrit.
+			input = readline("minishell >"); // fonction qui permet de recuperer ce que l'on ecrit.
 			if (input && *input)
 				add_history(input); // permet avec la flèche du haut de récuperer le dernier input.
 			if (!parsing_input(input, minishell))
@@ -181,10 +190,12 @@ int	main(int ac, char **av, char **envp)
 				print_pwd();
 			// if (!ft_strncmp(input, "cd", 2))
 			// 	cd(minishell, input);
-			printf("\n%s\n", input);
+			// printf("\n%s\n", input);
 			free(input);
 		}
 		return (0);
 	}
 	return (1);
 }
+
+// si un pipe est le dernier token, "unexpected end of line".

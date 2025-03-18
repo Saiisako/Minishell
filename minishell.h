@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/03/15 14:44:13 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/18 16:59:48 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 
 typedef enum e_type
 {
-	WORD, // Commande, argument, fichier
+	WORD = 1, // Commande, argument, fichier
 	PIPE, // |
 	REDIR_IN, // <
 	REDIR_OUT, // >
@@ -44,6 +44,7 @@ typedef struct s_token
 {
 	char			*value;
 	t_type			type;
+	bool			is_next_space;
 	struct s_token	*next;
 }					t_token;
 
@@ -55,16 +56,9 @@ typedef struct s_env
 	struct s_env	*next;
 }					t_env;
 
-typedef struct d_squote
-{
-	char	*word;
-	char	*dollar;
-	bool	is_dollar;
-}			t_quote;
-
 typedef struct s_ms
 {
-	char	*prompt_msg;
+	const char	*prompt_msg;
 	char	**envp;
 	t_env	*env_lst;
 	t_token	*token;
