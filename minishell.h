@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/03/19 15:47:24 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/19 18:38:25 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ typedef struct s_ms
 {
 	const char	*prompt_msg;
 	char		**envp;
+	bool		is_next_space;
 	t_env		*env_lst;
 	t_token		*token;
 }				t_ms;
@@ -91,7 +92,9 @@ void	fill_token_list(t_ms *minishell, char *str);
 void	token_add_back(t_token **lst, t_token *new);
 void	word_token(char *input, int *i, t_ms *minishell);
 void	process_token(char *input, int *i, t_ms *minishell);
-t_token	*new_token(char *str);
+t_token	*new_token(char *str, t_ms *minishell);
+void	merge_token(t_ms *minishell);
+
 
 ///////////////// BUILTIN /////////////////
 

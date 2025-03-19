@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/03/19 15:42:41 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/19 19:07:59 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ int	double_quote(char *input, int *i, t_ms *minishell)
 	if (!input[*i])
 		return (printf("unclosed quote : "), 0);
 	token = ft_substr(input, start, (*i - start) + 1);
+	if (input[(*i)] != ' ' && input[(*i)] != '\0')
+		minishell->is_next_space = true;
 	fill_token_list(minishell, token);
 	return (1);
 }
@@ -42,6 +44,8 @@ int	single_quote(char *input, int *i, t_ms *minishell)
 	if (!input[*i])
 		return (printf("unclosed quote : "), 0);
 	token = ft_substr(input, start, (*i - start) + 1);
+	if (input[(*i)] != ' ' && input[(*i)] != '\0')
+		minishell->is_next_space = true;
 	fill_token_list(minishell, token);
 	return (1);
 }
@@ -57,6 +61,8 @@ void	word_token(char *input, int *i, t_ms *minishell)
 		&& (input[*i] != 39 && input[*i] != 34))
 		(*i)++;
 	token = ft_substr(input, start, (*i - start));
+	if (input[(*i)] != ' ' && input[(*i)] != '\0')
+		minishell->is_next_space = true;
 	fill_token_list(minishell, token);
 	(*i)--;
 }
@@ -77,6 +83,23 @@ void	process_token(char *input, int *i, t_ms *minishell)
 		word_token(input, i, minishell);
 }
 
+void free_token_list(t_token *head)
+{
+    t_token *temp;
+
+    while (head != NULL)
+    {
+        temp = head;
+        head = head->next;
+
+        // Libérer la mémoire allouée pour la valeur du token
+        free(temp->value);
+
+        // Libérer le token lui-même
+        free(temp);
+    }
+}
+
 int	parsing_input(char *input, t_ms *minishell)
 {
 	int	i;
@@ -94,6 +117,13 @@ int	parsing_input(char *input, t_ms *minishell)
 			break ;
 		i++;
 	}
+	printf("before\n\n");
 	print_tokens(minishell->token);
+	
+	// merge_token(minishell);
+	// printf("after\n\n");
+	// print_tokens(minishell->token);
+	free_token_list(minishell->token);
+	minishell->is_next_space = false;
 	return (1);
 }

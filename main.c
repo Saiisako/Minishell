@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/03/19 15:48:52 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/19 16:48:28 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ int	main(int ac, char **av, char **envp)
 	(void)av;
 	minishell = malloc(sizeof(t_ms));
 	minishell->envp = envp;
+	minishell->is_next_space = false;
 	if (ac == 1)
 	{
 		fill_env_cpy(minishell, envp);
