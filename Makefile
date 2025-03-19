@@ -9,6 +9,8 @@ RDL_FLAG = -lreadline
 SRCS	=	main.c\
 			parsing/prompt.c\
 			parsing/env.c\
+			parsing/tokenizer.c\
+			parsing/tokenizer_lst.c\
 			builtin/env.c\
 			builtin/pwd.c\
 			builtin/cd.c\

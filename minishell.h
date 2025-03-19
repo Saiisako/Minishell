@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/03/19 14:34:18 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/19 15:47:24 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,13 @@
 
 typedef enum e_type
 {
-	WORD = 1, // Commande, argument, fichier
-	PIPE, // |
-	REDIR_IN, // <
-	REDIR_OUT, // >
-	APPEND, // >>
-	HEREDOC // <<
-}		t_type;
+	WORD = 1,
+	PIPE,
+	REDIR_IN,
+	REDIR_OUT,
+	APPEND,
+	HEREDOC
+}	t_type;
 
 typedef struct s_token
 {
@@ -59,10 +59,10 @@ typedef struct s_env
 typedef struct s_ms
 {
 	const char	*prompt_msg;
-	char	**envp;
-	t_env	*env_lst;
-	t_token	*token;
-}			t_ms;
+	char		**envp;
+	t_env		*env_lst;
+	t_token		*token;
+}				t_ms;
 
 ///////////////// PARSING /////////////////
 
@@ -74,13 +74,24 @@ char	*cpy_left(char	*env_var);
 char	*cpy_right(char *env_var);
 void	fill_env_cpy(t_ms *ms, char **envp);
 
-// PROMPT
+// PROMPT (see later)
 
 char	*return_last_folder(const char *path);
 char	*get_last_path(t_ms *minishell);
 void	get_input_prompt(t_ms *minishell);
 
-//
+// TOKENIZER (+LIST))
+
+int		parsing_input(char *input, t_ms *minishell);
+int		double_quote(char *input, int *i, t_ms *minishell);
+int		single_quote(char *input, int *i, t_ms *minishell);
+int		parsing_input(char *input, t_ms *minishell);
+void	print_tokens(t_token *tokens);
+void	fill_token_list(t_ms *minishell, char *str);
+void	token_add_back(t_token **lst, t_token *new);
+void	word_token(char *input, int *i, t_ms *minishell);
+void	process_token(char *input, int *i, t_ms *minishell);
+t_token	*new_token(char *str);
 
 ///////////////// BUILTIN /////////////////
 

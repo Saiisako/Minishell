@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 14:08:59 by skock             #+#    #+#             */
-/*   Updated: 2025/03/19 11:22:16 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/19 15:56:57 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	go_root(t_ms *minishell)
 
 void	go_old(t_ms *minishell)
 {
-	printf("ehre\n");
+	printf("here\n");
 	chdir(get_oldpwd(minishell));
 	update_pwd(minishell);
 }
