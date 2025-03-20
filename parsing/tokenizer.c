@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/03/19 19:07:59 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/20 16:53:39 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ int	double_quote(char *input, int *i, t_ms *minishell)
 	if (!input[*i])
 		return (printf("unclosed quote : "), 0);
 	token = ft_substr(input, start, (*i - start) + 1);
-	if (input[(*i)] != ' ' && input[(*i)] != '\0')
+	if (input[(*i) + 1] != ' ' && input[(*i) + 1] != '\0')
 		minishell->is_next_space = true;
-	fill_token_list(minishell, token);
+	fill_token_list(minishell, token, D_QUOTE);
 	return (1);
 }
 
@@ -44,9 +44,9 @@ int	single_quote(char *input, int *i, t_ms *minishell)
 	if (!input[*i])
 		return (printf("unclosed quote : "), 0);
 	token = ft_substr(input, start, (*i - start) + 1);
-	if (input[(*i)] != ' ' && input[(*i)] != '\0')
+	if (input[(*i) + 1] != ' ' && input[(*i) + 1] != '\0')
 		minishell->is_next_space = true;
-	fill_token_list(minishell, token);
+	fill_token_list(minishell, token, S_QUOTE);
 	return (1);
 }
 
@@ -63,7 +63,7 @@ void	word_token(char *input, int *i, t_ms *minishell)
 	token = ft_substr(input, start, (*i - start));
 	if (input[(*i)] != ' ' && input[(*i)] != '\0')
 		minishell->is_next_space = true;
-	fill_token_list(minishell, token);
+	fill_token_list(minishell, token, WORD);
 	(*i)--;
 }
 
@@ -85,19 +85,32 @@ void	process_token(char *input, int *i, t_ms *minishell)
 
 void free_token_list(t_token *head)
 {
-    t_token *temp;
+	t_token *temp;
 
-    while (head != NULL)
-    {
-        temp = head;
-        head = head->next;
+	while (head != NULL)
+	{
+		temp = head;
+		head = head->next;
+		free(temp->value);
+		free(temp);
+	}
+}
 
-        // Libérer la mémoire allouée pour la valeur du token
-        free(temp->value);
+void	merge_inception(t_ms *minishell)
+{
+	t_token	*tmp;
 
-        // Libérer le token lui-même
-        free(temp);
-    }
+	tmp = minishell->token;
+	while (tmp)
+	{
+		if (tmp->is_next_space == true)
+		{
+			merge_token(minishell);
+			tmp= tmp->next;
+		}
+		else
+			tmp = tmp->next;
+	}
 }
 
 int	parsing_input(char *input, t_ms *minishell)
@@ -117,12 +130,15 @@ int	parsing_input(char *input, t_ms *minishell)
 			break ;
 		i++;
 	}
-	printf("before\n\n");
+	// expand_token(minishell->token);
+	printf("before\n");
 	print_tokens(minishell->token);
-	
-	// merge_token(minishell);
-	// printf("after\n\n");
-	// print_tokens(minishell->token);
+	// merge_inception(minishell);
+	merge_token(minishell);
+	merge_token(minishell);
+	merge_token(minishell);
+	printf("after\n");
+	print_tokens(minishell->token);
 	free_token_list(minishell->token);
 	minishell->is_next_space = false;
 	return (1);

@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/03/19 16:48:28 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/20 16:33:18 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,47 +16,6 @@ void	print_error_message(const char *msg)
 {
 	printf("%s\n", msg);
 }
-
-// void	search_dollar(const char *input)
-// {
-// 	int	i;
-// 	int	j;
-
-// 	i = 0;
-// 	j = 0;
-// 	while (input[i])
-// 	{
-// 		if (input[i] == '$')
-// 			j++;
-// 		i++;
-// 	}
-// 	printf("number of dollar : %d", j);
-// }
-
-// int	does_have_double_quotes(const char *input)
-// {
-// 	int i;
-
-// 	i = 0;
-// 	while (input[i])
-// 	{
-// 		if (input[i] == '\"')
-// 		{
-// 			i++;
-// 			while (input[i] != '\"')
-// 			{
-// 				i++;
-// 				if (input[i] == '\"')
-// 				{
-// 					printf("double quotes detected !\n");
-// 					return (1);
-// 				}
-// 			}
-// 		}
-// 		i++;
-// 	}
-// 	return (0);
-// }
 
 // int	is_builtin(char *input)
 // {
@@ -119,8 +78,6 @@ int	main(int ac, char **av, char **envp)
 				cd(minishell, input);
 			if (!ft_strcmp(input, "env"))
 				print_env(minishell);
-			if (!ft_strcmp(input, "bozo"))
-				break ;
 			if (!ft_strcmp(input, "pwd"))
 				print_pwd();
 			if (!parsing_input(input, minishell))
@@ -134,3 +91,4 @@ int	main(int ac, char **av, char **envp)
 
 // si un pipe(special char) est le dernier token, "unexpected end of line".
 // si un pipe(special char) est le premier token, "unexpected end of line".
+// avec echo si les arguments sont "" "$USER" ca doit ca doit echo : _skock et pas : skock.

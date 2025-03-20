@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/03/19 18:38:25 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/20 15:40:35 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,9 @@ typedef enum e_type
 	REDIR_IN,
 	REDIR_OUT,
 	APPEND,
-	HEREDOC
+	HEREDOC,
+	S_QUOTE,
+	D_QUOTE,
 }	t_type;
 
 typedef struct s_token
@@ -88,11 +90,11 @@ int		double_quote(char *input, int *i, t_ms *minishell);
 int		single_quote(char *input, int *i, t_ms *minishell);
 int		parsing_input(char *input, t_ms *minishell);
 void	print_tokens(t_token *tokens);
-void	fill_token_list(t_ms *minishell, char *str);
+void	fill_token_list(t_ms *minishell, char *str, t_type type);
 void	token_add_back(t_token **lst, t_token *new);
 void	word_token(char *input, int *i, t_ms *minishell);
 void	process_token(char *input, int *i, t_ms *minishell);
-t_token	*new_token(char *str, t_ms *minishell);
+t_token	*new_token(char *str, t_ms *minishell, t_type type);
 void	merge_token(t_ms *minishell);
 
 
