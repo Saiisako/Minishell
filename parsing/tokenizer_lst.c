@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:20:19 by skock             #+#    #+#             */
-/*   Updated: 2025/03/20 16:52:47 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/21 12:34:57 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ void	merge_token(t_ms *minishell)
 	t_token	*new_tk;
 	char	*first_value;
 	char	*second_value;
+	char	*merged_value;
 
 	tmp = minishell->token;
 	while (tmp && tmp->next)
@@ -78,19 +79,24 @@ void	merge_token(t_ms *minishell)
 		{
 			first_value = tmp->value;
 			second_value = tmp->next->value;
-			if (tmp->next->is_next_space == false)
-				minishell->is_next_space = false;
-			new_tk = new_token(ft_strjoin(first_value, second_value), minishell, 0);
+			if (first_value[0] == '\0')
+				merged_value = ft_strdup(second_value);
+			else if (second_value[0] == '\0')
+				merged_value = ft_strdup(first_value);
+			else
+				merged_value = ft_strjoin(first_value, second_value);
+			new_tk = new_token(merged_value, minishell, 0);
+			new_tk->is_next_space = tmp->next->is_next_space;
 			new_tk->next = tmp->next->next;
 			free(tmp->value);
 			free(tmp->next->value);
 			tmp->value = new_tk->value;
+			tmp->is_next_space = new_tk->is_next_space;
 			tmp->next = new_tk->next;
+			free(new_tk);
 			return ;
-			// tmp = tmp->next;
 		}
-		else
-			tmp = tmp->next;
+		tmp = tmp->next;
 	}
 }
 
