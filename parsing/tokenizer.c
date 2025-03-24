@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/03/21 14:13:30 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/24 17:07:51 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,50 +127,92 @@ int	token_size(t_token *token)
 // 			tmp = tmp->next;
 // 	}
 // }
+#include <stdlib.h>
+#include <string.h>
 
-void	do_expand(t_token *token, t_ms *minishell)
+void	ft_strreplace(char **token, const char *replace)
+{
+	char	*new_value;
+
+	if (!token || !*token || !replace)
+		return ;
+
+	new_value = strdup(replace);
+	if (!new_value)
+		return ;
+
+	free(*token);
+	*token = new_value;
+}
+
+void do_expand(t_token *token, t_ms *minishell)
 {
 	int		i;
 	int		start;
 	char	*exp;
-	i = 0;
+	char	*before;
+	char	*result;
+	char	*temp;
+	t_env	*tmp;
+	bool	found;
 
+	i = 0;
+	start = 0;
+	result = NULL;
 	if (token->type == WORD || token->type == D_QUOTE)
 	{
 		while (token->value[i])
 		{
-			if (token->value[i] == '$')
+			if (token->value[i] == '$' && token->value[i + 1] && 
+				(ft_isalnum(token->value[i + 1]) || token->value[i + 1] == '_'))
 			{
-				start = i;
-				while (token->value[i] && (ft_isalnum(token->value[i])
-					|| token->value[i] == '_' || token->value[i] == '$' || token->value[i] == '$'))
-						i++;
-				exp = ft_substr(token->value, start, i);
-				printf("exp = %s\n", exp);
-				t_env	*tmp = minishell->env_lst;
-				bool	flag = false;
+				before = ft_substr(token->value, start, i - start);
+				temp = ft_strjoin(result, before);
+				free(result);
+				free(before);
+				result = temp;
+				start = i + 1;
+				i++;
+				while (token->value[i] && (ft_isalnum(token->value[i]) || token->value[i] == '_'))
+					i++;
+				exp = ft_substr(token->value, start, i - start);
+				tmp = minishell->env_lst;
+				found = false;
 				while (tmp)
 				{
-					if (!ft_strcmp(tmp->key, exp + 1))
+					if (!ft_strcmp(tmp->key, exp))
 					{
-						flag = true;
-						exp = ft_strdup(tmp->value);
+						found = true;
+						break;
 					}
 					tmp = tmp->next;
 				}
-				if (flag == false)
-					ft_strclear(token->value, exp);
-				printf("to be replace %s\n", ft_substr(token->value, start, i));
-				printf("to replace %s\n", exp);
-				printf("%d\n", flag);
-				printf("\nonce expand -> : %s\n", token->value);
+				if (found)
+				{
+					temp = ft_strjoin(result, tmp->value);
+					free(result);
+					result = temp;
+				}
+				free(exp);
+				start = i;
+				continue;
 			}
 			i++;
 		}
+		if (token->value[start])
+		{
+			before = ft_substr(token->value, start, i - start);
+			temp = ft_strjoin(result, before);
+			free(result);
+			free(before);
+			result = temp;
+		}
+		free(token->value);
+		token->value = result;
+		printf("Résultat final après expansion: '%s'\n", token->value);
 	}
-	printf("%s\n", token->value);
-	printf("After\n");
 }
+
 
 void	expand_token(t_token *token, t_ms *minishell)
 {
@@ -212,8 +254,8 @@ int	parsing_input(char *input, t_ms *minishell)
 		i++;
 	}
 	expand_token(minishell->token, minishell);
-	// printf("before\n");
-	// print_tokens(minishell->token);
+	printf("before\n");
+	print_tokens(minishell->token);
 	// merge_inception(minishell);
 	// merge_token(minishell);
 	// print_tokens(minishell->token);

@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 13:17:56 by skock             #+#    #+#             */
-/*   Updated: 2025/03/21 13:18:20 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/24 12:38:15 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,16 @@ void	ft_strclear(char *str, const char *remove)
 
 	if (!str || !remove)
 		return;
+	
 	pos = ft_strstr(str, remove);
 	if (!pos)
 		return;
+	
 	len_remove = ft_strlen(remove);
-	while (*pos)
+	while (*(pos + len_remove))
 	{
 		*pos = *(pos + len_remove);
 		pos++;
 	}
+	*pos = '\0'; // Assure que la chaîne se termine bien
 }
