@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/03/24 17:07:51 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/24 18:18:58 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,25 +110,23 @@ int	token_size(t_token *token)
 	return (i);
 }
 
-// void	merge_inception(t_ms *minishell)
-// {
-// 	t_token	*tmp;
+void	merge_inception(t_ms *minishell)
+{
+	t_token	*tmp;
 
-// 	tmp = minishell->token;
-// 	while (tmp)
-// 	{
-// 		if (tmp->is_next_space == true)
-// 		{
-// 			t_token *next = tmp->next; // Sauvegarde du prochain élément
-// 			merge_token(minishell);
-// 			tmp = next; // Continuer après la fusion
-// 		}
-// 		else
-// 			tmp = tmp->next;
-// 	}
-// }
-#include <stdlib.h>
-#include <string.h>
+	tmp = minishell->token;
+	while (tmp)
+	{
+		if (tmp->is_next_space == true)
+		{
+			t_token *next = tmp->next; // Sauvegarde du prochain élément
+			merge_token(minishell);
+			tmp = next; // Continuer après la fusion
+		}
+		else
+			tmp = tmp->next;
+	}
+}
 
 void	ft_strreplace(char **token, const char *replace)
 {
@@ -254,9 +252,8 @@ int	parsing_input(char *input, t_ms *minishell)
 		i++;
 	}
 	expand_token(minishell->token, minishell);
-	printf("before\n");
 	print_tokens(minishell->token);
-	// merge_inception(minishell);
+	merge_inception(minishell);
 	// merge_token(minishell);
 	// print_tokens(minishell->token);
 	// printf("before\n");
@@ -271,9 +268,9 @@ int	parsing_input(char *input, t_ms *minishell)
 	// printf("before\n");
 	// merge_token(minishell);
 	// print_tokens(minishell->token);
-	// printf("AFTERRRRRRRRRRRRRRRRR\n\n\n");
-	// print_tokens(minishell->token);
-	free_token_list(minishell->token);
+	printf("AFTERRRRRRRRRRRRRRRRR\n");
+	print_tokens(minishell->token);
+	// free_token_list(minishell->token);
 	minishell->is_next_space = false;
 	return (1);
 }
