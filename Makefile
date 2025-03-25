@@ -11,6 +11,7 @@ SRCS	=	main.c\
 			parsing/env.c\
 			parsing/tokenizer.c\
 			parsing/tokenizer_lst.c\
+			parsing/quote_remove.c\
 			builtin/env.c\
 			builtin/pwd.c\
 			builtin/cd.c\

@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/03/20 15:40:35 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/25 12:33:56 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,33 +85,40 @@ void	get_input_prompt(t_ms *minishell);
 
 // TOKENIZER (+LIST))
 
-int		parsing_input(char *input, t_ms *minishell);
+t_token	*new_token(char *str, t_ms *minishell, t_type type);
 int		double_quote(char *input, int *i, t_ms *minishell);
 int		single_quote(char *input, int *i, t_ms *minishell);
 int		parsing_input(char *input, t_ms *minishell);
-void	print_tokens(t_token *tokens);
+int		parsing_input(char *input, t_ms *minishell);
 void	fill_token_list(t_ms *minishell, char *str, t_type type);
-void	token_add_back(t_token **lst, t_token *new);
-void	word_token(char *input, int *i, t_ms *minishell);
 void	process_token(char *input, int *i, t_ms *minishell);
-t_token	*new_token(char *str, t_ms *minishell, t_type type);
+void	word_token(char *input, int *i, t_ms *minishell);
+void	token_add_back(t_token **lst, t_token *new);
+void	print_tokens(t_token *tokens);
 void	merge_token(t_ms *minishell);
+
+// EXPANDER
+
+// CLEAR QUOTE
+
+char	*quote_rmv(const char *str);
+void	clear_quote(t_ms *minishell);
 
 
 ///////////////// BUILTIN /////////////////
 
 // CD
 
-void	update_pwd(t_ms *minishell);
 void	cd(t_ms *minishell, char *input);
-char	*get_last_folder(char *path);
-char	*get_user(t_ms *minishell);
-char	*get_oldpwd(t_ms *minishell);
-void	go_back(t_ms *minishell);
+void	cd(t_ms *minishell, char *input);
+void	update_pwd(t_ms *minishell);
 void	go_tilde(t_ms *minishell);
+void	go_back(t_ms *minishell);
 void	go_root(t_ms *minishell);
 void	go_old(t_ms *minishell);
-void	cd(t_ms *minishell, char *input);
+char	*get_oldpwd(t_ms *minishell);
+char	*get_last_folder(char *path);
+char	*get_user(t_ms *minishell);
 
 // ENV
 

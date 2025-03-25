@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:20:19 by skock             #+#    #+#             */
-/*   Updated: 2025/03/21 12:34:57 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/25 11:35:51 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,8 @@ void	print_tokens(t_token *tokens)
 {
 	while (tokens)
 	{
-		printf("TYPE = %d\n", tokens->type);
-		printf("doit fusionner ? -> %d\n", tokens->is_next_space);
+		// printf("TYPE = %d\n", tokens->type);
+		// printf("doit fusionner ? -> %d\n", tokens->is_next_space);
 		printf("node = {%s}\n", tokens->value);
 		tokens = tokens->next;
 	}

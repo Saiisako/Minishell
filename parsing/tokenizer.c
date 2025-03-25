@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/03/24 18:18:58 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/25 12:37:41 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ void free_token_list(t_token *head)
 		free(temp);
 	}
 }
+
 int	token_size(t_token *token)
 {
 	int		i;
@@ -119,9 +120,9 @@ void	merge_inception(t_ms *minishell)
 	{
 		if (tmp->is_next_space == true)
 		{
-			t_token *next = tmp->next; // Sauvegarde du prochain élément
+			t_token *next = tmp->next;
 			merge_token(minishell);
-			tmp = next; // Continuer après la fusion
+			tmp = next;
 		}
 		else
 			tmp = tmp->next;
@@ -207,10 +208,8 @@ void do_expand(t_token *token, t_ms *minishell)
 		}
 		free(token->value);
 		token->value = result;
-		printf("Résultat final après expansion: '%s'\n", token->value);
 	}
 }
-
 
 void	expand_token(t_token *token, t_ms *minishell)
 {
@@ -252,25 +251,9 @@ int	parsing_input(char *input, t_ms *minishell)
 		i++;
 	}
 	expand_token(minishell->token, minishell);
-	print_tokens(minishell->token);
+	clear_quote(minishell);
 	merge_inception(minishell);
-	// merge_token(minishell);
-	// print_tokens(minishell->token);
-	// printf("before\n");
-	// merge_token(minishell);
-	// print_tokens(minishell->token);
-	// printf("before\n");
-	// merge_token(minishell);
-	// print_tokens(minishell->token);
-	// printf("before\n");
-	// merge_token(minishell);
-	// print_tokens(minishell->token);
-	// printf("before\n");
-	// merge_token(minishell);
-	// print_tokens(minishell->token);
-	printf("AFTERRRRRRRRRRRRRRRRR\n");
 	print_tokens(minishell->token);
-	// free_token_list(minishell->token);
 	minishell->is_next_space = false;
 	return (1);
 }
