@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/03/25 12:37:41 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/27 11:37:01 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,6 +233,12 @@ void	expand_token(t_token *token, t_ms *minishell)
 	}
 }
 
+void	create_end_list(t_ms *minishell)
+{
+	(void)minishell;
+	return ;
+}
+
 int	parsing_input(char *input, t_ms *minishell)
 {
 	int	i;
@@ -254,6 +260,8 @@ int	parsing_input(char *input, t_ms *minishell)
 	clear_quote(minishell);
 	merge_inception(minishell);
 	print_tokens(minishell->token);
+	create_end_list(minishell);
+	exec_line(minishell);
 	minishell->is_next_space = false;
 	return (1);
 }

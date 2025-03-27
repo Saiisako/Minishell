@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/03/25 12:33:56 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/27 11:38:40 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,8 @@ void	merge_token(t_ms *minishell);
 
 char	*quote_rmv(const char *str);
 void	clear_quote(t_ms *minishell);
+
+///////////////// EXECUTION /////////////////
 
 
 ///////////////// BUILTIN /////////////////
