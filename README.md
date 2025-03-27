@@ -15,3 +15,5 @@ si il peux y avoir un merge je dois supprimer la premiere " ou ' jusqua a la pro
 si un pipe(special char) est le dernier token, "unexpected end of line".
 si un pipe(special char) est le premier token, "unexpected end of line".
 avec echo si les arguments sont "" "$USER" ca doit ca doit echo : _skock et pas : skock.
+s il y a deux caracteres speciaux qui se suivent c'est une erreur.
+si le path n'existe pas doit renvoyer un message d'erreur ! a mon avis comme chaque chose de l'env dailleeurs

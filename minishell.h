@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/03/27 11:38:40 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/27 16:31:25 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ typedef struct s_token
 
 typedef struct s_env
 {
-	char			*key;	// Avant le =.
-	char			*value;	// Apres le =.
+	char			*key;
+	char			*value;
 	int				index;
 	struct s_env	*next;
 }					t_env;
@@ -96,6 +96,7 @@ void	word_token(char *input, int *i, t_ms *minishell);
 void	token_add_back(t_token **lst, t_token *new);
 void	print_tokens(t_token *tokens);
 void	merge_token(t_ms *minishell);
+t_type	is_special_char(char cur, char next);
 
 // EXPANDER
 
@@ -106,6 +107,7 @@ void	clear_quote(t_ms *minishell);
 
 ///////////////// EXECUTION /////////////////
 
+void	exec_line(t_ms *minishell);
 
 ///////////////// BUILTIN /////////////////
 

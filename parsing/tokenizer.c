@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/03/27 11:37:01 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/27 16:30:32 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,6 +230,8 @@ void	expand_token(t_token *token, t_ms *minishell)
 			do_expand(tmp, minishell);
 			tmp = tmp->next;
 		}
+		else
+			tmp = tmp->next;
 	}
 }
 
@@ -237,6 +239,39 @@ void	create_end_list(t_ms *minishell)
 {
 	(void)minishell;
 	return ;
+}
+
+void	select_type(t_ms *minishell)
+{
+	t_token	*tmp;
+
+	tmp = minishell->token;
+	while (tmp)
+	{
+		if (!ft_strncmp(tmp->value, ">>", 2))
+			tmp->type = APPEND;
+		else if (!ft_strncmp(tmp->value, "<<", 2))
+			tmp->type = HEREDOC;
+		else if (!ft_strncmp(tmp->value, "|", 1))
+			tmp->type = PIPE;
+		else if (!ft_strncmp(tmp->value, "<", 1))
+			tmp->type = REDIR_IN;
+		else if (!ft_strncmp(tmp->value, ">", 1))
+			tmp->type = REDIR_OUT;
+		tmp = tmp->next;
+	}
+}
+
+void	divide_word(t_ms *minishell)
+{
+	t_token		*tmp;
+
+	tmp = minishell->token;
+	while (tmp)
+	{
+		if (tmp->type == WORD)
+		tmp = tmp->next;
+	}
 }
 
 int	parsing_input(char *input, t_ms *minishell)
@@ -256,12 +291,13 @@ int	parsing_input(char *input, t_ms *minishell)
 			break ;
 		i++;
 	}
+	select_type(minishell);
+	// divide_word(minishell);
 	expand_token(minishell->token, minishell);
 	clear_quote(minishell);
 	merge_inception(minishell);
 	print_tokens(minishell->token);
 	create_end_list(minishell);
 	exec_line(minishell);
-	minishell->is_next_space = false;
 	return (1);
 }

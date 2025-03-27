@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/03/25 12:40:44 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/27 14:43:01 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	print_error_message(const char *msg)
 	printf("%s\n", msg);
 }
 
-int	is_special_char(char cur, char next)
+t_type	is_special_char(char cur, char next)
 {
 	if (next == cur && (cur == '>' || cur == '<'))
 	{
@@ -26,7 +26,6 @@ int	is_special_char(char cur, char next)
 		if (cur == '<')
 			return (HEREDOC);
 	}
-	return (2);
 	if (cur == '|')
 		return (PIPE);
 	if (cur == '>')
@@ -40,11 +39,13 @@ void prompt(t_ms *minishell)
 {
 	char *input;
 
-	printf("\033[H\033[J");
+	// printf("\033[H\033[J");
 	while (1)
 	{
 		get_input_prompt(minishell);
 		input = readline("minishell >");
+		if (!parsing_input(input, minishell))
+			print_error_message("error");
 		if (input && *input)
 			add_history(input);
 		if (!ft_strncmp(input, "cd", 2))
@@ -53,8 +54,6 @@ void prompt(t_ms *minishell)
 			print_env(minishell);
 		if (!ft_strcmp(input, "pwd"))
 			print_pwd();
-		if (!parsing_input(input, minishell))
-			print_error_message("error");
 		free(input);
 	}
 }

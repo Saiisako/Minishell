@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:55:20 by skock             #+#    #+#             */
-/*   Updated: 2025/03/18 13:12:34 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/27 13:32:41 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	get_input_prompt(t_ms *minishell)
 	char	*base;
 	char	*base_2;
 
-	base = "\001\033[0;36mlazy\033[0mshell:[";
+	base = "\033[0;36mlazy\033[0mshell:[";
 	base_2 = "] ➜ $";
 	minishell->prompt_msg = ft_strjoin(base, get_last_path(minishell));
 	minishell->prompt_msg = ft_strjoin(minishell->prompt_msg, base_2);
