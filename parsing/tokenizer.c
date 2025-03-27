@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/03/27 16:30:32 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/27 17:07:30 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,6 +258,8 @@ void	select_type(t_ms *minishell)
 			tmp->type = REDIR_IN;
 		else if (!ft_strncmp(tmp->value, ">", 1))
 			tmp->type = REDIR_OUT;
+		else
+			tmp->type = WORD;
 		tmp = tmp->next;
 	}
 }
@@ -270,6 +272,7 @@ void	divide_word(t_ms *minishell)
 	while (tmp)
 	{
 		if (tmp->type == WORD)
+			
 		tmp = tmp->next;
 	}
 }
@@ -291,11 +294,11 @@ int	parsing_input(char *input, t_ms *minishell)
 			break ;
 		i++;
 	}
-	select_type(minishell);
-	// divide_word(minishell);
 	expand_token(minishell->token, minishell);
 	clear_quote(minishell);
 	merge_inception(minishell);
+	select_type(minishell);
+	// divide_word(minishell);
 	print_tokens(minishell->token);
 	create_end_list(minishell);
 	exec_line(minishell);
