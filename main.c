@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/03/27 14:43:01 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/28 15:16:52 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ t_type	is_special_char(char cur, char next)
 	return (0);
 }
 
-void prompt(t_ms *minishell)
+void	prompt(t_ms *minishell)
 {
 	char *input;
 

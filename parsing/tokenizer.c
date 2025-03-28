@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/03/28 14:13:40 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/28 17:05:15 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,63 @@ void	word_token(char *input, int *i, t_ms *minishell)
 	start = *i;
 	(*i)++;
 	while (input[*i] && !ft_iswhitespace(input[*i])
-		&& (input[*i] != 39 && input[*i] != 34))
+		&& (input[*i] != 39 && input[*i] != 34) && ((input[*i] != '|') && (input[*i] != '>') && (input[*i] != '<')))
 		(*i)++;
 	token = ft_substr(input, start, (*i - start));
 	if (input[(*i)] != ' ' && input[(*i)] != '\0')
 		minishell->is_next_space = true;
 	fill_token_list(minishell, token, WORD);
+	(*i)--;
+}
+
+void	special_token(char *input, int *i, t_ms *minishell)
+{
+	int		start;
+	char	*token;
+	t_type	type;
+
+	start = *i;
+
+	// Handle multi-character tokens first
+	if ((input[*i] == '>' && input[*i + 1] == '>') ||
+		(input[*i] == '<' && input[*i + 1] == '<'))
+	{
+		token = ft_substr(input, start, 2);
+		if (input[*i] == '>')
+			type = APPEND;
+		else
+			type = HEREDOC;
+		(*i)++;
+	}
+	else 
+	{
+		// Single character tokens
+		token = ft_substr(input, start, 1);
+		switch (input[*i])
+		{
+			case '>':
+				type = REDIR_OUT;
+				break;
+			case '<':
+				type = REDIR_IN;
+				break;
+			case '|':
+				type = PIPE;
+				break;
+			default:
+				// This should not happen, but just in case
+				type = WORD;
+				break;
+		}
+	}
+
+	// Always increment to move past the token
+	(*i)++;
+
+	// Add token to list
+	fill_token_list(minishell, token, type);
+
+	// Back up one to maintain parsing position
 	(*i)--;
 }
 
@@ -79,21 +130,12 @@ void	process_token(char *input, int *i, t_ms *minishell)
 		if (!single_quote(input, i, minishell))
 			return ;
 	}
+	else if (input[*i] == '>' || input[*i] == '<')
+	{
+		special_token(input, i, minishell);
+	}
 	else if (ft_isascii(input[*i]))
 		word_token(input, i, minishell);
-}
-
-void free_token_list(t_token *head)
-{
-	t_token *temp;
-
-	while (head != NULL)
-	{
-		temp = head;
-		head = head->next;
-		free(temp->value);
-		free(temp);
-	}
 }
 
 int	token_size(t_token *token)
@@ -311,6 +353,7 @@ char **split_special(const char *str)
 }
 
 
+
 void create_list(t_ms *minishell, char *value, t_type type)
 {
 	t_exec	*new_node;
@@ -333,32 +376,33 @@ void create_list(t_ms *minishell, char *value, t_type type)
 
 void divide_word(t_ms *minishell)
 {
-	t_token *tmp;
-	char **divide;
-	int i;
+    t_token *tmp;
+    char **divide;
+    int i;
 
-	minishell->exec = NULL;
-	tmp = minishell->token;
-	while (tmp)
-	{
-		if (tmp->type == WORD)
-		{
-			i = 0;
-			divide = split_special(tmp->value);
-			while (divide[i])
-			{
-				create_list(minishell, divide[i], WORD);
-				i++;
-			}
-			tmp = tmp->next;
-		}
-		else
-		{
-			create_list(minishell, tmp->value, tmp->type);
-			tmp = tmp->next;
-		}
-	}
+    minishell->exec = NULL;
+    tmp = minishell->token;
+    while (tmp)
+    {
+        if (tmp->type == WORD)
+        {
+            i = 0;
+            divide = split_special(tmp->value);  // Split the word based on special chars
+            while (divide[i])
+            {
+                create_list(minishell, divide[i], WORD);  // Add split parts to the exec list
+                i++;
+            }
+            tmp = tmp->next;
+        }
+        else
+        {
+            create_list(minishell, tmp->value, tmp->type);  // Directly add other token types
+            tmp = tmp->next;
+        }
+    }
 }
+
 
 void	print_exec(t_exec *exec)
 {
@@ -387,13 +431,13 @@ int	parsing_input(char *input, t_ms *minishell)
 			break ;
 		i++;
 	}
+	print_tokens(minishell->token);
 	expand_token(minishell->token, minishell);
 	clear_quote(minishell);
 	merge_inception(minishell);
-	select_type(minishell);
-	print_tokens(minishell->token);
-	divide_word(minishell);
-	print_exec(minishell->exec);
+	// select_type(minishell);
+	// divide_word(minishell);
+	// print_exec(minishell->exec);
 	exec_line(minishell);
 	return (1);
 }
