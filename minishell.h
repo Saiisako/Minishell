@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/03/27 16:31:25 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/28 13:35:41 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,13 @@ typedef enum e_type
 	D_QUOTE,
 }	t_type;
 
+typedef struct s_exec
+{
+	char			*value;
+	t_type			type;
+	struct s_exec	*next;
+}					t_exec;
+
 typedef struct s_token
 {
 	char			*value;
@@ -65,6 +72,7 @@ typedef struct s_ms
 	bool		is_next_space;
 	t_env		*env_lst;
 	t_token		*token;
+	t_exec		*exec;
 }				t_ms;
 
 ///////////////// PARSING /////////////////

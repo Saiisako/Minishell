@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/03/27 17:07:30 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/28 14:13:40 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,12 +235,6 @@ void	expand_token(t_token *token, t_ms *minishell)
 	}
 }
 
-void	create_end_list(t_ms *minishell)
-{
-	(void)minishell;
-	return ;
-}
-
 void	select_type(t_ms *minishell)
 {
 	t_token	*tmp;
@@ -248,32 +242,131 @@ void	select_type(t_ms *minishell)
 	tmp = minishell->token;
 	while (tmp)
 	{
-		if (!ft_strncmp(tmp->value, ">>", 2))
+		if (!ft_strcmp(tmp->value, ">>"))
 			tmp->type = APPEND;
-		else if (!ft_strncmp(tmp->value, "<<", 2))
+		else if (!ft_strcmp(tmp->value, "<<"))
 			tmp->type = HEREDOC;
-		else if (!ft_strncmp(tmp->value, "|", 1))
+		else if (!ft_strcmp(tmp->value, "|"))
 			tmp->type = PIPE;
-		else if (!ft_strncmp(tmp->value, "<", 1))
+		else if (!ft_strcmp(tmp->value, "<"))
 			tmp->type = REDIR_IN;
-		else if (!ft_strncmp(tmp->value, ">", 1))
+		else if (!ft_strcmp(tmp->value, ">"))
 			tmp->type = REDIR_OUT;
+		else if (tmp->type == D_QUOTE)
+			tmp->type = D_QUOTE;
+		else if (tmp->type == S_QUOTE)
+			tmp->type = S_QUOTE;
 		else
 			tmp->type = WORD;
 		tmp = tmp->next;
 	}
 }
 
-void	divide_word(t_ms *minishell)
+int is_special(char c)
 {
-	t_token		*tmp;
+	return (c == '>' || c == '<' || c == '|');
+}
 
+char **split_special(const char *str)
+{
+    int i;
+    int j;
+    char **result;
+    int start;
+
+    i = 0;
+    j = 0;
+    result = malloc(sizeof(char *) * (strlen(str) + 1));  // allocate memory
+    while (str[i])
+    {
+        start = i;
+
+        // Skip over normal characters (non-special)
+        while (str[i] && !is_special(str[i]))
+            i++;
+
+        // If we have some characters to add as a token
+        if (i > start)
+            result[j++] = strndup(&str[start], i - start);
+
+        // Handle special characters
+        while (str[i] && is_special(str[i]))
+        {
+            // Check for double special characters like ">>" or "<<"
+            if ((str[i] == '>' && str[i + 1] == '>') || (str[i] == '<' && str[i + 1] == '<'))
+            {
+                result[j++] = strndup(&str[i], 2);  // handle ">>" or "<<"
+                i += 2;  // Move past the special pair
+            }
+            else
+            {
+                result[j++] = strndup(&str[i], 1);  // handle single special character
+                i++;  // Move past the special character
+            }
+        }
+    }
+
+    result[j] = NULL;  // Null terminate the array of strings
+    return (result);
+}
+
+
+void create_list(t_ms *minishell, char *value, t_type type)
+{
+	t_exec	*new_node;
+	t_exec	*current;
+
+	new_node = malloc(sizeof(t_exec));
+	new_node->value = strdup(value);
+	new_node->type = type;
+	new_node->next = NULL;
+	if (!minishell->exec)
+		minishell->exec = new_node;
+	else
+	{
+		current = minishell->exec;
+		while (current->next)
+			current = current->next;
+		current->next = new_node;
+	}
+}
+
+void divide_word(t_ms *minishell)
+{
+	t_token *tmp;
+	char **divide;
+	int i;
+
+	minishell->exec = NULL;
 	tmp = minishell->token;
 	while (tmp)
 	{
 		if (tmp->type == WORD)
-			
-		tmp = tmp->next;
+		{
+			i = 0;
+			divide = split_special(tmp->value);
+			while (divide[i])
+			{
+				create_list(minishell, divide[i], WORD);
+				i++;
+			}
+			tmp = tmp->next;
+		}
+		else
+		{
+			create_list(minishell, tmp->value, tmp->type);
+			tmp = tmp->next;
+		}
+	}
+}
+
+void	print_exec(t_exec *exec)
+{
+	while (exec)
+	{
+		printf("TYPE = %d\n", exec->type);
+		printf("node = {%s}\n", exec->value);
+		exec = exec->next;
 	}
 }
 
@@ -298,9 +391,9 @@ int	parsing_input(char *input, t_ms *minishell)
 	clear_quote(minishell);
 	merge_inception(minishell);
 	select_type(minishell);
-	// divide_word(minishell);
 	print_tokens(minishell->token);
-	create_end_list(minishell);
+	divide_word(minishell);
+	print_exec(minishell->exec);
 	exec_line(minishell);
 	return (1);
 }
