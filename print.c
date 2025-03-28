@@ -1,19 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec.c                                             :+:      :+:    :+:   */
+/*   print.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/27 11:34:45 by skock             #+#    #+#             */
-/*   Updated: 2025/03/28 19:32:48 by skock            ###   ########.fr       */
+/*   Created: 2025/03/28 19:15:02 by skock             #+#    #+#             */
+/*   Updated: 2025/03/28 19:15:25 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
-void	execution(t_ms *minishell)
+void	print_error_message(const char *msg)
 {
-	(void)minishell;
-	return ;
+	printf("%s\n", msg);
 }

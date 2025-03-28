@@ -6,43 +6,19 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/03/28 15:16:52 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/28 19:32:02 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	print_error_message(const char *msg)
-{
-	printf("%s\n", msg);
-}
-
-t_type	is_special_char(char cur, char next)
-{
-	if (next == cur && (cur == '>' || cur == '<'))
-	{
-		if (cur == '>')
-			return (APPEND);
-		if (cur == '<')
-			return (HEREDOC);
-	}
-	if (cur == '|')
-		return (PIPE);
-	if (cur == '>')
-		return (REDIR_OUT);
-	if (cur == '<')
-		return (REDIR_IN);
-	return (0);
-}
-
 void	prompt(t_ms *minishell)
 {
 	char *input;
 
-	// printf("\033[H\033[J");
+	printf("\033[H\033[J");
 	while (1)
 	{
-		get_input_prompt(minishell);
 		input = readline("minishell >");
 		if (!parsing_input(input, minishell))
 			print_error_message("error");

@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/03/28 18:58:32 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/28 19:32:35 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	double_quote(char *input, int *i, t_ms *minishell)
 	while (input[*i] && input[*i] != 34)
 		(*i)++;
 	if (!input[*i])
-		return (printf("unclosed quote : "), 0);
+		return (0);
 	token = ft_substr(input, start, (*i - start) + 1);
 	if (input[(*i) + 1] != ' ' && input[(*i) + 1] != '\0')
 		minishell->is_next_space = true;
@@ -42,7 +42,7 @@ int	single_quote(char *input, int *i, t_ms *minishell)
 	while (input[*i] && input[*i] != 39)
 		(*i)++;
 	if (!input[*i])
-		return (printf("unclosed quote : "), 0);
+		return (0);
 	token = ft_substr(input, start, (*i - start) + 1);
 	if (input[(*i) + 1] != ' ' && input[(*i) + 1] != '\0')
 		minishell->is_next_space = true;
@@ -73,7 +73,6 @@ void	special_token(char *input, int *i, t_ms *minishell)
 	char	*token;
 
 	start = *i;
-	printf("WHERE AM I = %c", input[*i]);
 	if (input[*i] == '|')
 	{
 		token = ft_strdup("|");
@@ -109,17 +108,24 @@ void	special_token(char *input, int *i, t_ms *minishell)
 	(*i)--;
 }
 
+void	exit_error(const char *msg, t_ms *minishell)
+{
+	(void)minishell;
+	printf("%s", msg);
+	exit(1);
+}
+
 void	process_token(char *input, int *i, t_ms *minishell)
 {
 	if (input[*i] == 34)
 	{
 		if (!double_quote(input, i, minishell))
-			return ;
+			exit_error("Error : Unclosed quote -> \"\n", minishell);
 	}
 	else if (input[*i] == 39)
 	{
 		if (!single_quote(input, i, minishell))
-			return ;
+			exit_error("Error : Unclosed quote -> '\n", minishell);
 	}
 	else if (input[*i] == '>' || input[*i] == '<' || input[*i] == '|')
 		special_token(input, i, minishell);
@@ -280,10 +286,10 @@ void	select_is_space(t_ms *minishell)
 				|| tmp->type == PIPE || tmp->type == HEREDOC
 				|| tmp->type == APPEND)
 				tmp->is_next_space = false;
-			else if ((tmp->type == D_QUOTE || tmp->type == S_QUOTE
+			else if (tmp->next && ((tmp->type == D_QUOTE || tmp->type == S_QUOTE    // peut etre probleme ici mais je suis pas sur.
 				|| tmp->type == WORD) && (tmp->next->type == REDIR_OUT
 				|| tmp->next->type == REDIR_IN || tmp->next->type == PIPE
-				|| tmp->next->type == HEREDOC || tmp->next->type == APPEND))
+				|| tmp->next->type == HEREDOC || tmp->next->type == APPEND)))
 				tmp->is_next_space = false;
 		}
 		tmp = tmp->next;
@@ -376,8 +382,6 @@ int	parsing_input(char *input, t_ms *minishell)
 	expand_token(minishell->token, minishell);
 	clear_quote(minishell);
 	merge_inception(minishell);
-	// divide_word(minishell);
-	// print_exec(minishell->exec);
 	print_tokens(minishell->token);
 	exec_line(minishell);
 	return (1);
