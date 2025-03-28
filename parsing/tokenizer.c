@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/03/28 18:08:01 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/28 18:58:32 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,14 +73,39 @@ void	special_token(char *input, int *i, t_ms *minishell)
 	char	*token;
 
 	start = *i;
-	(*i)++;
-	while (input[*i] && !ft_iswhitespace(input[*i])
-		&& (input[*i] != 39 && input[*i] != 34) && ((input[*i] != '|') && (input[*i] != '>') && (input[*i] != '<')))
+	printf("WHERE AM I = %c", input[*i]);
+	if (input[*i] == '|')
+	{
+		token = ft_strdup("|");
+		fill_token_list(minishell, token, WORD);
 		(*i)++;
-	token = ft_substr(input, start, (*i - start));
-	if (input[(*i)] != ' ' && input[(*i)] != '\0')
-		minishell->is_next_space = true;
-	fill_token_list(minishell, token, WORD);
+	}
+	else if (input[*i] == '>' && input[*i + 1] == '>')
+	{
+		token = ft_strdup(">>");
+		fill_token_list(minishell, token, WORD);
+		(*i)++;
+		(*i)++;
+	}
+	else if (input[*i] == '<' && input[*i + 1] == '<')
+	{
+		token = ft_strdup("<<");
+		fill_token_list(minishell, token, WORD);
+		(*i)++;
+		(*i)++;
+	}
+	else if (input[*i] == '>')
+	{
+		token = ft_strdup(">");
+		fill_token_list(minishell, token, WORD);
+		(*i)++;
+	}
+	else if (input[*i] == '<')
+	{
+		token = ft_strdup("<");
+		fill_token_list(minishell, token, WORD);
+		(*i)++;
+	}
 	(*i)--;
 }
 
@@ -96,10 +121,8 @@ void	process_token(char *input, int *i, t_ms *minishell)
 		if (!single_quote(input, i, minishell))
 			return ;
 	}
-	else if (input[*i] == '>' || input[*i] == '<')
-	{
+	else if (input[*i] == '>' || input[*i] == '<' || input[*i] == '|')
 		special_token(input, i, minishell);
-	}
 	else if (ft_isascii(input[*i]))
 		word_token(input, i, minishell);
 }
@@ -118,7 +141,6 @@ int	token_size(t_token *token)
 	}
 	return (i);
 }
-			t_token *next;
 
 void	merge_inception(t_ms *minishell)
 {
@@ -245,6 +267,29 @@ void	expand_token(t_token *token, t_ms *minishell)
 	}
 }
 
+void	select_is_space(t_ms *minishell)
+{
+	t_token	*tmp;
+	
+	tmp = minishell->token;
+	while (tmp)
+	{
+		if (tmp->is_next_space == true)
+		{
+			if (tmp->type == REDIR_OUT || tmp->type == REDIR_IN
+				|| tmp->type == PIPE || tmp->type == HEREDOC
+				|| tmp->type == APPEND)
+				tmp->is_next_space = false;
+			else if ((tmp->type == D_QUOTE || tmp->type == S_QUOTE
+				|| tmp->type == WORD) && (tmp->next->type == REDIR_OUT
+				|| tmp->next->type == REDIR_IN || tmp->next->type == PIPE
+				|| tmp->next->type == HEREDOC || tmp->next->type == APPEND))
+				tmp->is_next_space = false;
+		}
+		tmp = tmp->next;
+	}
+}
+
 void	select_type(t_ms *minishell)
 {
 	t_token	*tmp;
@@ -270,57 +315,13 @@ void	select_type(t_ms *minishell)
 			tmp->type = WORD;
 		tmp = tmp->next;
 	}
+	select_is_space(minishell);
 }
 
 int is_special(char c)
 {
 	return (c == '>' || c == '<' || c == '|');
 }
-
-char **split_special(const char *str)
-{
-    int i;
-    int j;
-    char **result;
-    int start;
-
-    i = 0;
-    j = 0;
-    result = malloc(sizeof(char *) * (strlen(str) + 1));  // allocate memory
-    while (str[i])
-    {
-        start = i;
-
-        // Skip over normal characters (non-special)
-        while (str[i] && !is_special(str[i]))
-            i++;
-
-        // If we have some characters to add as a token
-        if (i > start)
-            result[j++] = strndup(&str[start], i - start);
-
-        // Handle special characters
-        while (str[i] && is_special(str[i]))
-        {
-            // Check for double special characters like ">>" or "<<"
-            if ((str[i] == '>' && str[i + 1] == '>') || (str[i] == '<' && str[i + 1] == '<'))
-            {
-                result[j++] = strndup(&str[i], 2);  // handle ">>" or "<<"
-                i += 2;  // Move past the special pair
-            }
-            else
-            {
-                result[j++] = strndup(&str[i], 1);  // handle single special character
-                i++;  // Move past the special character
-            }
-        }
-    }
-
-    result[j] = NULL;  // Null terminate the array of strings
-    return (result);
-}
-
-
 
 void create_list(t_ms *minishell, char *value, t_type type)
 {
@@ -342,34 +343,6 @@ void create_list(t_ms *minishell, char *value, t_type type)
 	}
 }
 
-void divide_word(t_ms *minishell)
-{
-    t_token *tmp;
-    char **divide;
-    int i;
-
-    minishell->exec = NULL;
-    tmp = minishell->token;
-    while (tmp)
-    {
-        if (tmp->type == WORD)
-        {
-            i = 0;
-            divide = split_special(tmp->value);  // Split the word based on special chars
-            while (divide[i])
-            {
-                create_list(minishell, divide[i], WORD);  // Add split parts to the exec list
-                i++;
-            }
-            tmp = tmp->next;
-        }
-        else
-        {
-            create_list(minishell, tmp->value, tmp->type);  // Directly add other token types
-            tmp = tmp->next;
-        }
-    }
-}
 
 
 void	print_exec(t_exec *exec)
@@ -399,13 +372,13 @@ int	parsing_input(char *input, t_ms *minishell)
 			break ;
 		i++;
 	}
-	print_tokens(minishell->token);
+	select_type(minishell);
 	expand_token(minishell->token, minishell);
 	clear_quote(minishell);
 	merge_inception(minishell);
-	// select_type(minishell);
 	// divide_word(minishell);
 	// print_exec(minishell->exec);
+	print_tokens(minishell->token);
 	exec_line(minishell);
 	return (1);
 }

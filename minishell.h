@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/03/28 13:35:41 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/28 18:48:16 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef enum e_type
 	HEREDOC,
 	S_QUOTE,
 	D_QUOTE,
+	SPECIAL,
 }	t_type;
 
 typedef struct s_exec
