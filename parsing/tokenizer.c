@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/03/28 17:05:15 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/28 18:08:01 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,50 +71,16 @@ void	special_token(char *input, int *i, t_ms *minishell)
 {
 	int		start;
 	char	*token;
-	t_type	type;
 
 	start = *i;
-
-	// Handle multi-character tokens first
-	if ((input[*i] == '>' && input[*i + 1] == '>') ||
-		(input[*i] == '<' && input[*i + 1] == '<'))
-	{
-		token = ft_substr(input, start, 2);
-		if (input[*i] == '>')
-			type = APPEND;
-		else
-			type = HEREDOC;
-		(*i)++;
-	}
-	else 
-	{
-		// Single character tokens
-		token = ft_substr(input, start, 1);
-		switch (input[*i])
-		{
-			case '>':
-				type = REDIR_OUT;
-				break;
-			case '<':
-				type = REDIR_IN;
-				break;
-			case '|':
-				type = PIPE;
-				break;
-			default:
-				// This should not happen, but just in case
-				type = WORD;
-				break;
-		}
-	}
-
-	// Always increment to move past the token
 	(*i)++;
-
-	// Add token to list
-	fill_token_list(minishell, token, type);
-
-	// Back up one to maintain parsing position
+	while (input[*i] && !ft_iswhitespace(input[*i])
+		&& (input[*i] != 39 && input[*i] != 34) && ((input[*i] != '|') && (input[*i] != '>') && (input[*i] != '<')))
+		(*i)++;
+	token = ft_substr(input, start, (*i - start));
+	if (input[(*i)] != ' ' && input[(*i)] != '\0')
+		minishell->is_next_space = true;
+	fill_token_list(minishell, token, WORD);
 	(*i)--;
 }
 
@@ -152,17 +118,19 @@ int	token_size(t_token *token)
 	}
 	return (i);
 }
+			t_token *next;
 
 void	merge_inception(t_ms *minishell)
 {
 	t_token	*tmp;
+	t_token	*next;
 
 	tmp = minishell->token;
 	while (tmp)
 	{
 		if (tmp->is_next_space == true)
 		{
-			t_token *next = tmp->next;
+			next = tmp->next;
 			merge_token(minishell);
 			tmp = next;
 		}

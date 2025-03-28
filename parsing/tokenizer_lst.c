@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:20:19 by skock             #+#    #+#             */
-/*   Updated: 2025/03/28 16:36:52 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/28 18:08:20 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	fill_token_list(t_ms *minishell, char *str, t_type type)
 
 void	print_tokens(t_token *tokens)
 {
-	printf("before token\n");
+	printf("before merge\n");
 	while (tokens)
 	{
 		printf("TYPE = %d\n", tokens->type);
