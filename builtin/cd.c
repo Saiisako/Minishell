@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 14:08:59 by skock             #+#    #+#             */
-/*   Updated: 2025/03/19 15:56:57 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/29 17:13:37 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,44 +41,44 @@ void	go_old(t_ms *minishell)
 	update_pwd(minishell);
 }
 
-void	cd(t_ms *minishell, char *input)
-{
-	char	**input_splited;
+// void	cd(t_ms *minishell, char *input)
+// {
+// 	char	**input_splited;
 
-	input_splited = ft_split(input, ' ');
-	if (!ft_strcmp(input_splited[0], "cd"))
-	{
-		go_tilde(minishell);
-		return ;
-	}
-	if (!ft_strcmp(input_splited[1], ".."))
-	{
-		go_back(minishell);
-		return ;
-	}
-	if (!ft_strcmp(input_splited[1], "-"))
-	{
-		go_old(minishell);
-		return ;
-	}
-	if (!ft_strcmp(input_splited[1], "~"))
-	{
-		go_tilde(minishell);
-		return ;
-	}
-	if (!ft_strcmp(input_splited[1], "/"))
-	{
-		go_root(minishell);
-		return ;
-	}
-	if (!chdir(input_splited[1]))
-	{
-		update_pwd(minishell);
-		return ;
-	}
-	if (!chdir(ft_strjoin_slash(getcwd(NULL, 0), input_splited[1])))
-	{
-		update_pwd(minishell);
-		return ;
-	}
-}
+// 	input_splited = ft_split(input, ' ');
+// 	if (!ft_strcmp(input_splited[0], "cd"))
+// 	{
+// 		go_tilde(minishell);
+// 		return ;
+// 	}
+// 	if (!ft_strcmp(input_splited[1], ".."))
+// 	{
+// 		go_back(minishell);
+// 		return ;
+// 	}
+// 	if (!ft_strcmp(input_splited[1], "-"))
+// 	{
+// 		go_old(minishell);
+// 		return ;
+// 	}
+// 	if (!ft_strcmp(input_splited[1], "~"))
+// 	{
+// 		go_tilde(minishell);
+// 		return ;
+// 	}
+// 	if (!ft_strcmp(input_splited[1], "/"))
+// 	{
+// 		go_root(minishell);
+// 		return ;
+// 	}
+// 	if (!chdir(input_splited[1]))
+// 	{
+// 		update_pwd(minishell);
+// 		return ;
+// 	}
+// 	if (!chdir(ft_strjoin_slash(getcwd(NULL, 0), input_splited[1])))
+// 	{
+// 		update_pwd(minishell);
+// 		return ;
+// 	}
+// }

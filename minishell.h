@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/03/29 13:20:48 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/29 17:12:43 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,12 +103,18 @@ void	fill_token_list(t_ms *minishell, char *str, t_type type);
 void	process_token(char *input, int *i, t_ms *minishell);
 void	word_token(char *input, int *i, t_ms *minishell);
 void	token_add_back(t_token **lst, t_token *new);
-void	print_tokens(t_token *tokens);
-void	merge_token(t_ms *minishell);
 void	special_token(char *input, int *i, t_ms *minishell);
 t_type	is_special_char(char cur, char next);
 
+// MERGER
+
+void	merge_token(t_ms *minishell);
+void	merge_inception(t_ms *minishell);
+
 // EXPANDER
+
+void	expand_token(t_token *token, t_ms *minishell);
+void	do_expand(t_token *token, t_ms *minishell);
 
 // CLEAR QUOTE
 

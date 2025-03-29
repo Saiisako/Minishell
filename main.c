@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/03/29 13:17:10 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/29 17:06:59 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,18 @@ t_type	is_special_char(char cur, char next)
 
 void	prompt(t_ms *minishell)
 {
-	char *input;
+	char	*input;
 
 	printf("\033[H\033[J");
 	while (1)
 	{
 		get_input_prompt(minishell);
 		input = readline("minishell >");
+		if (!input)
+		{
+			printf("CTRL + D\n");
+			exit(0);
+		}
 		if (!parsing_input(input, minishell))
 			print_error_message("error");
 		if (input && *input)
@@ -58,9 +63,9 @@ void	prompt(t_ms *minishell)
 	}
 }
 
-int main(int ac, char **av, char **envp)
+int	main(int ac, char **av, char **envp)
 {
-	t_ms *minishell;
+	t_ms	*minishell;
 
 	(void)av;
 	minishell = malloc(sizeof(t_ms));
@@ -74,4 +79,3 @@ int main(int ac, char **av, char **envp)
 	}
 	return (1);
 }
-

@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/29 13:16:51 by skock             #+#    #+#             */
-/*   Updated: 2025/03/29 13:17:36 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/29 17:03:03 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,8 @@ void	word_token(char *input, int *i, t_ms *minishell)
 	start = *i;
 	(*i)++;
 	while (input[*i] && !ft_iswhitespace(input[*i])
-		&& (input[*i] != 39 && input[*i] != 34) && ((input[*i] != '|') && (input[*i] != '>') && (input[*i] != '<')))
+		&& (input[*i] != 39 && input[*i] != 34) && ((input[*i] != '|')
+			&& (input[*i] != '>') && (input[*i] != '<')))
 		(*i)++;
 	token = ft_substr(input, start, (*i - start));
 	if (input[(*i)] != ' ' && input[(*i)] != '\0')
@@ -67,41 +68,26 @@ void	word_token(char *input, int *i, t_ms *minishell)
 
 void	special_token(char *input, int *i, t_ms *minishell)
 {
-	int		start;
-	char	*token;
+	const char	*specials[5];
+	int			len;
+	int			j;
 
-	start = *i;
-	if (input[*i] == '|')
+	j = 0;
+	specials[0] = "|";
+	specials[1] = ">>";
+	specials[2] = "<<";
+	specials[3] = ">";
+	specials[4] = "<";
+	while (j < 5)
 	{
-		token = ft_strdup("|");
-		fill_token_list(minishell, token, WORD);
-		(*i)++;
-	}
-	else if (input[*i] == '>' && input[*i + 1] == '>')
-	{
-		token = ft_strdup(">>");
-		fill_token_list(minishell, token, WORD);
-		(*i)++;
-		(*i)++;
-	}
-	else if (input[*i] == '<' && input[*i + 1] == '<')
-	{
-		token = ft_strdup("<<");
-		fill_token_list(minishell, token, WORD);
-		(*i)++;
-		(*i)++;
-	}
-	else if (input[*i] == '>')
-	{
-		token = ft_strdup(">");
-		fill_token_list(minishell, token, WORD);
-		(*i)++;
-	}
-	else if (input[*i] == '<')
-	{
-		token = ft_strdup("<");
-		fill_token_list(minishell, token, WORD);
-		(*i)++;
+		len = ft_strlen(specials[j]);
+		if (ft_strncmp(&input[*i], specials[j], len) == 0)
+		{
+			fill_token_list(minishell, ft_strdup(specials[j]), WORD);
+			*i += len;
+			break ;
+		}
+		j++;
 	}
 	(*i)--;
 }
