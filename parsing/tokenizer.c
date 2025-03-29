@@ -6,141 +6,11 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/03/28 18:58:32 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/29 13:19:45 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-// ligne 59 pourrait poser problème si input[i] est nul selon Claude.
-
-int	double_quote(char *input, int *i, t_ms *minishell)
-{
-	int		start;
-	char	*token;
-
-	start = *i;
-	(*i)++;
-	while (input[*i] && input[*i] != 34)
-		(*i)++;
-	if (!input[*i])
-		return (printf("unclosed quote : "), 0);
-	token = ft_substr(input, start, (*i - start) + 1);
-	if (input[(*i) + 1] != ' ' && input[(*i) + 1] != '\0')
-		minishell->is_next_space = true;
-	fill_token_list(minishell, token, D_QUOTE);
-	return (1);
-}
-
-int	single_quote(char *input, int *i, t_ms *minishell)
-{
-	int		start;
-	char	*token;
-
-	start = *i;
-	(*i)++;
-	while (input[*i] && input[*i] != 39)
-		(*i)++;
-	if (!input[*i])
-		return (printf("unclosed quote : "), 0);
-	token = ft_substr(input, start, (*i - start) + 1);
-	if (input[(*i) + 1] != ' ' && input[(*i) + 1] != '\0')
-		minishell->is_next_space = true;
-	fill_token_list(minishell, token, S_QUOTE);
-	return (1);
-}
-
-void	word_token(char *input, int *i, t_ms *minishell)
-{
-	int		start;
-	char	*token;
-
-	start = *i;
-	(*i)++;
-	while (input[*i] && !ft_iswhitespace(input[*i])
-		&& (input[*i] != 39 && input[*i] != 34) && ((input[*i] != '|') && (input[*i] != '>') && (input[*i] != '<')))
-		(*i)++;
-	token = ft_substr(input, start, (*i - start));
-	if (input[(*i)] != ' ' && input[(*i)] != '\0')
-		minishell->is_next_space = true;
-	fill_token_list(minishell, token, WORD);
-	(*i)--;
-}
-
-void	special_token(char *input, int *i, t_ms *minishell)
-{
-	int		start;
-	char	*token;
-
-	start = *i;
-	printf("WHERE AM I = %c", input[*i]);
-	if (input[*i] == '|')
-	{
-		token = ft_strdup("|");
-		fill_token_list(minishell, token, WORD);
-		(*i)++;
-	}
-	else if (input[*i] == '>' && input[*i + 1] == '>')
-	{
-		token = ft_strdup(">>");
-		fill_token_list(minishell, token, WORD);
-		(*i)++;
-		(*i)++;
-	}
-	else if (input[*i] == '<' && input[*i + 1] == '<')
-	{
-		token = ft_strdup("<<");
-		fill_token_list(minishell, token, WORD);
-		(*i)++;
-		(*i)++;
-	}
-	else if (input[*i] == '>')
-	{
-		token = ft_strdup(">");
-		fill_token_list(minishell, token, WORD);
-		(*i)++;
-	}
-	else if (input[*i] == '<')
-	{
-		token = ft_strdup("<");
-		fill_token_list(minishell, token, WORD);
-		(*i)++;
-	}
-	(*i)--;
-}
-
-void	process_token(char *input, int *i, t_ms *minishell)
-{
-	if (input[*i] == 34)
-	{
-		if (!double_quote(input, i, minishell))
-			return ;
-	}
-	else if (input[*i] == 39)
-	{
-		if (!single_quote(input, i, minishell))
-			return ;
-	}
-	else if (input[*i] == '>' || input[*i] == '<' || input[*i] == '|')
-		special_token(input, i, minishell);
-	else if (ft_isascii(input[*i]))
-		word_token(input, i, minishell);
-}
-
-int	token_size(t_token *token)
-{
-	int		i;
-	t_token	*tmp;
-
-	i = 0;
-	tmp = token;
-	while (tmp)
-	{
-		i++;
-		tmp = tmp->next;
-	}
-	return (i);
-}
 
 void	merge_inception(t_ms *minishell)
 {
@@ -159,21 +29,6 @@ void	merge_inception(t_ms *minishell)
 		else
 			tmp = tmp->next;
 	}
-}
-
-void	ft_strreplace(char **token, const char *replace)
-{
-	char	*new_value;
-
-	if (!token || !*token || !replace)
-		return ;
-
-	new_value = strdup(replace);
-	if (!new_value)
-		return ;
-
-	free(*token);
-	*token = new_value;
 }
 
 void do_expand(t_token *token, t_ms *minishell)
@@ -323,37 +178,6 @@ int is_special(char c)
 	return (c == '>' || c == '<' || c == '|');
 }
 
-void create_list(t_ms *minishell, char *value, t_type type)
-{
-	t_exec	*new_node;
-	t_exec	*current;
-
-	new_node = malloc(sizeof(t_exec));
-	new_node->value = strdup(value);
-	new_node->type = type;
-	new_node->next = NULL;
-	if (!minishell->exec)
-		minishell->exec = new_node;
-	else
-	{
-		current = minishell->exec;
-		while (current->next)
-			current = current->next;
-		current->next = new_node;
-	}
-}
-
-
-
-void	print_exec(t_exec *exec)
-{
-	while (exec)
-	{
-		printf("TYPE = %d\n", exec->type);
-		printf("node = {%s}\n", exec->value);
-		exec = exec->next;
-	}
-}
 
 int	parsing_input(char *input, t_ms *minishell)
 {
@@ -376,8 +200,6 @@ int	parsing_input(char *input, t_ms *minishell)
 	expand_token(minishell->token, minishell);
 	clear_quote(minishell);
 	merge_inception(minishell);
-	// divide_word(minishell);
-	// print_exec(minishell->exec);
 	print_tokens(minishell->token);
 	exec_line(minishell);
 	return (1);

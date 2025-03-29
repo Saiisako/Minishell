@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/03/28 15:16:52 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/29 13:17:10 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	prompt(t_ms *minishell)
 {
 	char *input;
 
-	// printf("\033[H\033[J");
+	printf("\033[H\033[J");
 	while (1)
 	{
 		get_input_prompt(minishell);

@@ -7,11 +7,13 @@ LIBFT_FLAGS = -L./library/libft -lft
 RDL_FLAG = -lreadline
 
 SRCS	=	main.c\
+			print.c\
 			parsing/prompt.c\
 			parsing/env.c\
 			parsing/tokenizer.c\
 			parsing/tokenizer_lst.c\
 			parsing/quote_remove.c\
+			parsing/process_token.c\
 			execution/exec.c\
 			builtin/env.c\
 			builtin/pwd.c\
@@ -27,6 +29,8 @@ CYAN = \033[0;36m
 RESET = \033[0m
 
 OBJS = $(SRCS:.c=.o)
+OBJS := $(addprefix obj/, $(OBJS))
+OBJ_DIRS = $(sort $(dir $(OBJS)))
 
 TARGET = $(NAME)
 
@@ -43,8 +47,8 @@ define PRINT_LOADING
 	@clear
 endef
 
-$(NAME): $(LIBFT) $(OBJS)
-	@$(PRINT_LOADING) # Cette ligne affiche une barre de progression
+$(NAME): $(LIBFT) $(OBJ_DIRS) $(OBJS)
+	@$(PRINT_LOADING)
 	@$(CC) $(FLAGS) -o $(NAME) $(OBJS) $(LIBFT_FLAGS) $(RDL_FLAG)
 	@echo "$(CYAN)██╗      █████╗ ███████╗██╗   ██╗$(RESET)███████╗██╗  ██╗███████╗██╗     ██╗"
 	@echo "$(CYAN)██║     ██╔══██╗╚══███╔╝╚██╗ ██╔╝$(RESET)██╔════╝██║  ██║██╔════╝██║     ██║"
@@ -56,8 +60,11 @@ $(NAME): $(LIBFT) $(OBJS)
 $(LIBFT):
 	@make -s -C library/libft
 
-.c.o:
-	@$(CC) $(FLAGS) -c -o $@ $<
+$(OBJ_DIRS):
+	@mkdir -p $@
+
+obj/%.o: %.c | $(OBJ_DIRS)
+	@$(CC) $(FLAGS) -c $< -o $@
 
 all: $(NAME)
 
@@ -68,7 +75,7 @@ clean: clear
 	@make -s -C library/libft clean
 
 fclean: clean
-	@$(RM) $(NAME)
+	@$(RM) $(NAME) obj/
 	@make -s -C library/libft fclean
 
 re: fclean all

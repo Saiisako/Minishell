@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:20:19 by skock             #+#    #+#             */
-/*   Updated: 2025/03/28 18:08:20 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/29 13:20:19 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,18 +52,6 @@ void	fill_token_list(t_ms *minishell, char *str, t_type type)
 	if (!token)
 		return ;
 	token_add_back(&minishell->token, token);
-}
-
-void	print_tokens(t_token *tokens)
-{
-	printf("before merge\n");
-	while (tokens)
-	{
-		printf("TYPE = %d\n", tokens->type);
-		printf("doit fusionner ? -> %d\n", tokens->is_next_space);
-		printf("node = {%s}\n", tokens->value);
-		tokens = tokens->next;
-	}
 }
 
 void	merge_token(t_ms *minishell)

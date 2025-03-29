@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/03/28 18:48:16 by skock            ###   ########.fr       */
+/*   Updated: 2025/03/29 13:20:48 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ void	word_token(char *input, int *i, t_ms *minishell);
 void	token_add_back(t_token **lst, t_token *new);
 void	print_tokens(t_token *tokens);
 void	merge_token(t_ms *minishell);
+void	special_token(char *input, int *i, t_ms *minishell);
 t_type	is_special_char(char cur, char next);
 
 // EXPANDER
@@ -140,5 +141,9 @@ void	print_env(t_ms *minishell);
 // PWD
 
 void	print_pwd(void);
+
+///////////////// PRINT /////////////////
+
+void	print_tokens(t_token *tokens);
 
 #endif
