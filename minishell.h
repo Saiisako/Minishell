@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/03/29 17:26:03 by skock            ###   ########.fr       */
+/*   Updated: 2025/04/02 13:54:42 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ typedef enum e_type
 	HEREDOC,
 	S_QUOTE,
 	D_QUOTE,
-	SPECIAL,
 }	t_type;
 
 typedef struct s_token
@@ -50,6 +49,16 @@ typedef struct s_token
 	bool			is_next_space;
 	struct s_token	*next;
 }					t_token;
+
+typedef struct s_cmd
+{
+	char			*path;
+	int				infile_fd;
+	int				outfile_fd;
+	pid_t			pid;
+	struct s_token	*token;
+	struct s_cmd	*next;
+}					t_cmd;
 
 typedef struct s_env
 {
@@ -62,10 +71,12 @@ typedef struct s_env
 typedef struct s_ms
 {
 	const char	*prompt_msg;
+	int			status;
 	char		**envp;
 	bool		is_next_space;
 	t_env		*env_lst;
 	t_token		*token;
+	t_cmd		*cmd_list;
 }				t_ms;
 
 ///////////////// PARSING /////////////////

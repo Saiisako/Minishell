@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/03/29 17:06:59 by skock            ###   ########.fr       */
+/*   Updated: 2025/04/02 15:05:27 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,18 +35,36 @@ t_type	is_special_char(char cur, char next)
 	return (0);
 }
 
+void free_env(t_ms *minishell)
+{
+	t_env *tmp;
+	t_env *next_node;
+
+	tmp = minishell->env_lst;
+	while (tmp)
+	{
+		next_node = tmp->next;
+		free(tmp->key);
+		free(tmp->value);
+		free(tmp);
+		tmp = next_node;
+	}
+	
+}
+
+
 void	prompt(t_ms *minishell)
 {
 	char	*input;
 
-	printf("\033[H\033[J");
 	while (1)
 	{
-		get_input_prompt(minishell);
 		input = readline("minishell >");
 		if (!input)
 		{
 			printf("CTRL + D\n");
+			free_env(minishell);
+			free(minishell);
 			exit(0);
 		}
 		if (!parsing_input(input, minishell))
@@ -68,11 +86,11 @@ int	main(int ac, char **av, char **envp)
 	t_ms	*minishell;
 
 	(void)av;
-	minishell = malloc(sizeof(t_ms));
-	minishell->envp = envp;
-	minishell->is_next_space = false;
 	if (ac == 1)
 	{
+		minishell = malloc(sizeof(t_ms));
+		minishell->envp = envp;
+		minishell->is_next_space = false;
 		fill_env_cpy(minishell, envp);
 		prompt(minishell);
 		return (0);

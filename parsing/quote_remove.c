@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:32:42 by skock             #+#    #+#             */
-/*   Updated: 2025/03/29 17:03:26 by skock            ###   ########.fr       */
+/*   Updated: 2025/04/01 11:59:04 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,10 @@ void	clear_quote(t_ms *minishell)
 	{
 		next = tmp->next;
 		if (tmp->type == D_QUOTE || tmp->type == S_QUOTE)
+		{
 			tmp->value = quote_rmv(tmp->value);
+			tmp->type = WORD;
+		}
 		tmp = next;
 	}
 }
