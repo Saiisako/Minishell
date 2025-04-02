@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/04/02 13:54:42 by skock            ###   ########.fr       */
+/*   Updated: 2025/04/02 19:01:45 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,13 @@ void	do_expand(t_token *token, t_ms *minishell);
 char	*quote_rmv(const char *str);
 void	clear_quote(t_ms *minishell);
 
+// CMD_LST
+
+void	fill_cmd_lst(t_ms *minishell);
+void	cut_weird(t_cmd *cmd);
+t_cmd	*create_cmd_until_pipe(t_token *tmp);
+t_cmd	*new_cmd(void);
+
 ///////////////// EXECUTION /////////////////
 
 void	exec_line(t_ms *minishell);
@@ -153,6 +160,7 @@ void	print_pwd(void);
 
 ///////////////// PRINT /////////////////
 
+void	print_cmd(t_cmd *cmd);
 void	print_tokens(t_token *tokens);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/04/02 15:05:27 by skock            ###   ########.fr       */
+/*   Updated: 2025/04/02 18:54:00 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,28 +17,10 @@ void	print_error_message(const char *msg)
 	printf("%s\n", msg);
 }
 
-t_type	is_special_char(char cur, char next)
+void	free_env(t_ms *minishell)
 {
-	if (next == cur && (cur == '>' || cur == '<'))
-	{
-		if (cur == '>')
-			return (APPEND);
-		if (cur == '<')
-			return (HEREDOC);
-	}
-	if (cur == '|')
-		return (PIPE);
-	if (cur == '>')
-		return (REDIR_OUT);
-	if (cur == '<')
-		return (REDIR_IN);
-	return (0);
-}
-
-void free_env(t_ms *minishell)
-{
-	t_env *tmp;
-	t_env *next_node;
+	t_env	*tmp;
+	t_env	*next_node;
 
 	tmp = minishell->env_lst;
 	while (tmp)
@@ -49,9 +31,7 @@ void free_env(t_ms *minishell)
 		free(tmp);
 		tmp = next_node;
 	}
-	
 }
-
 
 void	prompt(t_ms *minishell)
 {
@@ -71,8 +51,6 @@ void	prompt(t_ms *minishell)
 			print_error_message("error");
 		if (input && *input)
 			add_history(input);
-		if (!ft_strncmp(input, "cd", 2))
-			cd(minishell, input);
 		if (!ft_strcmp(input, "env"))
 			print_env(minishell);
 		if (!ft_strcmp(input, "pwd"))

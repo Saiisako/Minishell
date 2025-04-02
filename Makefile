@@ -9,6 +9,7 @@ RDL_FLAG = -lreadline
 SRCS	=	main.c\
 			print.c\
 			parsing/merge.c\
+			parsing/cmd_lst.c\
 			parsing/prompt.c\
 			parsing/env.c\
 			parsing/tokenizer.c\

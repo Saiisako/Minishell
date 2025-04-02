@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:02:46 by skock             #+#    #+#             */
-/*   Updated: 2025/04/02 15:17:48 by skock            ###   ########.fr       */
+/*   Updated: 2025/04/02 18:42:42 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ void	do_expand(t_token *token, t_ms *minishell)
 				{
 					temp = ft_strjoin(result, tmp->value);
 					free(result);
-					free(tmp->value)
 					result = temp;
 				}
 				free(exp);
