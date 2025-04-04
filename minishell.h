@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/04/02 19:01:45 by skock            ###   ########.fr       */
+/*   Updated: 2025/04/04 14:35:28 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ typedef struct s_ms
 	bool		is_next_space;
 	t_env		*env_lst;
 	t_token		*token;
+	t_token		*expand;
 	t_cmd		*cmd_list;
 }				t_ms;
 
@@ -102,12 +103,11 @@ int		double_quote(char *input, int *i, t_ms *minishell);
 int		single_quote(char *input, int *i, t_ms *minishell);
 int		parsing_input(char *input, t_ms *minishell);
 int		parsing_input(char *input, t_ms *minishell);
-void	fill_token_list(t_ms *minishell, char *str, t_type type);
-void	process_token(char *input, int *i, t_ms *minishell);
+int		process_token(char *input, int *i, t_ms *minishell);
 void	word_token(char *input, int *i, t_ms *minishell);
 void	token_add_back(t_token **lst, t_token *new);
 void	special_token(char *input, int *i, t_ms *minishell);
-t_type	is_special_char(char cur, char next);
+void	fill_token_list(t_ms *minishell, char *str, t_type type);
 
 // MERGER
 

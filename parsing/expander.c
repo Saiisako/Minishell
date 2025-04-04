@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:02:46 by skock             #+#    #+#             */
-/*   Updated: 2025/04/02 18:42:42 by skock            ###   ########.fr       */
+/*   Updated: 2025/04/04 13:47:23 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,68 @@ void	do_expand(t_token *token, t_ms *minishell)
 		token->value = result;
 	}
 }
+
+// void	fill_expand_lst(t_ms *minishell, char *str)
+// {
+
+// }
+
+// int	search_in_env(t_token *token, t_ms *minishell)
+// {
+	
+// }
+
+// void	word_expand(char *value, t_ms *minishell, int *i)
+// {
+// 	char	*word;
+// 	int		start;
+
+// 	start = *i;
+// 	(*i)++;
+// 	while (value[*i] && value[*i] != '$')
+// 		i++;
+// 	if (!value[*i])
+// 	{
+// 		word = ft_substr(value, start, i - start);
+// 		fill_expand_lst(minishell, word);
+// 	}
+// 	else
+// 		return ;
+// }
+
+// void	dollar_expand(char *value, t_ms *minishell, int *i)
+// {
+// 	char	*word;
+// 	int		start;
+
+// 	start = *i;
+// 	(*i)++;
+// 	while (value[*i])
+// }
+
+// void	do_expand(t_token *token, t_ms *minishell)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	while (token->value[i])
+// 	{
+// 		if (token->value[i] == '$')
+// 		{
+// 			dollar_expand(token->value, minishell, &i);
+// 			if (!token->value[i])
+// 				break ;
+// 		}
+// 		else
+// 		{
+// 			word_expand(token->value, minishell, &i);
+// 			if (!token->value[i])
+// 				break ;
+// 		}
+// 		i++;
+// 	}
+	
+// }
 
 void	expand_token(t_token *token, t_ms *minishell)
 {

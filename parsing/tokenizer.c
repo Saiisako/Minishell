@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/04/02 19:03:07 by skock            ###   ########.fr       */
+/*   Updated: 2025/04/04 14:35:53 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	select_is_space(t_ms *minishell)
 	tmp = minishell->token;
 	while (tmp)
 	{
+		printf("type ? = %d\n", tmp->type);
 		if (tmp->is_next_space == true)
 		{
 			if (tmp->type == REDIR_OUT || tmp->type == REDIR_IN
@@ -100,7 +101,8 @@ int	parsing_input(char *input, t_ms *minishell)
 			i++;
 		if (!input[i])
 			break ;
-		process_token(input, &i, minishell);
+		if (!process_token(input, &i, minishell))
+			return (0);
 		if (!input[i])
 			break ;
 		i++;
