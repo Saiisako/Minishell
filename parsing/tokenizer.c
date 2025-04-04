@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/04/04 14:35:53 by skock            ###   ########.fr       */
+/*   Updated: 2025/04/04 18:10:28 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,13 @@ void	select_is_space(t_ms *minishell)
 	tmp = minishell->token;
 	while (tmp)
 	{
-		printf("type ? = %d\n", tmp->type);
 		if (tmp->is_next_space == true)
 		{
 			if (tmp->type == REDIR_OUT || tmp->type == REDIR_IN
 				|| tmp->type == PIPE || tmp->type == HEREDOC
 				|| tmp->type == APPEND)
 				tmp->is_next_space = false;
-			else if ((tmp->type == D_QUOTE || tmp->type == S_QUOTE
+			else if (tmp->next && (tmp->type == D_QUOTE || tmp->type == S_QUOTE    ///// enlever tmp->next &&  si dautre erreur
 					|| tmp->type == WORD) && (tmp->next->type == REDIR_OUT
 					|| tmp->next->type == REDIR_IN || tmp->next->type == PIPE
 					|| tmp->next->type == HEREDOC || tmp->next->type == APPEND))
@@ -95,6 +94,7 @@ int	parsing_input(char *input, t_ms *minishell)
 
 	minishell->token = NULL;
 	i = 0;
+	i = 0;
 	while (input[i])
 	{
 		while (input[i] && ft_iswhitespace(input[i]))
@@ -107,8 +107,10 @@ int	parsing_input(char *input, t_ms *minishell)
 			break ;
 		i++;
 	}
+
 	select_type(minishell);
 	expand_token(minishell->token, minishell);
+	// exit(1);
 	clear_quote(minishell);
 	merge_inception(minishell);
 	if (!parsing_error(minishell))

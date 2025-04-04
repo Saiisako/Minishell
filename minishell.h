@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/04/04 14:35:28 by skock            ###   ########.fr       */
+/*   Updated: 2025/04/04 17:52:27 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef enum e_type
 	HEREDOC,
 	S_QUOTE,
 	D_QUOTE,
+	EXPANDING,
 }	t_type;
 
 typedef struct s_token
@@ -117,7 +118,7 @@ void	merge_inception(t_ms *minishell);
 // EXPANDER
 
 void	expand_token(t_token *token, t_ms *minishell);
-void	do_expand(t_token *token, t_ms *minishell);
+void	do_expand(char *value, t_ms *minishell);
 
 // CLEAR QUOTE
 

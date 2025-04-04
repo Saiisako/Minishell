@@ -19,4 +19,4 @@ gerer des les debut les caractere speciaux
 - si un pipe(special char) est le premier token, "unexpected end of line".
 
 
-si lii y a une error faut pas quitter frere
+segfault quand je finis par un retour a la ligne.

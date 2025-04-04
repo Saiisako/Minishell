@@ -6,146 +6,146 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:02:46 by skock             #+#    #+#             */
-/*   Updated: 2025/04/04 13:47:23 by skock            ###   ########.fr       */
+/*   Updated: 2025/04/04 18:38:21 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	do_expand(t_token *token, t_ms *minishell)
+t_token	*new_expand(char *str)
 {
-	int		i;
-	int		start;
-	char	*exp;
-	char	*before;
-	char	*result;
-	char	*temp;
-	t_env	*tmp;
-	bool	found;
+	t_token		*expand;
 
-	i = 0;
-	start = 0;
-	result = NULL;
-	if (token->type == WORD || token->type == D_QUOTE)
+	expand = malloc(sizeof(t_token));
+	expand->value = str;
+	expand->next = NULL;
+	expand->type = EXPANDING;
+	expand->is_next_space = true;
+	return (expand);
+}
+
+void	expand_add_back(t_token **lst, t_token *new)
+{
+	t_token	*last;
+
+	if (!*lst)
+		*lst = new;
+	else
 	{
-		while (token->value[i])
-		{
-			if (token->value[i] == '$' && token->value[i + 1] &&
-				(ft_isalnum(token->value[i + 1]) || token->value[i + 1] == '_'))
-			{
-				before = ft_substr(token->value, start, i - start);
-				temp = ft_strjoin(result, before);
-				free(result);
-				free(before);
-				result = temp;
-				start = i + 1;
-				i++;
-				while (token->value[i] && (ft_isalnum(token->value[i])
-						|| token->value[i] == '_'))
-					i++;
-				exp = ft_substr(token->value, start, i - start);
-				tmp = minishell->env_lst;
-				found = false;
-				while (tmp)
-				{
-					if (!ft_strcmp(tmp->key, exp))
-					{
-						found = true;
-						break;
-					}
-					tmp = tmp->next;
-				}
-				if (found)
-				{
-					temp = ft_strjoin(result, tmp->value);
-					free(result);
-					result = temp;
-				}
-				free(exp);
-				start = i;
-				continue;
-			}
-			i++;
-		}
-		if (token->value[start])
-		{
-			before = ft_substr(token->value, start, i - start);
-			temp = ft_strjoin(result, before);
-			free(result);
-			free(before);
-			result = temp;
-		}
-		free(token->value);
-		token->value = result;
+		last = *lst;
+		while (last->next != NULL)
+			last = last->next;
+		last->next = new;
 	}
 }
 
-// void	fill_expand_lst(t_ms *minishell, char *str)
-// {
+void	fill_expand_lst(t_ms *minishell, char *str)
+{
+	t_token	*expand;
 
-// }
+	expand = new_expand(str);
+	if (!expand)
+		return ;
+	expand_add_back(&minishell->expand, expand);
+}
 
-// int	search_in_env(t_token *token, t_ms *minishell)
-// {
-	
-// }
+void	word_expand(char *value, t_ms *minishell, int *i)
+{
+	char	*word;
+	int		start;
 
-// void	word_expand(char *value, t_ms *minishell, int *i)
-// {
-// 	char	*word;
-// 	int		start;
+	start = *i;
+	while (value[*i] && value[*i] != '$')
+		(*i)++;
+	word = ft_substr(value, start, (size_t)((*i) - start));
+	fill_expand_lst(minishell, word);
+	if (value[*i] == '$')
+		(*i)--;
+}
 
-// 	start = *i;
-// 	(*i)++;
-// 	while (value[*i] && value[*i] != '$')
-// 		i++;
-// 	if (!value[*i])
-// 	{
-// 		word = ft_substr(value, start, i - start);
-// 		fill_expand_lst(minishell, word);
-// 	}
-// 	else
-// 		return ;
-// }
+void	dollar_expand(char *value, t_ms *minishell, int *i)
+{
+	char	*word;
+	int		start;
 
-// void	dollar_expand(char *value, t_ms *minishell, int *i)
-// {
-// 	char	*word;
-// 	int		start;
+	start = *i;
+	(*i)++;
+	while ((ft_isalnum(value[(*i)]) || value[(*i)] == '_'))
+		(*i)++;
+	word = ft_substr(value, start, (size_t)((*i) - start));
+	fill_expand_lst(minishell, word);
+	(*i)--;
+}
 
-// 	start = *i;
-// 	(*i)++;
-// 	while (value[*i])
-// }
+void	print_expand(t_ms *minishell)
+{
+	t_token	*tmp;
 
-// void	do_expand(t_token *token, t_ms *minishell)
-// {
-// 	int	i;
+	tmp = minishell->expand;
+	while(tmp)
+	{
+		printf("node = %s|\n", tmp->value);
+		tmp = tmp->next;
+	}
+}
 
-// 	i = 0;
-// 	while (token->value[i])
-// 	{
-// 		if (token->value[i] == '$')
-// 		{
-// 			dollar_expand(token->value, minishell, &i);
-// 			if (!token->value[i])
-// 				break ;
-// 		}
-// 		else
-// 		{
-// 			word_expand(token->value, minishell, &i);
-// 			if (!token->value[i])
-// 				break ;
-// 		}
-// 		i++;
-// 	}
-	
-// }
+void	do_expand(char *value, t_ms *minishell)
+{
+	int	i;
+
+	i = 0;
+	while (value[i])
+	{
+		if (value[i] == '$')
+		{
+			dollar_expand(value, minishell, &i);
+			if (!value[i])
+				break ;
+		}
+		else if (value[i] != '$')
+		{
+			word_expand(value, minishell, &i);
+			if (!value[i])
+				break ;
+		}
+		i++;
+	}
+}
+
+void	expand(t_ms *minishell)
+{
+	t_env	*tmp_env;
+	t_token	*tmp2;
+
+	tmp2 = minishell->expand;
+	while (tmp2)
+	{
+		tmp_env = minishell->env_lst;
+		while (tmp_env)
+		{
+			if (!ft_strcmp(tmp_env->key, tmp2->value + 1))
+			{
+				free(tmp2->value);
+				tmp2->value = ft_strdup(tmp_env->value);
+			}
+			else if (tmp2->value[0] == '$' && ft_strcmp(tmp_env->key, tmp2->value + 1) == 1)
+			{
+				free(tmp2->value);
+				tmp2->value = ft_strdup("");
+			}
+			tmp_env = tmp_env->next;
+		}
+		tmp2 = tmp2->next;
+	}
+	print_expand(minishell);
+	return ;
+}
 
 void	expand_token(t_token *token, t_ms *minishell)
 {
 	t_token	*tmp;
-
+	
+	minishell->expand = NULL;
 	tmp = token;
 	while (tmp)
 	{
@@ -153,15 +153,16 @@ void	expand_token(t_token *token, t_ms *minishell)
 			tmp = tmp->next;
 		else if (tmp->type == WORD)
 		{
-			do_expand(tmp, minishell);
+			do_expand(tmp->value, minishell);
 			tmp = tmp->next;
 		}
 		else if (tmp->type == D_QUOTE)
 		{
-			do_expand(tmp, minishell);
+			do_expand(tmp->value, minishell);
 			tmp = tmp->next;
 		}
 		else
 			tmp = tmp->next;
 	}
+	expand(minishell);
 }
