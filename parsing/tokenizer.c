@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/04/04 18:10:28 by skock            ###   ########.fr       */
+/*   Updated: 2025/04/05 15:16:41 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,13 +79,11 @@ int	parsing_error(t_ms *minishell)
 	return (1);
 }
 
-void	free_token(t_token *token)
+void	ft_cmd(t_ms *minishell)
 {
-	if (token)
-	{
-		free(token->value);
-		free(token);
-	}
+	fill_cmd_lst(minishell);
+	cut_weird(minishell->cmd_list);
+	exec_line(minishell);
 }
 
 int	parsing_input(char *input, t_ms *minishell)
@@ -107,16 +105,12 @@ int	parsing_input(char *input, t_ms *minishell)
 			break ;
 		i++;
 	}
-
 	select_type(minishell);
 	expand_token(minishell->token, minishell);
-	// exit(1);
 	clear_quote(minishell);
 	merge_inception(minishell);
 	if (!parsing_error(minishell))
 		return (0);
-	fill_cmd_lst(minishell);
-	cut_weird(minishell->cmd_list);
-	exec_line(minishell);
+	ft_cmd(minishell);
 	return (1);
 }

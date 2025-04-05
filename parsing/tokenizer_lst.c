@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:20:19 by skock             #+#    #+#             */
-/*   Updated: 2025/04/02 14:02:22 by skock            ###   ########.fr       */
+/*   Updated: 2025/04/05 14:42:27 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,13 @@
 t_token	*new_token(char *str, t_ms *minishell, t_type type)
 {
 	t_token		*token;
+	static int	i = 1;
 
 	token = malloc(sizeof(t_token));
 	token->value = str;
 	token->next = NULL;
 	token->type = type;
+	token->index = i++;
 	token->is_next_space = false;
 	if (minishell->is_next_space == true)
 	{

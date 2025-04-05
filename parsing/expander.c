@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:02:46 by skock             #+#    #+#             */
-/*   Updated: 2025/04/04 18:38:21 by skock            ###   ########.fr       */
+/*   Updated: 2025/04/05 15:04:45 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,27 +89,68 @@ void	print_expand(t_ms *minishell)
 	}
 }
 
-void	do_expand(char *value, t_ms *minishell)
+int	expand_size(t_ms *minishell)
 {
-	int	i;
+	int		i;
+	t_token	*tmp;
 
 	i = 0;
-	while (value[i])
+	tmp = minishell->expand;
+	while (tmp)
 	{
-		if (value[i] == '$')
-		{
-			dollar_expand(value, minishell, &i);
-			if (!value[i])
-				break ;
-		}
-		else if (value[i] != '$')
-		{
-			word_expand(value, minishell, &i);
-			if (!value[i])
-				break ;
-		}
 		i++;
+		tmp = tmp->next;
 	}
+	return (i);
+}
+
+void	modify_main_token_lst(t_ms *minishell, char *word, int index)
+{
+	t_token	*tmp;
+
+	tmp = minishell->token;
+	while (tmp->index != index)
+		tmp = tmp->next;
+	free(tmp->value);
+	tmp->value = ft_strdup(word);
+}
+
+void	free_expand_list(t_ms *minishell)
+{
+	t_token	*tmp;
+	t_token	*next;
+
+	tmp = minishell->expand;
+	while (tmp)
+	{
+		next = tmp->next;
+
+		free(tmp->value);
+		free(tmp);
+
+		tmp = next;
+	}
+	minishell->expand = NULL;
+}
+
+void	join_expand(t_ms *minishell, int index)
+{
+	int		size;
+	char	*word_expand;
+	t_token	*tmp;
+	
+	// print_expand(minishell);
+	size = expand_size(minishell);
+	tmp = minishell->expand;
+	word_expand = tmp->value;
+	while (tmp->next && tmp && size >= 0)
+	{
+		word_expand = ft_strjoin(word_expand, tmp->next->value);
+		tmp = tmp->next;
+		size--;
+	}
+	modify_main_token_lst(minishell, word_expand, index);
+	free_expand_list(minishell);
 }
 
 void	expand(t_ms *minishell)
@@ -137,9 +178,33 @@ void	expand(t_ms *minishell)
 		}
 		tmp2 = tmp2->next;
 	}
-	print_expand(minishell);
 	return ;
 }
+void	do_expand(char *value, t_ms *minishell, int index)
+{
+	int	i;
+
+	i = 0;
+	while (value[i])
+	{
+		if (value[i] == '$')
+		{
+			dollar_expand(value, minishell, &i);
+			if (!value[i])
+				break ;
+		}
+		else if (value[i] != '$')
+		{
+			word_expand(value, minishell, &i);
+			if (!value[i])
+				break ;
+		}
+		i++;
+	}
+	expand(minishell);
+	join_expand(minishell, index);
+}
+
 
 void	expand_token(t_token *token, t_ms *minishell)
 {
@@ -153,16 +218,15 @@ void	expand_token(t_token *token, t_ms *minishell)
 			tmp = tmp->next;
 		else if (tmp->type == WORD)
 		{
-			do_expand(tmp->value, minishell);
+			do_expand(tmp->value, minishell, tmp->index);
 			tmp = tmp->next;
 		}
 		else if (tmp->type == D_QUOTE)
 		{
-			do_expand(tmp->value, minishell);
+			do_expand(tmp->value, minishell, tmp->index);
 			tmp = tmp->next;
 		}
 		else
 			tmp = tmp->next;
 	}
-	expand(minishell);
 }

@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/04/04 17:52:27 by skock            ###   ########.fr       */
+/*   Updated: 2025/04/05 14:50:50 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,9 @@ typedef enum e_type
 typedef struct s_token
 {
 	char			*value;
-	t_type			type;
 	bool			is_next_space;
+	t_type			type;
+	int				index;
 	struct s_token	*next;
 }					t_token;
 
@@ -118,7 +119,7 @@ void	merge_inception(t_ms *minishell);
 // EXPANDER
 
 void	expand_token(t_token *token, t_ms *minishell);
-void	do_expand(char *value, t_ms *minishell);
+void	do_expand(char *value, t_ms *minishell, int index);
 
 // CLEAR QUOTE
 
