@@ -1,19 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec.c                                             :+:      :+:    :+:   */
+/*   free_expand.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/27 11:34:45 by skock             #+#    #+#             */
-/*   Updated: 2025/04/05 15:03:44 by skock            ###   ########.fr       */
+/*   Created: 2025/04/05 15:20:09 by skock             #+#    #+#             */
+/*   Updated: 2025/04/05 15:26:20 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	exec_line(t_ms *minishell)
+void	free_expand_list(t_ms *minishell)
 {
-	print_cmd(minishell->cmd_list);
-	return ;
+	t_token	*tmp;
+	t_token	*next;
+
+	tmp = minishell->expand;
+	while (tmp)
+	{
+		next = tmp->next;
+		free(tmp->value);
+		free(tmp);
+		tmp = next;
+	}
+	minishell->expand = NULL;
 }

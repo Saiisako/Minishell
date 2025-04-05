@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/29 13:16:51 by skock             #+#    #+#             */
-/*   Updated: 2025/03/29 17:03:03 by skock            ###   ########.fr       */
+/*   Updated: 2025/04/04 14:36:13 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,20 +92,21 @@ void	special_token(char *input, int *i, t_ms *minishell)
 	(*i)--;
 }
 
-void	process_token(char *input, int *i, t_ms *minishell)
+int	process_token(char *input, int *i, t_ms *minishell)
 {
 	if (input[*i] == 34)
 	{
 		if (!double_quote(input, i, minishell))
-			return ;
+			return (0);
 	}
 	else if (input[*i] == 39)
 	{
 		if (!single_quote(input, i, minishell))
-			return ;
+			return (0);
 	}
 	else if (input[*i] == '>' || input[*i] == '<' || input[*i] == '|')
 		special_token(input, i, minishell);
 	else if (ft_isascii(input[*i]))
 		word_token(input, i, minishell);
+	return (1);
 }

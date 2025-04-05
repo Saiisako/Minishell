@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/04/02 19:03:07 by skock            ###   ########.fr       */
+/*   Updated: 2025/04/05 15:19:28 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	select_is_space(t_ms *minishell)
 				|| tmp->type == PIPE || tmp->type == HEREDOC
 				|| tmp->type == APPEND)
 				tmp->is_next_space = false;
-			else if ((tmp->type == D_QUOTE || tmp->type == S_QUOTE
+			else if (tmp->next && (tmp->type == D_QUOTE || tmp->type == S_QUOTE
 					|| tmp->type == WORD) && (tmp->next->type == REDIR_OUT
 					|| tmp->next->type == REDIR_IN || tmp->next->type == PIPE
 					|| tmp->next->type == HEREDOC || tmp->next->type == APPEND))
@@ -79,13 +79,11 @@ int	parsing_error(t_ms *minishell)
 	return (1);
 }
 
-void	free_token(t_token *token)
+void	ft_cmd(t_ms *minishell)
 {
-	if (token)
-	{
-		free(token->value);
-		free(token);
-	}
+	fill_cmd_lst(minishell);
+	cut_weird(minishell->cmd_list);
+	exec_line(minishell);
 }
 
 int	parsing_input(char *input, t_ms *minishell)
@@ -94,13 +92,15 @@ int	parsing_input(char *input, t_ms *minishell)
 
 	minishell->token = NULL;
 	i = 0;
+	i = 0;
 	while (input[i])
 	{
 		while (input[i] && ft_iswhitespace(input[i]))
 			i++;
 		if (!input[i])
 			break ;
-		process_token(input, &i, minishell);
+		if (!process_token(input, &i, minishell))
+			return (0);
 		if (!input[i])
 			break ;
 		i++;
@@ -111,8 +111,6 @@ int	parsing_input(char *input, t_ms *minishell)
 	merge_inception(minishell);
 	if (!parsing_error(minishell))
 		return (0);
-	fill_cmd_lst(minishell);
-	cut_weird(minishell->cmd_list);
-	exec_line(minishell);
+	ft_cmd(minishell);
 	return (1);
 }

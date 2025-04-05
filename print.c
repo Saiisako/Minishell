@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/29 13:20:02 by skock             #+#    #+#             */
-/*   Updated: 2025/04/02 18:57:20 by skock            ###   ########.fr       */
+/*   Updated: 2025/04/05 15:18:23 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	print_cmd(t_cmd *cmd)
 		tmp_token = tmp_cmd->token;
 		while (tmp_token)
 		{
-			printf("token value = %s\n", tmp_token->value);
+			printf("token value = |   |%s|   |\n", tmp_token->value);
 			printf("token type = %d\n", tmp_token->type);
 			printf("\n\n");
 			tmp_token = tmp_token->next;

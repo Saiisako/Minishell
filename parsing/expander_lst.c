@@ -1,37 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokenizer_lst.c                                    :+:      :+:    :+:   */
+/*   expander_lst.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/19 15:20:19 by skock             #+#    #+#             */
-/*   Updated: 2025/04/05 14:42:27 by skock            ###   ########.fr       */
+/*   Created: 2025/04/05 15:22:23 by skock             #+#    #+#             */
+/*   Updated: 2025/04/05 15:22:45 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_token	*new_token(char *str, t_ms *minishell, t_type type)
+t_token	*new_expand(char *str)
 {
-	t_token		*token;
-	static int	i = 1;
+	t_token		*expand;
 
-	token = malloc(sizeof(t_token));
-	token->value = str;
-	token->next = NULL;
-	token->type = type;
-	token->index = i++;
-	token->is_next_space = false;
-	if (minishell->is_next_space == true)
-	{
-		token->is_next_space = true;
-		minishell->is_next_space = false;
-	}
-	return (token);
+	expand = malloc(sizeof(t_token));
+	expand->value = str;
+	expand->next = NULL;
+	expand->type = EXPANDING;
+	expand->is_next_space = true;
+	return (expand);
 }
 
-void	token_add_back(t_token **lst, t_token *new)
+void	expand_add_back(t_token **lst, t_token *new)
 {
 	t_token	*last;
 
@@ -46,12 +39,12 @@ void	token_add_back(t_token **lst, t_token *new)
 	}
 }
 
-void	fill_token_list(t_ms *minishell, char *str, t_type type)
+void	fill_expand_lst(t_ms *minishell, char *str)
 {
-	t_token	*token;
+	t_token	*expand;
 
-	token = new_token(str, minishell, type);
-	if (!token)
+	expand = new_expand(str);
+	if (!expand)
 		return ;
-	token_add_back(&minishell->token, token);
+	expand_add_back(&minishell->expand, expand);
 }
