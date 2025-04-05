@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/04/05 14:50:50 by skock            ###   ########.fr       */
+/*   Updated: 2025/04/05 15:27:05 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,15 @@ void	merge_inception(t_ms *minishell);
 
 void	expand_token(t_token *token, t_ms *minishell);
 void	do_expand(char *value, t_ms *minishell, int index);
+void	modify_main_token_lst(t_ms *minishell, char *word, int index);
+int		expand_size(t_ms *minishell);
+void	dollar_expand(char *value, t_ms *minishell, int *i);
+void	word_expand(char *value, t_ms *minishell, int *i);
+void	fill_expand_lst(t_ms *minishell, char *str);
+void	expand_add_back(t_token **lst, t_token *new);
+t_token	*new_expand(char *str);
+void	join_expand(t_ms *minishell, int index);
+void	expand(t_ms *minishell);
 
 // CLEAR QUOTE
 
@@ -164,5 +173,10 @@ void	print_pwd(void);
 
 void	print_cmd(t_cmd *cmd);
 void	print_tokens(t_token *tokens);
+void	print_expand(t_ms *minishell);
+
+///////////////// FREE /////////////////
+
+void	free_expand_list(t_ms *minishell);
 
 #endif

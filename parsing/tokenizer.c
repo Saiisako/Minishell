@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/04/05 15:16:41 by skock            ###   ########.fr       */
+/*   Updated: 2025/04/05 15:19:28 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	select_is_space(t_ms *minishell)
 				|| tmp->type == PIPE || tmp->type == HEREDOC
 				|| tmp->type == APPEND)
 				tmp->is_next_space = false;
-			else if (tmp->next && (tmp->type == D_QUOTE || tmp->type == S_QUOTE    ///// enlever tmp->next &&  si dautre erreur
+			else if (tmp->next && (tmp->type == D_QUOTE || tmp->type == S_QUOTE
 					|| tmp->type == WORD) && (tmp->next->type == REDIR_OUT
 					|| tmp->next->type == REDIR_IN || tmp->next->type == PIPE
 					|| tmp->next->type == HEREDOC || tmp->next->type == APPEND))
