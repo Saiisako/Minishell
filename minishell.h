@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/04/05 15:27:05 by skock            ###   ########.fr       */
+/*   Updated: 2025/04/05 16:45:09 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,6 +168,10 @@ void	print_env(t_ms *minishell);
 // PWD
 
 void	print_pwd(void);
+
+// ECHO
+
+void	print_echo(char **args);
 
 ///////////////// PRINT /////////////////
 

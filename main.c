@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/04/02 18:54:00 by skock            ###   ########.fr       */
+/*   Updated: 2025/04/05 16:44:03 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	free_env(t_ms *minishell)
 void	prompt(t_ms *minishell)
 {
 	char	*input;
+	char	**args; //
 
 	while (1)
 	{
@@ -51,10 +52,26 @@ void	prompt(t_ms *minishell)
 			print_error_message("error");
 		if (input && *input)
 			add_history(input);
-		if (!ft_strcmp(input, "env"))
-			print_env(minishell);
-		if (!ft_strcmp(input, "pwd"))
-			print_pwd();
+		// if (!ft_strcmp(input, "env"))
+		// 	print_env(minishell);
+		// if (!ft_strcmp(input, "pwd"))
+		// 	print_pwd();
+		// if (!ft_strcmp(input, "echo"))
+		// {
+		// 	printf("go in here\n");
+		// 	args = ft_split(input, ' ');
+		// 	print_echo(args);
+		// }			
+		args = ft_split(input, ' '); //
+		if (args && args[0]) 
+		{
+			if (!ft_strcmp(args[0], "env"))
+				print_env(minishell);
+			else if (!ft_strcmp(args[0], "pwd"))
+				print_pwd();
+			else if (!ft_strcmp(args[0], "echo"))
+				print_echo(args);
+		}
 		free(input);
 	}
 }
