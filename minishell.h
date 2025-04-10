@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/04/05 16:45:09 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/04/10 16:48:14 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,8 +150,8 @@ void	exec_line(t_ms *minishell);
 
 // CD
 
-void	cd(t_ms *minishell, char *input);
-void	cd(t_ms *minishell, char *input);
+void	cd(t_ms *minishell);
+// void	cd(t_ms *minishell, char *input);
 void	update_pwd(t_ms *minishell);
 void	go_tilde(t_ms *minishell);
 void	go_back(t_ms *minishell);
@@ -171,7 +171,8 @@ void	print_pwd(void);
 
 // ECHO
 
-void	print_echo(char **args);
+void	print_echo(t_cmd *cmd);
+void	execute_builtin(t_cmd *cmd, t_ms *minishell);
 
 ///////////////// PRINT /////////////////
 

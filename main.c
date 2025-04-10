@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/04/05 16:44:03 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/04/10 16:51:29 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ void	free_env(t_ms *minishell)
 void	prompt(t_ms *minishell)
 {
 	char	*input;
-	char	**args; //
 
 	while (1)
 	{
@@ -52,6 +51,8 @@ void	prompt(t_ms *minishell)
 			print_error_message("error");
 		if (input && *input)
 			add_history(input);
+		// if (!ft_strncmp(input, "cd", 2))
+ 		// 	cd(minishell, input);
 		// if (!ft_strcmp(input, "env"))
 		// 	print_env(minishell);
 		// if (!ft_strcmp(input, "pwd"))
@@ -62,19 +63,34 @@ void	prompt(t_ms *minishell)
 		// 	args = ft_split(input, ' ');
 		// 	print_echo(args);
 		// }			
-		args = ft_split(input, ' '); //
-		if (args && args[0]) 
-		{
-			if (!ft_strcmp(args[0], "env"))
-				print_env(minishell);
-			else if (!ft_strcmp(args[0], "pwd"))
-				print_pwd();
-			else if (!ft_strcmp(args[0], "echo"))
-				print_echo(args);
-		}
+		if (minishell->cmd_list)
+		execute_builtin(minishell->cmd_list, minishell);
 		free(input);
 	}
 }
+
+//add-on chloe
+
+void	execute_builtin(t_cmd *cmd, t_ms *minishell)
+{
+	char *cmd_name;
+
+	if (!cmd || !cmd->token)
+		return;
+	cmd_name = cmd->token->value;
+	if (!ft_strcmp(cmd_name, "echo"))
+		print_echo(cmd);
+	else if (!ft_strcmp(cmd_name, "pwd"))
+		print_pwd();
+	else if (!ft_strcmp(cmd_name, "env"))
+		print_env(minishell);
+	else if (!ft_strcmp(cmd_name, "cd"))
+	{
+		printf("going in there\n");
+		cd(minishell);
+	}
+}
+
 
 int	main(int ac, char **av, char **envp)
 {

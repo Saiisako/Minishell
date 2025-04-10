@@ -6,30 +6,32 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:43:03 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/04/05 16:45:52 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/04/10 16:44:44 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	print_echo(char **args)
+void	print_echo(t_cmd *cmd)
 {
-	int	i;
-	int	newline;
-	
-	newline = 1;
-	i = 1;
-	if (args[i] && ft_strcmp(args[1], "-n") == 0)
+	t_token	*token;
+	int		newline = 1;
+	bool	first = true;
+
+	token = cmd->token->next;
+	if (token && token->type == WORD && ft_strcmp(token->value, "-n") == 0)
 	{
 		newline = 0;
-		i++;
+		token = token->next;
 	}
-	while (args[i])
+
+	while (token && token->type == WORD)
 	{
-		ft_printf("%s", args[i]);
-		if (args[i + 1])
+		if (!first)
 			ft_printf(" ");
-		i++;
+		ft_printf("%s", token->value);
+		first = false;
+		token = token->next;
 	}
 	if (newline)
 		ft_printf("\n");
