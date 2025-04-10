@@ -1,6 +1,6 @@
 NAME = minishell
 CC = cc
-FLAGS = -Wall -Werror -Wextra -g -fsanitize=address
+FLAGS = -Wall -Werror -Wextra #-g -fsanitize=address
 RM = rm -rf
 LIBFT = library/libft/libft.a
 LIBFT_FLAGS = -L./library/libft -lft
@@ -20,6 +20,7 @@ SRCS	=	main.c\
 			parsing/expander_end.c\
 			parsing/expander_lst.c\
 			parsing/free_expand.c\
+			parsing/expand_heredoc.c\
 			execution/exec.c\
 			builtin/env.c\
 			builtin/pwd.c\

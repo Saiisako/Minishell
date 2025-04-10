@@ -1,0 +1,3 @@
+salut $USER, comment ca va ? $HOME
+Oui ca va
+ceci est un heredoc modifié car je peux expandre$USERdwdw !

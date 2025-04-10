@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/04/05 15:27:05 by skock            ###   ########.fr       */
+/*   Updated: 2025/04/10 09:21:34 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,15 @@ void	expand_add_back(t_token **lst, t_token *new);
 t_token	*new_expand(char *str);
 void	join_expand(t_ms *minishell, int index);
 void	expand(t_ms *minishell);
+
+// HEREDOC EXPANDER
+
+void	do_expand_heredoc(char **value, t_ms *minishell);
+void	dollar_expand_heredoc(char *value, t_ms *minishell, int *i);
+void	word_expand_heredoc(char *value, t_ms *minishell, int *i);
+void	expand_heredoc(t_ms *minishell);
+void	join_expand_heredoc(t_ms *minishell, char **heredoc, int index);
+
 
 // CLEAR QUOTE
 
