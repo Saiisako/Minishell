@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/04/10 16:48:14 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/04/11 17:53:57 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ t_token	*new_expand(char *str);
 void	join_expand(t_ms *minishell, int index);
 void	expand(t_ms *minishell);
 
-// CLEAR QUOTE
+// CLEAR*get_last_dir(char *path) QUOTE
 
 char	*quote_rmv(const char *str);
 void	clear_quote(t_ms *minishell);
@@ -150,7 +150,7 @@ void	exec_line(t_ms *minishell);
 
 // CD
 
-void	cd(t_ms *minishell);
+void	cd(t_cmd *cmd, t_ms *ms);
 // void	cd(t_ms *minishell, char *input);
 void	update_pwd(t_ms *minishell);
 void	go_tilde(t_ms *minishell);
@@ -173,6 +173,7 @@ void	print_pwd(void);
 
 void	print_echo(t_cmd *cmd);
 void	execute_builtin(t_cmd *cmd, t_ms *minishell);
+char	*get_last_dir(char *path);
 
 ///////////////// PRINT /////////////////
 

@@ -26,6 +26,7 @@ SRCS	=	main.c\
 			builtin/cd.c\
 			builtin/cd_utils.c\
 			builtin/echo.c\
+			builtin/exit.c\
 
 RED = \033[0;31m
 GREEN = \033[0;32m

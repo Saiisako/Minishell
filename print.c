@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   print.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/29 13:20:02 by skock             #+#    #+#             */
-/*   Updated: 2025/04/05 15:18:23 by skock            ###   ########.fr       */
+/*   Updated: 2025/04/10 17:01:57 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	print_cmd(t_cmd *cmd)
 		printf("////// CMD %d///////\n", i++);
 		printf("infile fd = %d\n", tmp_cmd->infile_fd);
 		printf("outfile fd = %d\n", tmp_cmd->outfile_fd);
-		printf("PID = %d\n", tmp_cmd->pid);
+		printf("PID= %d\n", tmp_cmd->pid);
 		printf("PATH = %s\n", tmp_cmd->path);
 		printf(" //// TOKEN /////\n");
 		tmp_token = tmp_cmd->token;
