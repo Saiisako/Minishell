@@ -31,6 +31,7 @@ SRCS	=	ft_split.c\
 			../gnl/get_next_line_utils.c\
 			ft_substr.c\
 			ft_strrchr.c\
+			ft_strchr.c\
 
 OBJS = $(SRCS:.c=.o)
 

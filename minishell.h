@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/04/11 17:53:57 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/04/30 13:22:13 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ typedef struct s_cmd
 	char			*path;
 	int				infile_fd;
 	int				outfile_fd;
+	bool			is_pipe; //
+	bool			is_redir; //
 	pid_t			pid;
 	struct s_token	*token;
 	struct s_cmd	*next;
@@ -80,6 +82,7 @@ typedef struct s_ms
 	t_token		*token;
 	t_token		*expand;
 	t_cmd		*cmd_list;
+	int			pipe_fd[2]; //
 }				t_ms;
 
 ///////////////// PARSING /////////////////
@@ -130,7 +133,7 @@ t_token	*new_expand(char *str);
 void	join_expand(t_ms *minishell, int index);
 void	expand(t_ms *minishell);
 
-// CLEAR*get_last_dir(char *path) QUOTE
+// CLEAR
 
 char	*quote_rmv(const char *str);
 void	clear_quote(t_ms *minishell);
@@ -144,14 +147,29 @@ t_cmd	*new_cmd(void);
 
 ///////////////// EXECUTION /////////////////
 
-void	exec_line(t_ms *minishell);
+char	**tokens_to_args(t_token *token);
+int		execute_pipeline(t_ms *minishell);
+int		process_redirections(t_ms *minishell);
+char	*find_command_path(char *cmd, t_env *env);
+bool	is_builtin(char *cmd);
+char	*get_env_value(t_env *env, char *key);
+char	*ft_strjoin3(char *s1, char *s2, char *s3);
+void	free_array(char **array);
+void	reset_commands(t_ms *minishell);
+int		run_builtin_command(t_ms *minishell, t_cmd *temp_cmd, char **args);
+int		create_token_chain(t_token *first_token, char **args);
+int		setup_pipes(t_cmd *cmd, int *pipe_fd, int *prev_pipe);
+int		execute_cmd(t_ms *ms, t_cmd *cmd, char **args, int *pipe_fd, int prev, int *status);
+void	update_fds(t_cmd *cmd, int *pipe_fd, int *prev_pipe);
+int		wait_all_children(t_ms *ms, int last_pid, int last_status);
 
 ///////////////// BUILTIN /////////////////
+
+int execute_builtin(t_ms *minishell, char **args);
 
 // CD
 
 void	cd(t_cmd *cmd, t_ms *ms);
-// void	cd(t_ms *minishell, char *input);
 void	update_pwd(t_ms *minishell);
 void	go_tilde(t_ms *minishell);
 void	go_back(t_ms *minishell);
@@ -160,6 +178,7 @@ void	go_old(t_ms *minishell);
 char	*get_oldpwd(t_ms *minishell);
 char	*get_last_folder(char *path);
 char	*get_user(t_ms *minishell);
+char	*get_last_dir(char *path);
 
 // ENV
 
@@ -172,8 +191,25 @@ void	print_pwd(void);
 // ECHO
 
 void	print_echo(t_cmd *cmd);
-void	execute_builtin(t_cmd *cmd, t_ms *minishell);
-char	*get_last_dir(char *path);
+
+// EXIT
+
+void	ft_exit(t_cmd *cmd, t_ms *minishell);
+
+// EXPORT
+
+void	ft_export(t_ms *ms, t_cmd *cmd);
+void	export_set_var(t_ms *ms, char *arg);
+int		env_update_or_add(t_env **env_lst, char *key, char *value);
+void	update_envp(t_ms *ms);
+void	export_print_sorted(t_env *env_lst);
+char	*concat_env_var(char *key, char *value);
+
+// UNSET
+
+int		valid_name(const char *str);
+void	ft_unset(t_ms *ms, t_cmd *cmd);
+void	unset_var(t_ms *ms, char *key);
 
 ///////////////// PRINT /////////////////
 
@@ -184,5 +220,9 @@ void	print_expand(t_ms *minishell);
 ///////////////// FREE /////////////////
 
 void	free_expand_list(t_ms *minishell);
+void	free_env(t_ms *minishell); //
+void	free_token_list(t_token *token);
+void	free_cmd_list(t_cmd *cmd);
+void	free_minishell(t_ms *minishell);
 
 #endif
