@@ -22,10 +22,19 @@ SRCS	=	main.c\
 			parsing/free_expand.c\
 			parsing/expand_heredoc.c\
 			execution/exec.c\
+			execution/free.c\
+			execution/create_path.c\
+			execution/exec_utils.c\
+			execution/exec_redirection.c\
 			builtin/env.c\
 			builtin/pwd.c\
 			builtin/cd.c\
 			builtin/cd_utils.c\
+			builtin/echo.c\
+			builtin/exit.c\
+			builtin/export.c\
+			builtin/unset.c\
+
 
 RED = \033[0;31m
 GREEN = \033[0;32m
