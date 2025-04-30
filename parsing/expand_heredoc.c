@@ -1,4 +1,5 @@
 
+
 #include "../minishell.h"
 
 void	join_expand_heredoc(t_ms *minishell, char **heredoc, int index)
