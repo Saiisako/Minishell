@@ -3,18 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/04/30 13:21:31 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/04/30 14:15:31 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	print_error_message(const char *msg)
+void	print_error_message(const char *msg, t_ms *minishell)
 {
-	printf("%s\n", msg);
+	char	*special;
+
+	if (minishell->first_special != 69 && minishell->second_special != 69)
+	{
+		if (minishell->second_special == HEREDOC)
+			special = ft_strdup("<<");
+		if (minishell->second_special == APPEND)
+			special = ft_strdup(">>");
+		if (minishell->second_special == REDIR_IN)
+			special = ft_strdup("<");
+		if (minishell->second_special == REDIR_OUT)
+			special = ft_strdup(">");
+		if (minishell->second_special == PIPE)
+			special = ft_strdup("|");
+		printf("syntax error near unexpected token '%s'\n", special);
+	}
+	else
+		printf("%s\n", msg);
 }
 
 void	prompt(t_ms *minishell)
@@ -41,7 +58,7 @@ void	prompt(t_ms *minishell)
 			exit(0);
 		}
 		if (!parsing_input(input, minishell))
-			print_error_message("error");
+			print_error_message("error", minishell);
 		if (input && *input)
 			add_history(input);
 		if (minishell->cmd_list)
@@ -114,7 +131,7 @@ int	execute_builtin(t_ms *minishell, char **args)
 	cmd.is_redir = false;
 	cmd.pid = -1;
 	cmd.next = NULL;
-	
+
 	first_token.value = args[0];
 	first_token.is_next_space = true;
 	first_token.type = WORD;
@@ -156,6 +173,8 @@ int	main(int ac, char **av, char **envp)
 		minishell = malloc(sizeof(t_ms));
 		minishell->envp = envp;
 		minishell->is_next_space = false;
+		minishell->first_special = 69;
+		minishell->second_special = 69;
 		fill_env_cpy(minishell, envp);
 		prompt(minishell);
 		// exec_line(minishell);

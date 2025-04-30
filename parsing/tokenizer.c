@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/04/30 13:34:33 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/04/30 14:14:06 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,11 @@ int	parsing_error(t_ms *minishell)
 	while (tmp && tmp->next)
 	{
 		if (tmp->type != 1 && tmp->next->type != 1)
+		{
+			minishell->first_special = tmp->type;
+			minishell->second_special = tmp->next->type;
 			return (0);
+		}
 		tmp = tmp->next;
 	}
 	if (tmp && tmp->type != 1)
@@ -83,7 +87,7 @@ void	ft_cmd(t_ms *minishell)
 {
 	fill_cmd_lst(minishell);
 	cut_weird(minishell->cmd_list);
-	exec_line(minishell);
+	print_cmd(minishell->cmd_list);
 }
 
 char	**malloc_file(char *filepath)

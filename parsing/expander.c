@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:02:46 by skock             #+#    #+#             */
-/*   Updated: 2025/04/10 09:41:23 by skock            ###   ########.fr       */
+/*   Updated: 2025/04/30 14:31:17 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ void	do_expand(char *value, t_ms *minishell, int index)
 		i++;
 	}
 	expand(minishell);
+	print_expand(minishell);
 	join_expand(minishell, index);
 }
 

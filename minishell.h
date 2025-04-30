@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/04/30 13:36:04 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/04/30 14:05:54 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,8 @@ typedef struct s_ms
 	t_token		*expand;
 	t_cmd		*cmd_list;
 	int			pipe_fd[2]; //
+	t_type		first_special;
+	t_type		second_special;
 }				t_ms;
 
 ///////////////// PARSING /////////////////
