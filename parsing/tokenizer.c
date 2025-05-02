@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/04/30 14:14:06 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/02 11:57:33 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void	ft_cmd(t_ms *minishell)
 {
 	fill_cmd_lst(minishell);
 	cut_weird(minishell->cmd_list);
-	print_cmd(minishell->cmd_list);
+	// print_cmd(minishell->cmd_list);
 }
 
 char	**malloc_file(char *filepath)
