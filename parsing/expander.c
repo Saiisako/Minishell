@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:02:46 by skock             #+#    #+#             */
-/*   Updated: 2025/05/02 11:34:26 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/02 11:48:30 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ void expand(t_ms *minishell)
 			free(tmp2->value);
 			tmp2->value = ft_strdup("");
 		}
-
 		tmp2 = tmp2->next;
 	}
 	return;
@@ -73,6 +72,12 @@ void	do_expand(char *value, t_ms *minishell, int index)
 	{
 		if (value[i] == '$')
 		{
+			if (value[i + 1] == '?')
+			{
+				fill_expand_lst(minishell, ft_itoa(minishell->status));
+				i++;
+				i++;
+			}
 			dollar_expand(value, minishell, &i);
 			if (!value[i])
 				break ;

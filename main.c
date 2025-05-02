@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/04/30 14:15:31 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/02 11:40:25 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,6 +175,7 @@ int	main(int ac, char **av, char **envp)
 		minishell->is_next_space = false;
 		minishell->first_special = 69;
 		minishell->second_special = 69;
+		minishell->status = 0;
 		fill_env_cpy(minishell, envp);
 		prompt(minishell);
 		// exec_line(minishell);
