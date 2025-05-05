@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/05/02 11:57:33 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/05 14:03:47 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,9 @@ int	parsing_error(t_ms *minishell)
 	}
 	if (tmp && tmp->type != 1)
 		return (0);
+	tmp = minishell->token;
+	if (tmp && tmp->type == PIPE)
+		return (0);
 	return (1);
 }
 
@@ -87,52 +90,40 @@ void	ft_cmd(t_ms *minishell)
 {
 	fill_cmd_lst(minishell);
 	cut_weird(minishell->cmd_list);
-	// print_cmd(minishell->cmd_list);
+	print_cmd(minishell->cmd_list);
 }
 
 char	**malloc_file(char *filepath)
 {
 	int		fd;
 	int		i;
-	char	**lines;
 	char	*line;
+	char	**lines;
 	char	**tmp;
 
 	fd = open(filepath, O_RDONLY);
 	if (fd < 0)
 		return (NULL);
-
 	lines = malloc(sizeof(char *) * 1);
-	if (!lines)
-		return (NULL);
-
 	lines[0] = NULL;
-
 	i = 0;
 	line = get_next_line(fd);
 	while (line)
 	{
 		tmp = malloc(sizeof(char *) * (i + 2));
-		if (!tmp)
-			return (NULL);
-
 		int j = 0;
 		while (j < i)
 		{
 			tmp[j] = lines[j];
 			j++;
 		}
-
 		tmp[i] = line;
 		tmp[i + 1] = NULL;
-
 		free(lines);
 		lines = tmp;
-
 		i++;
 		line = get_next_line(fd);
 	}
-
 	close(fd);
 	return (lines);
 }

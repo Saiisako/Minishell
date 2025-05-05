@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/04/30 14:05:54 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/05 13:01:59 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ typedef struct s_ms
 	int			pipe_fd[2]; //
 	t_type		first_special;
 	t_type		second_special;
+	bool		go_cmd;
 }				t_ms;
 
 ///////////////// PARSING /////////////////

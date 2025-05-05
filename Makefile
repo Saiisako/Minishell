@@ -1,6 +1,6 @@
 NAME = minishell
 CC = cc
-FLAGS = -Wall -Werror -Wextra #-g -fsanitize=address
+FLAGS = -Wall -Werror -Wextra -g -fsanitize=address
 RM = rm -rf
 LIBFT = library/libft/libft.a
 LIBFT_FLAGS = -L./library/libft -lft
@@ -34,7 +34,6 @@ SRCS	=	main.c\
 			builtin/exit.c\
 			builtin/export.c\
 			builtin/unset.c\
-
 
 RED = \033[0;31m
 GREEN = \033[0;32m

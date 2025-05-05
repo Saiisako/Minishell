@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand_heredoc.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/05 10:38:06 by skock             #+#    #+#             */
+/*   Updated: 2025/05/05 10:38:15 by skock            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../minishell.h"
 
@@ -25,7 +36,6 @@ void	join_expand_heredoc(t_ms *minishell, char **heredoc, int index)
 	heredoc[index] = ft_strdup(word_expand);
 	free(word_expand);
 }
-
 
 void	expand_heredoc(t_ms *minishell)
 {

@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/02 11:40:25 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/05 13:04:00 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void	print_error_message(const char *msg, t_ms *minishell)
 	}
 	else
 		printf("%s\n", msg);
+	// minishell->go_cmd == false;
 }
 
 void	prompt(t_ms *minishell)
@@ -58,7 +59,10 @@ void	prompt(t_ms *minishell)
 			exit(0);
 		}
 		if (!parsing_input(input, minishell))
+		{
 			print_error_message("error", minishell);
+			continue;
+		}
 		if (input && *input)
 			add_history(input);
 		if (minishell->cmd_list)
@@ -176,6 +180,7 @@ int	main(int ac, char **av, char **envp)
 		minishell->first_special = 69;
 		minishell->second_special = 69;
 		minishell->status = 0;
+		minishell->go_cmd = true;
 		fill_env_cpy(minishell, envp);
 		prompt(minishell);
 		// exec_line(minishell);

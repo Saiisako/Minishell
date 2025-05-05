@@ -9,3 +9,9 @@ PARSING :
 EXE :
 - si le path n'existe pas doit renvoyer un message d'erreur ! a mon avis comme chaque chose de l'env dailleurs
 gerer des les debut les caractere speciaux
+
+
+env -i recup CWD
+si besoin : TERM environment variable not set.
+env | grep SHLVL
+gerer le $ seul. ou quil soit a la fin.

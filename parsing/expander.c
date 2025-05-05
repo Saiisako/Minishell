@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:02:46 by skock             #+#    #+#             */
-/*   Updated: 2025/05/02 11:57:28 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/05 14:55:58 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,11 @@ void expand(t_ms *minishell)
 	while (tmp2)
 	{
 		tmp_env = minishell->env_lst;
-		int found = 0;
+		int	found = 0;
 		while (tmp_env)
 		{
+			if (tmp2->value[0] != '$')
+				break ;
 			if (!ft_strcmp(tmp_env->key, tmp2->value + 1))
 			{
 				free(tmp2->value);
@@ -62,7 +64,6 @@ void expand(t_ms *minishell)
 	return;
 }
 
-
 void	do_expand(char *value, t_ms *minishell, int index)
 {
 	int	i;
@@ -70,14 +71,14 @@ void	do_expand(char *value, t_ms *minishell, int index)
 	i = 0;
 	while (value[i])
 	{
-		if (value[i] == '$')
+		if (value[i] == '$' && value[i + 1] == '?')
 		{
-			if (value[i + 1] == '?')
-			{
 				fill_expand_lst(minishell, ft_itoa(minishell->status));
 				i++;
 				i++;
-			}
+		}
+		if (value[i] == '$')
+		{
 			dollar_expand(value, minishell, &i);
 			if (!value[i])
 				break ;
@@ -91,7 +92,6 @@ void	do_expand(char *value, t_ms *minishell, int index)
 		i++;
 	}
 	expand(minishell);
-	// print_expand(minishell);
 	join_expand(minishell, index);
 }
 
