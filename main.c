@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/05 13:04:00 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/06 12:38:44 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,20 @@ void	prompt(t_ms *minishell)
 			exit(0);
 		}
 		if (!parsing_input(input, minishell))
-		{
-			print_error_message("error", minishell);
-			continue;
-		}
+ 		{
+ 			print_error_message("error", minishell);
+ 			continue;
+ 		}
 		if (input && *input)
 			add_history(input);
+		if (setup_heredocs(minishell->cmd_list) < 0) //
+		{
+			print_error_message("heredoc failed", minishell);
+			free(input);
+			free_env(minishell);
+			free(minishell);
+			exit(1);
+		}
 		if (minishell->cmd_list)
 			execute_pipeline(minishell);
 		free(input);
@@ -186,5 +194,6 @@ int	main(int ac, char **av, char **envp)
 		// exec_line(minishell);
 		return (0);
 	}
+	return (1);
 	return (1);
 }
