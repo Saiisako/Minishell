@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/06 11:34:55 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/06 12:22:29 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,9 @@ typedef struct s_ms
 	t_token		*expand;
 	t_cmd		*cmd_list;
 	int			pipe_fd[2]; //
+	t_type		first_special;
+	t_type		second_special;
+	bool		go_cmd;
 }				t_ms;
 
 ///////////////// PARSING /////////////////

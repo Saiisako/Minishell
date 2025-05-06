@@ -6,15 +6,33 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/06 11:30:08 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/06 12:21:57 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	print_error_message(const char *msg)
+void	print_error_message(const char *msg, t_ms *minishell)
 {
-	printf("%s\n", msg);
+	char	*special;
+
+	if (minishell->first_special != 69 && minishell->second_special != 69)
+	{
+		if (minishell->second_special == HEREDOC)
+			special = ft_strdup("<<");
+		if (minishell->second_special == APPEND)
+			special = ft_strdup(">>");
+		if (minishell->second_special == REDIR_IN)
+			special = ft_strdup("<");
+		if (minishell->second_special == REDIR_OUT)
+			special = ft_strdup(">");
+		if (minishell->second_special == PIPE)
+			special = ft_strdup("|");
+		printf("syntax error near unexpected token '%s'\n", special);
+	}
+	else
+		printf("%s\n", msg);
+	// minishell->go_cmd == false;
 }
 
 void	prompt(t_ms *minishell)
@@ -41,12 +59,15 @@ void	prompt(t_ms *minishell)
 			exit(0);
 		}
 		if (!parsing_input(input, minishell))
-			print_error_message("error");
+ 		{
+ 			print_error_message("error", minishell);
+ 			continue;
+ 		}
 		if (input && *input)
 			add_history(input);
 		if (setup_heredocs(minishell->cmd_list) < 0) //
 		{
-			print_error_message("heredoc failed");
+			print_error_message("heredoc failed", minishell);
 			free(input);
 			free_env(minishell);
 			free(minishell);
@@ -164,10 +185,15 @@ int	main(int ac, char **av, char **envp)
 		minishell = malloc(sizeof(t_ms));
 		minishell->envp = envp;
 		minishell->is_next_space = false;
+		minishell->first_special = 69;
+		minishell->second_special = 69;
+		minishell->status = 0;
+		minishell->go_cmd = true;
 		fill_env_cpy(minishell, envp);
 		prompt(minishell);
 		// exec_line(minishell);
 		return (0);
 	}
+	return (1);
 	return (1);
 }
