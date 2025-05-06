@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/04/30 13:36:04 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/06 11:34:55 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ typedef struct s_cmd
 	char			*path;
 	int				infile_fd;
 	int				outfile_fd;
+	int				heredoc_fd;
 	bool			is_pipe; //
 	bool			is_redir; //
 	pid_t			pid;
@@ -156,25 +157,41 @@ t_cmd	*new_cmd(void);
 
 ///////////////// EXECUTION /////////////////
 
-char	**tokens_to_args(t_token *token);
 int		execute_pipeline(t_ms *minishell);
-int		process_redirections(t_ms *minishell);
-char	*find_command_path(char *cmd, t_env *env);
-bool	is_builtin(char *cmd);
-char	*get_env_value(t_env *env, char *key);
-char	*ft_strjoin3(char *s1, char *s2, char *s3);
 void	free_array(char **array);
-void	reset_commands(t_ms *minishell);
-int		run_builtin_command(t_ms *minishell, t_cmd *temp_cmd, char **args);
 int		create_token_chain(t_token *first_token, char **args);
 int		setup_pipes(t_cmd *cmd, int *pipe_fd, int *prev_pipe);
 int		execute_cmd(t_ms *ms, t_cmd *cmd, char **args, int *pipe_fd, int prev, int *status);
 void	update_fds(t_cmd *cmd, int *pipe_fd, int *prev_pipe);
 int		wait_all_children(t_ms *ms, int last_pid, int last_status);
+int		execute_pipeline(t_ms *minishell);
+int		handle_command(t_ms *ms, t_cmd *cmd, int pipe_fd[2], int *prev_pipe, int *status);
+int		handle_empty_cmd(t_cmd *cmd, int *prev_pipe, int pipe_fd[2]);
+void	print_cmd_not_found(char *cmd);
+void	cleanup_pipes(t_cmd *cmd, int pipe_fd[2], int *prev_pipe);
+
+// REDIRECTION
+
+int		process_redirections(t_ms *minishell);
+void	handle_redirections(t_cmd *cmd, int prev_pipe, int *pipe_fd);
+
+// PATH
+
+char	*find_command_path(char *cmd, t_env *env);
+char	**tokens_to_args(t_token *token);
+char	*get_env_value(t_env *env, char *key);
+char	*ft_strjoin3(char *s1, char *s2, char *s3);
+
+// HEREDOC //
+
+int	create_heredoc(char *limiter);
+int	setup_heredocs(t_cmd *cmd_list);
 
 ///////////////// BUILTIN /////////////////
 
-int execute_builtin(t_ms *minishell, char **args);
+bool	is_builtin(char *cmd);
+int		execute_builtin(t_ms *minishell, char **args);
+int		run_builtin_command(t_ms *minishell, t_cmd *temp_cmd, char **args);
 
 // CD
 
