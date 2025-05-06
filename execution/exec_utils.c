@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 16:14:03 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/06 11:29:07 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/06 12:57:38 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ bool is_builtin(char *cmd)
 }
 void print_cmd_not_found(char *cmd)
 {
-	ft_putstr_fd("minishell: command not found: ", 2);
 	ft_putstr_fd(cmd, 2);
+	ft_putstr_fd(": command not found", 2);
 	write(2, "\n", 1);
 }
 

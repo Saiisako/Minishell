@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/06 12:38:44 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/06 14:15:31 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	prompt(t_ms *minishell)
  		}
 		if (input && *input)
 			add_history(input);
-		if (setup_heredocs(minishell->cmd_list) < 0) //
+		if (setup_heredocs(minishell->cmd_list, minishell) < 0) //
 		{
 			print_error_message("heredoc failed", minishell);
 			free(input);
