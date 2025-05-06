@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/06 14:12:33 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/06 15:50:14 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,6 +224,7 @@ void	print_echo(t_cmd *cmd);
 // EXIT
 
 void	ft_exit(t_cmd *cmd, t_ms *minishell);
+int		double_sign(char *str);
 
 // EXPORT
 

@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/06 14:15:31 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/06 15:19:54 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,10 @@ void	print_error_message(const char *msg, t_ms *minishell)
 			special = ft_strdup(">");
 		if (minishell->second_special == PIPE)
 			special = ft_strdup("|");
-		printf("syntax error near unexpected token '%s'\n", special);
+		ft_printf("syntax error near unexpected token '%s'\n", special);
 	}
 	else
-		printf("%s\n", msg);
+		ft_printf("%s\n", msg);
 	// minishell->go_cmd == false;
 }
 
@@ -53,7 +53,7 @@ void	prompt(t_ms *minishell)
 		free(full_prompt);
 		if (!input)
 		{
-			printf("CTRL + D\n");
+			ft_printf("CTRL + D\n");
 			free_env(minishell);
 			free(minishell);
 			exit(0);

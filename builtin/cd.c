@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 14:08:59 by skock             #+#    #+#             */
-/*   Updated: 2025/04/11 17:54:11 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/06 15:28:45 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	go_root(t_ms *minishell)
 
 void	go_old(t_ms *minishell)
 {
-	printf("here\n");
+	// printf("here\n");
 	chdir(get_oldpwd(minishell));
 	update_pwd(minishell);
 }
@@ -75,5 +75,8 @@ void	cd(t_cmd *cmd, t_ms *ms)
 		return ;
 	}
 	else
-		printf("minishell: cd: %s: No such file or directory\n", arg->value);
+	{
+		ft_printf("minishell: cd: %s: No such file or directory\n", arg->value);
+		exit(1);
+	}
 }
