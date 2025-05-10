@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/10 17:30:57 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/10 17:36:50 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,23 +184,29 @@ char	*get_last_dir(char *path)
 	return (last_slash + 1);
 }
 
+void	setup_minishell(t_ms **minishell, char **envp)
+{
+		*minishell = malloc(sizeof(t_ms));
+		if (!minishell)
+			exit(1);
+		(*minishell)->envp = envp;
+		(*minishell)->is_next_space = false;
+		(*minishell)->first_special = 69;
+		(*minishell)->second_special = 69;
+		(*minishell)->status = 0;
+		(*minishell)->go_cmd = true;
+		(*minishell)->unexpected = false;
+}
+
 int	main(int ac, char **av, char **envp)
 {
 	t_ms	*minishell;
 
+	minishell = NULL;
 	(void)av;
 	if (ac == 1)
 	{
-		minishell = malloc(sizeof(t_ms));
-		if (!minishell)
-			return (1);
-		minishell->envp = envp;
-		minishell->is_next_space = false;
-		minishell->first_special = 69;
-		minishell->second_special = 69;
-		minishell->status = 0;
-		minishell->go_cmd = true;
-		minishell->unexpected = false;
+		setup_minishell(&minishell, envp);
 		fill_env_cpy(minishell, envp);
 		prompt(minishell);
 		free_minishell(minishell);
