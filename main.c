@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/10 14:46:50 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/10 16:51:01 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ int	create_token_chain(t_token *first_token, char **args)
 int	run_builtin_command(t_ms *minishell, t_cmd *cmd, char **args)
 {
 	int	result = 0;
-	
+
 	if (!ft_strcmp(args[0], "echo"))
 		print_echo(cmd);
 	else if (!ft_strcmp(args[0], "cd"))
@@ -203,7 +203,6 @@ int	main(int ac, char **av, char **envp)
 		minishell->unexpected = false;
 		fill_env_cpy(minishell, envp);
 		prompt(minishell);
-		// exec_line(minishell);
 		free_minishell(minishell);
 		return (0);
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:02:46 by skock             #+#    #+#             */
-/*   Updated: 2025/05/06 12:39:52 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/10 16:56:55 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,11 @@ void expand(t_ms *minishell)
 	{
 		tmp_env = minishell->env_lst;
 		int	found = 0;
+		if (!ft_strcmp(tmp2->value, "$"))
+		{
+			tmp2 = tmp2->next;
+			continue;
+		}
 		while (tmp_env)
 		{
 			if (tmp2->value[0] != '$')
@@ -95,6 +100,32 @@ void	do_expand(char *value, t_ms *minishell, int index)
 	join_expand(minishell, index);
 }
 
+void	delete_token(t_ms *minishell, char *value)
+{
+	t_token	*tmp;
+	t_token	*prev;
+
+	tmp = minishell->token;
+	prev = NULL;
+
+	while (tmp)
+	{
+		if (!ft_strcmp(tmp->value, value))
+		{
+			if (prev == NULL)
+				minishell->token = tmp->next;
+			else
+				prev->next = tmp->next;
+			free(tmp->value);
+			free(tmp);
+			return;
+		}
+		prev = tmp;
+		tmp = tmp->next;
+	}
+}
+
+
 void	expand_token(t_token *token, t_ms *minishell)
 {
 	t_token	*tmp;
@@ -107,7 +138,14 @@ void	expand_token(t_token *token, t_ms *minishell)
 			tmp = tmp->next;
 		else if (tmp->type == WORD)
 		{
+			if (!ft_strcmp("$", tmp->value))
+			{
+				tmp = tmp->next;
+				continue ;
+			}
 			do_expand(tmp->value, minishell, tmp->index);
+			if (!ft_strcmp(tmp->value, ""))
+				delete_token(minishell, tmp->value);
 			tmp = tmp->next;
 		}
 		else if (tmp->type == D_QUOTE)
