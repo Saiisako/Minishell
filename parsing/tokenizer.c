@@ -6,11 +6,24 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/05/06 15:29:03 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/10 14:37:46 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	verif_first_token(t_ms *minishell)
+{
+	t_token	*tmp;
+
+	tmp = minishell->token;
+	if (tmp->type != WORD && tmp->type != D_QUOTE && tmp->type != S_QUOTE && !tmp->next)
+	{
+		minishell->unexpected = true;
+		return (1);
+	}
+	return (0);
+}
 
 void	select_is_space(t_ms *minishell)
 {
@@ -33,6 +46,7 @@ void	select_is_space(t_ms *minishell)
 		}
 		tmp = tmp->next;
 	}
+	tmp = minishell->token;
 }
 
 void	select_type(t_ms *minishell)

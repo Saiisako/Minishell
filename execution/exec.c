@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:34:45 by skock             #+#    #+#             */
-/*   Updated: 2025/05/10 05:52:35 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/10 14:10:57 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,9 +125,9 @@ int	execute_cmd(t_ms *minishell, t_cmd *cmd, char **args, int *pipe_fd, int prev
 		execve(cmd->path, args, minishell->envp);
 		if (errno == EACCES)
 		{
-			ft_putstr_fd("minishell: permission denied: ", 2);
+			ft_putstr_fd("minishell: ", 2);
 			ft_putstr_fd(args[0], 2);
-			ft_putchar_fd('\n', 2);
+			ft_putstr_fd(": Permission denied\n", 2);			
 			minishell->status = 126;
 			exit(minishell->status);
 		}

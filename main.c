@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/10 05:17:55 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/10 14:35:50 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,12 @@ void	print_error_message(const char *msg, t_ms *minishell)
 {
 	char	*special;
 
+	if (minishell->unexpected)
+	{
+		printf("bash: syntax error near unexpected token. \n");
+		minishell->unexpected = false;
+		return ;
+	}
 	if (minishell->first_special != 69 && minishell->second_special != 69)
 	{
 		if (minishell->second_special == HEREDOC)
@@ -28,11 +34,10 @@ void	print_error_message(const char *msg, t_ms *minishell)
 			special = ft_strdup(">");
 		if (minishell->second_special == PIPE)
 			special = ft_strdup("|");
-		ft_printf("syntax error near unexpected token '%s'\n", special);
+		printf("bash: syntax error near unexpected token '%s'\n", special);
 	}
 	else
 		ft_printf("%s\n", msg);
-	// minishell->go_cmd == false;
 }
 
 void	prompt(t_ms *minishell)
@@ -60,7 +65,7 @@ void	prompt(t_ms *minishell)
 		}
 		if (!parsing_input(input, minishell))
  		{
- 			print_error_message("error", minishell);
+ 			print_error_message("bash :", minishell);
  			continue;
  		}
 		if (input && *input)
@@ -82,8 +87,6 @@ void	prompt(t_ms *minishell)
 		free(input);
 	}
 }
-
-//add-on chloe
 
 int	create_token_chain(t_token *first_token, char **args)
 {
@@ -197,6 +200,7 @@ int	main(int ac, char **av, char **envp)
 		minishell->second_special = 69;
 		minishell->status = 0;
 		minishell->go_cmd = true;
+		minishell->unexpected = false;
 		minishell->token = NULL;
 		minishell->expand = NULL;
 		minishell->cmd_list = NULL;
