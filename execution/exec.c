@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:34:45 by skock             #+#    #+#             */
-/*   Updated: 2025/05/10 05:24:08 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/10 05:52:35 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,9 +123,20 @@ int	execute_cmd(t_ms *minishell, t_cmd *cmd, char **args, int *pipe_fd, int prev
 		if (!cmd->path)
 			exit(EXIT_FAILURE);
 		execve(cmd->path, args, minishell->envp);
-		ft_putstr_fd("minishell: ", 2);
-		perror(args[0]);
-		exit(EXIT_FAILURE);
+		if (errno == EACCES)
+		{
+			ft_putstr_fd("minishell: permission denied: ", 2);
+			ft_putstr_fd(args[0], 2);
+			ft_putchar_fd('\n', 2);
+			minishell->status = 126;
+			exit(minishell->status);
+		}
+		else
+		{
+			ft_putstr_fd("minishell: ", 2);
+			perror(args[0]);
+			exit(EXIT_FAILURE);
+		}
 	}
 	else if (cmd->pid < 0)
 	{
@@ -146,7 +157,10 @@ int	wait_all_children(t_ms *ms, int last_pid, int last_status)
 		{
 			waitpid(cmd->pid, &status, 0);
 			if (cmd->pid == last_pid && WIFEXITED(status))
+			{
 				last_status = WEXITSTATUS(status);
+				ms->status = last_status;
+			}
 		}
 		cmd = cmd->next;
 	}
