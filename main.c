@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/10 14:35:50 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/10 14:46:50 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	print_error_message(const char *msg, t_ms *minishell)
 		printf("bash: syntax error near unexpected token '%s'\n", special);
 	}
 	else
-		ft_printf("%s\n", msg);
+		printf("%s\n", msg);
 }
 
 void	prompt(t_ms *minishell)
@@ -49,7 +49,7 @@ void	prompt(t_ms *minishell)
 		char	*cwd;
 		char	*full_prompt;
 		char	*last;
-		
+
 		cwd = getcwd(NULL, 0);
 		last = get_last_dir(cwd);
 		full_prompt = ft_strjoin(last, " > ");
@@ -201,11 +201,6 @@ int	main(int ac, char **av, char **envp)
 		minishell->status = 0;
 		minishell->go_cmd = true;
 		minishell->unexpected = false;
-		minishell->token = NULL;
-		minishell->expand = NULL;
-		minishell->cmd_list = NULL;
-		minishell->pipe_fd[0] = -1;
-		minishell->pipe_fd[1] = -1;
 		fill_env_cpy(minishell, envp);
 		prompt(minishell);
 		// exec_line(minishell);

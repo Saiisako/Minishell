@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/05/10 14:37:46 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/10 14:43:22 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,8 @@ int	parsing_error(t_ms *minishell)
 	t_token	*tmp;
 
 	tmp = minishell->token;
+	if (verif_first_token(minishell))
+		return (0);
 	while (tmp && tmp->next)
 	{
 		if (tmp->type != 1 && tmp->next->type != 1)
