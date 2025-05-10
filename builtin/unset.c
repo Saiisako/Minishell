@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:38:16 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/06 14:19:23 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/10 15:35:57 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,8 @@
 void	ft_unset(t_ms *ms, t_cmd *cmd)
 {
 	t_token	*arg;
-	
-	arg = cmd->token->next;
 
+	arg = cmd->token->next;
 	while (arg)
 	{
 		if (arg->type == WORD && valid_name(arg->value))
@@ -61,7 +60,7 @@ void	unset_var(t_ms *ms, char *key)
 int	valid_name(const char *str)
 {
 	int	i;
-	
+
 	if (!str || !*str)
 		return (0);
 	i = 1;
@@ -75,4 +74,3 @@ int	valid_name(const char *str)
 	}
 	return (1);
 }
-

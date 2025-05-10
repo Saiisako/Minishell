@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/05/10 14:43:22 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/10 15:51:03 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	verif_first_token(t_ms *minishell)
 	t_token	*tmp;
 
 	tmp = minishell->token;
-	if (tmp->type != WORD && tmp->type != D_QUOTE && tmp->type != S_QUOTE && !tmp->next)
+	if (tmp && tmp->type != WORD && tmp->type != D_QUOTE && tmp->type != S_QUOTE && !tmp->next)
 	{
 		minishell->unexpected = true;
 		return (1);

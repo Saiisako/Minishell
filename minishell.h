@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/10 14:44:10 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/10 16:58:16 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,6 +211,8 @@ char	*get_oldpwd(t_ms *minishell);
 char	*get_last_folder(char *path);
 char	*get_user(t_ms *minishell);
 char	*get_last_dir(char *path);
+void	special_cd(t_token *arg, t_ms *ms);
+
 
 // ENV
 
@@ -231,12 +233,18 @@ int		double_sign(char *str);
 
 // EXPORT
 
-int		ft_export(t_ms *ms, t_cmd *cmd);
-void	export_set_var(t_ms *ms, char *arg);
-int		env_update_or_add(t_env **env_lst, char *key, char *value);
+int		env_add_new(t_env **env_lst, char *key, char *value, t_ms *ms);
+int		env_update_or_add(t_env **env_lst, char *key, char *value, t_ms *ms);
 void	update_envp(t_ms *ms);
+int		parse_export_var(char *arg, char **key, char **value);
+void	export_set_var(t_ms *ms, char *arg);
+void	fill_env_array(t_env *env_lst, t_env **array);
+void	sort_env_array(t_env **array);
+void	print_env_array(t_env **array);
 void	export_print_sorted(t_env *env_lst);
 char	*concat_env_var(char *key, char *value);
+int		process_export_arg(t_ms *ms, t_token *arg);
+int		ft_export(t_ms *ms, t_cmd *cmd);
 
 // UNSET
 
