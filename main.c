@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/10 16:51:01 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/10 17:30:57 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	print_error_message(const char *msg, t_ms *minishell)
 
 	if (minishell->unexpected)
 	{
-		printf("bash: syntax error near unexpected token. \n");
+		printf("bash: syntax error near unexpected token 'newline'\n");
 		minishell->unexpected = false;
 		return ;
 	}
@@ -65,7 +65,7 @@ void	prompt(t_ms *minishell)
 		}
 		if (!parsing_input(input, minishell))
  		{
- 			print_error_message("bash :", minishell);
+ 			print_error_message("", minishell);
  			continue;
  		}
 		if (input && *input)
