@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/06 15:19:54 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/10 05:17:55 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	prompt(t_ms *minishell)
  		}
 		if (input && *input)
 			add_history(input);
-		if (setup_heredocs(minishell->cmd_list, minishell) < 0) //
+		if (setup_heredocs(minishell->cmd_list, minishell) < 0)
 		{
 			print_error_message("heredoc failed", minishell);
 			free(input);
@@ -74,7 +74,11 @@ void	prompt(t_ms *minishell)
 			exit(1);
 		}
 		if (minishell->cmd_list)
+		{
 			execute_pipeline(minishell);
+			free_cmd_list(minishell->cmd_list);
+			minishell->cmd_list = NULL;
+		}
 		free(input);
 	}
 }
@@ -108,6 +112,8 @@ int	create_token_chain(t_token *first_token, char **args)
 
 int	run_builtin_command(t_ms *minishell, t_cmd *cmd, char **args)
 {
+	int	result = 0;
+	
 	if (!ft_strcmp(args[0], "echo"))
 		print_echo(cmd);
 	else if (!ft_strcmp(args[0], "cd"))
@@ -115,7 +121,7 @@ int	run_builtin_command(t_ms *minishell, t_cmd *cmd, char **args)
 	else if (!ft_strcmp(args[0], "pwd"))
 		print_pwd();
 	else if (!ft_strcmp(args[0], "export"))
-		ft_export(minishell, cmd);
+		result = ft_export(minishell, cmd);
 	else if (!ft_strcmp(args[0], "unset"))
 		ft_unset(minishell, cmd);
 	else if (!ft_strcmp(args[0], "env"))
@@ -123,8 +129,9 @@ int	run_builtin_command(t_ms *minishell, t_cmd *cmd, char **args)
 	else if (!ft_strcmp(args[0], "exit"))
 		ft_exit(cmd, minishell);
 	else
-		return (1);
-	return (0);
+		return (minishell->status = 1, 1);
+	minishell->status = result;
+	return (result);
 }
 
 int	execute_builtin(t_ms *minishell, char **args)
@@ -163,7 +170,6 @@ int	execute_builtin(t_ms *minishell, char **args)
 		current = current->next;
 		free(to_free);
 	}
-	
 	return (result);
 }
 
@@ -183,17 +189,24 @@ int	main(int ac, char **av, char **envp)
 	if (ac == 1)
 	{
 		minishell = malloc(sizeof(t_ms));
+		if (!minishell)
+			return (1);
 		minishell->envp = envp;
 		minishell->is_next_space = false;
 		minishell->first_special = 69;
 		minishell->second_special = 69;
 		minishell->status = 0;
 		minishell->go_cmd = true;
+		minishell->token = NULL;
+		minishell->expand = NULL;
+		minishell->cmd_list = NULL;
+		minishell->pipe_fd[0] = -1;
+		minishell->pipe_fd[1] = -1;
 		fill_env_cpy(minishell, envp);
 		prompt(minishell);
 		// exec_line(minishell);
+		free_minishell(minishell);
 		return (0);
 	}
-	return (1);
 	return (1);
 }

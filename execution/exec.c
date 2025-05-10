@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:34:45 by skock             #+#    #+#             */
-/*   Updated: 2025/05/06 11:29:33 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/10 05:24:08 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,30 +17,38 @@ int	execute_pipeline(t_ms *minishell)
 	t_cmd	*cmd = minishell->cmd_list;
 	int		pipe_fd[2];
 	int		prev_pipe = -1;
-	int		status = 0;
 	int		last_pid = -1;
+	int		redir_ok;
 
-	if (process_redirections(minishell))
-		return (1);
 	while (cmd)
 	{
+		redir_ok = 1;
+		if (process_redirections(cmd, minishell))
+		{
+			minishell->status = 1;
+			redir_ok = 0;
+		}
 		if (setup_pipes(cmd, pipe_fd, &prev_pipe))
 			return (1);
-		last_pid = handle_command(minishell, cmd, pipe_fd, &prev_pipe, &status);
+		if (redir_ok)
+			last_pid = handle_command(minishell, cmd, pipe_fd, &prev_pipe, &minishell->status);
+		else
+			cleanup_pipes(cmd, pipe_fd, &prev_pipe); 
 		cmd = cmd->next;
 	}
-	return (wait_all_children(minishell, last_pid, status));
+	return (wait_all_children(minishell, last_pid, minishell->status));
 }
 
 int	handle_command(t_ms *ms, t_cmd *cmd, int pipe_fd[2], int *prev_pipe, int *status)
 {
 	char **args = tokens_to_args(cmd->token);
+	int	pid;
 
 	if (!args || !args[0])
 	{
-		int pid = handle_empty_cmd(cmd, prev_pipe, pipe_fd);
+		pid = handle_empty_cmd(cmd, prev_pipe, pipe_fd, ms);
 		free_array(args);
-		return pid;
+		return (pid);
 	}
 	if (!is_builtin(args[0]))
 	{
@@ -50,22 +58,22 @@ int	handle_command(t_ms *ms, t_cmd *cmd, int pipe_fd[2], int *prev_pipe, int *st
 			print_cmd_not_found(args[0]);
 			free_array(args);
 			cleanup_pipes(cmd, pipe_fd, prev_pipe);
-			return -1;
+			return (ms->status = 127, -1);
 		}
 	}
-	int pid = execute_cmd(ms, cmd, args, pipe_fd, *prev_pipe, status);
+	pid = execute_cmd(ms, cmd, args, pipe_fd, *prev_pipe, status);
 	update_fds(cmd, pipe_fd, prev_pipe);
 	free_array(args);
-	return pid;
+	return (pid);
 }
 
-int	handle_empty_cmd(t_cmd *cmd, int *prev_pipe, int pipe_fd[2])
-{
+int	handle_empty_cmd(t_cmd *cmd, int *prev_pipe, int pipe_fd[2], t_ms *ms)
+{	
 	if (!cmd->is_redir)
 	{
-		ft_putstr_fd("minishell: command not found\n", 2);
+		ft_putstr_fd(": command not found", 2);
 		cleanup_pipes(cmd, pipe_fd, prev_pipe);
-		return -1;
+		return (ms->status = 127, -1);
 	}
 	int child_pid = fork();
 	if (child_pid == 0)
@@ -76,16 +84,13 @@ int	handle_empty_cmd(t_cmd *cmd, int *prev_pipe, int pipe_fd[2])
 	else if (child_pid > 0)
 		cmd->pid = child_pid;
 	cleanup_pipes(cmd, pipe_fd, prev_pipe);
-	return child_pid;
+	return (child_pid);
 }
-
 
 int	execute_cmd(t_ms *minishell, t_cmd *cmd, char **args, int *pipe_fd, int prev, int *status)
 {
 	if (!args || !args[0])
-	{
 		return (-1);
-	}
 	if (is_builtin(args[0]) && !cmd->next && prev == -1 &&
 		cmd->infile_fd == -2 && cmd->outfile_fd == -2)
 	{
@@ -147,5 +152,3 @@ int	wait_all_children(t_ms *ms, int last_pid, int last_status)
 	}
 	return (last_status);
 }
-
-

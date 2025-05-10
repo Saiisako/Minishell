@@ -25,15 +25,16 @@ void	ft_exit(t_cmd *cmd, t_ms *minishell)
 		exit_status = ft_atoi(token->value);
 		if (!double_sign(token->value))
 		{
+			ft_putstr_fd("exit\n", 2);
 			ft_putstr_fd("minishell: exit: ", 2);
-			ft_printf("%s :", token->value);
+			ft_printf("%s: ", token->value);
 			ft_putstr_fd("numeric argument required\n", 2);
-			// return;
-			exit (100);
+			exit_status = 2;
 		}
-		if (token->next) {
+		if (token->next) 
+		{
 			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
-			return;
+			exit_status = 1;
 		}
 	}
 	free_env(minishell);

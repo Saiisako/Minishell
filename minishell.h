@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/06 15:50:14 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/10 04:55:03 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,13 +169,14 @@ void	update_fds(t_cmd *cmd, int *pipe_fd, int *prev_pipe);
 int		wait_all_children(t_ms *ms, int last_pid, int last_status);
 int		execute_pipeline(t_ms *minishell);
 int		handle_command(t_ms *ms, t_cmd *cmd, int pipe_fd[2], int *prev_pipe, int *status);
-int		handle_empty_cmd(t_cmd *cmd, int *prev_pipe, int pipe_fd[2]);
+int		handle_empty_cmd(t_cmd *cmd, int *prev_pipe, int pipe_fd[2], t_ms *ms);
 void	print_cmd_not_found(char *cmd);
 void	cleanup_pipes(t_cmd *cmd, int pipe_fd[2], int *prev_pipe);
 
 // REDIRECTION
 
-int		process_redirections(t_ms *minishell);
+int	process_redirections(t_cmd *cmd, t_ms *ms);
+
 void	handle_redirections(t_cmd *cmd, int prev_pipe, int *pipe_fd);
 
 // PATH
@@ -228,7 +229,7 @@ int		double_sign(char *str);
 
 // EXPORT
 
-void	ft_export(t_ms *ms, t_cmd *cmd);
+int		ft_export(t_ms *ms, t_cmd *cmd);
 void	export_set_var(t_ms *ms, char *arg);
 int		env_update_or_add(t_env **env_lst, char *key, char *value);
 void	update_envp(t_ms *ms);
