@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/06 14:15:31 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/10 12:51:28 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,12 @@ void	print_error_message(const char *msg, t_ms *minishell)
 {
 	char	*special;
 
+	if (minishell->unexpected)
+	{
+		printf("bash: syntax error near unexpected token. \n");
+		minishell->unexpected = false;
+		return ;
+	}
 	if (minishell->first_special != 69 && minishell->second_special != 69)
 	{
 		if (minishell->second_special == HEREDOC)
@@ -28,11 +34,10 @@ void	print_error_message(const char *msg, t_ms *minishell)
 			special = ft_strdup(">");
 		if (minishell->second_special == PIPE)
 			special = ft_strdup("|");
-		printf("syntax error near unexpected token '%s'\n", special);
+		printf("bash: syntax error near unexpected token '%s'\n", special);
 	}
 	else
 		printf("%s\n", msg);
-	// minishell->go_cmd == false;
 }
 
 void	prompt(t_ms *minishell)
@@ -44,7 +49,7 @@ void	prompt(t_ms *minishell)
 		char	*cwd;
 		char	*full_prompt;
 		char	*last;
-		
+
 		cwd = getcwd(NULL, 0);
 		last = get_last_dir(cwd);
 		full_prompt = ft_strjoin(last, " > ");
@@ -60,7 +65,7 @@ void	prompt(t_ms *minishell)
 		}
 		if (!parsing_input(input, minishell))
  		{
- 			print_error_message("error", minishell);
+ 			print_error_message("bash :", minishell);
  			continue;
  		}
 		if (input && *input)
@@ -78,8 +83,6 @@ void	prompt(t_ms *minishell)
 		free(input);
 	}
 }
-
-//add-on chloe
 
 int	create_token_chain(t_token *first_token, char **args)
 {
@@ -163,7 +166,6 @@ int	execute_builtin(t_ms *minishell, char **args)
 		current = current->next;
 		free(to_free);
 	}
-	
 	return (result);
 }
 
@@ -189,6 +191,7 @@ int	main(int ac, char **av, char **envp)
 		minishell->second_special = 69;
 		minishell->status = 0;
 		minishell->go_cmd = true;
+		minishell->unexpected = false;
 		fill_env_cpy(minishell, envp);
 		prompt(minishell);
 		// exec_line(minishell);

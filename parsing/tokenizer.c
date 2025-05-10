@@ -3,14 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/05/06 12:37:23 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/10 12:52:38 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	verif_first_token(t_ms *minishell)
+{
+	t_token	*tmp;
+
+	tmp = minishell->token;
+	if (tmp->type != WORD && tmp->type != D_QUOTE && tmp->type != S_QUOTE && !tmp->next)
+	{
+		minishell->unexpected = true;
+		return (1);
+	}
+	return (0);
+}
 
 void	select_is_space(t_ms *minishell)
 {
@@ -33,6 +46,7 @@ void	select_is_space(t_ms *minishell)
 		}
 		tmp = tmp->next;
 	}
+	tmp = minishell->token;
 }
 
 void	select_type(t_ms *minishell)
@@ -68,6 +82,8 @@ int	parsing_error(t_ms *minishell)
 	t_token	*tmp;
 
 	tmp = minishell->token;
+	if (verif_first_token(minishell))
+		return (0);
 	while (tmp && tmp->next)
 	{
 		if (tmp->type != 1 && tmp->next->type != 1)
@@ -90,7 +106,7 @@ void	ft_cmd(t_ms *minishell)
 {
 	fill_cmd_lst(minishell);
 	cut_weird(minishell->cmd_list);
-	print_cmd(minishell->cmd_list);
+	// print_cmd(minishell->cmd_list);
 }
 
 char	**malloc_file(char *filepath)

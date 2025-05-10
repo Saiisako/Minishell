@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/06 14:12:33 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/10 12:45:13 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,15 +75,16 @@ typedef struct s_env
 
 typedef struct s_ms
 {
-	const char	*prompt_msg;
 	int			status;
+	int			pipe_fd[2];
 	char		**envp;
+	bool		unexpected;
+	const char	*prompt_msg;
 	bool		is_next_space;
 	t_env		*env_lst;
 	t_token		*token;
 	t_token		*expand;
 	t_cmd		*cmd_list;
-	int			pipe_fd[2];
 	t_type		first_special;
 	t_type		second_special;
 	bool		go_cmd;
