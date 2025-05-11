@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/05/10 15:50:14 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/11 19:35:27 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ int	verif_first_token(t_ms *minishell)
 	t_token	*tmp;
 
 	tmp = minishell->token;
-	if (tmp && tmp->type != WORD && tmp->type != D_QUOTE && tmp->type != S_QUOTE && !tmp->next)
+	if (tmp && tmp->type != WORD && tmp->type != D_QUOTE
+		&& tmp->type != S_QUOTE && !tmp->next)
 	{
 		minishell->unexpected = true;
 		return (1);
@@ -106,38 +107,48 @@ void	ft_cmd(t_ms *minishell)
 {
 	fill_cmd_lst(minishell);
 	cut_weird(minishell->cmd_list);
-	// print_cmd(minishell->cmd_list);
+}
+
+char	**append_line(char **lines, char *line, int count)
+{
+	char	**tmp;
+	int		i;
+
+	tmp = malloc(sizeof(char *) * (count + 2));
+	if (!tmp)
+		return (NULL);
+	i = 0;
+	while (i < count)
+	{
+		tmp[i] = lines[i];
+		i++;
+	}
+	tmp[i] = line;
+	tmp[i + 1] = NULL;
+	free(lines);
+	return (tmp);
 }
 
 char	**malloc_file(char *filepath)
 {
 	int		fd;
-	int		i;
+	int		count;
 	char	*line;
 	char	**lines;
-	char	**tmp;
 
+	count = 0;
 	fd = open(filepath, O_RDONLY);
 	if (fd < 0)
 		return (NULL);
 	lines = malloc(sizeof(char *) * 1);
+	if (!lines)
+		return (NULL);
 	lines[0] = NULL;
-	i = 0;
 	line = get_next_line(fd);
-	while (line)
+	while (line != NULL)
 	{
-		tmp = malloc(sizeof(char *) * (i + 2));
-		int j = 0;
-		while (j < i)
-		{
-			tmp[j] = lines[j];
-			j++;
-		}
-		tmp[i] = line;
-		tmp[i + 1] = NULL;
-		free(lines);
-		lines = tmp;
-		i++;
+		lines = append_line(lines, line, count);
+		count++;
 		line = get_next_line(fd);
 	}
 	close(fd);
@@ -147,10 +158,9 @@ char	**malloc_file(char *filepath)
 int	parsing_input(char *input, t_ms *minishell)
 {
 	int	i;
+
 	minishell->expand = NULL;
 	minishell->token = NULL;
-
-	i = 0;
 	i = 0;
 	while (input[i])
 	{

@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:02:46 by skock             #+#    #+#             */
-/*   Updated: 2025/05/10 16:56:55 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/11 19:04:15 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	join_expand(t_ms *minishell, int index)
 	char	*word_expand;
 	t_token	*tmp;
 
+	expand(minishell);
 	size = expand_size(minishell);
 	tmp = minishell->expand;
 	word_expand = tmp->value;
@@ -31,16 +32,17 @@ void	join_expand(t_ms *minishell, int index)
 	free_expand_list(minishell);
 }
 
-void expand(t_ms *minishell)
+void	expand(t_ms *minishell)
 {
 	t_env *tmp_env;
 	t_token *tmp2;
+	int	found;
 
 	tmp2 = minishell->expand;
 	while (tmp2)
 	{
 		tmp_env = minishell->env_lst;
-		int	found = 0;
+		found = 0;
 		if (!ft_strcmp(tmp2->value, "$"))
 		{
 			tmp2 = tmp2->next;
@@ -78,9 +80,8 @@ void	do_expand(char *value, t_ms *minishell, int index)
 	{
 		if (value[i] == '$' && value[i + 1] == '?')
 		{
-				fill_expand_lst(minishell, ft_itoa(minishell->status));
-				i++;
-				i++;
+			fill_expand_lst(minishell, ft_itoa(minishell->status));
+			i += 2;
 		}
 		if (value[i] == '$')
 		{
@@ -96,7 +97,6 @@ void	do_expand(char *value, t_ms *minishell, int index)
 		}
 		i++;
 	}
-	expand(minishell);
 	join_expand(minishell, index);
 }
 
@@ -107,7 +107,6 @@ void	delete_token(t_ms *minishell, char *value)
 
 	tmp = minishell->token;
 	prev = NULL;
-
 	while (tmp)
 	{
 		if (!ft_strcmp(tmp->value, value))
@@ -125,35 +124,46 @@ void	delete_token(t_ms *minishell, char *value)
 	}
 }
 
+void	handle_word_token(t_token **tmp, t_ms *minishell)
+{
+	t_token	*next;
+
+	if (!ft_strcmp("$", (*tmp)->value))
+	{
+		*tmp = (*tmp)->next;
+		return ;
+	}
+	do_expand((*tmp)->value, minishell, (*tmp)->index);
+	if (!ft_strcmp((*tmp)->value, ""))
+	{
+		next = (*tmp)->next;
+		delete_token(minishell, (*tmp)->value);
+		*tmp = next;
+	}
+	else
+		*tmp = (*tmp)->next;
+}
+
+void	handle_token(t_token **tmp, t_ms *minishell)
+{
+	if ((*tmp)->type == S_QUOTE)
+		*tmp = (*tmp)->next;
+	else if ((*tmp)->type == WORD)
+		handle_word_token(tmp, minishell);
+	else if ((*tmp)->type == D_QUOTE)
+	{
+		do_expand((*tmp)->value, minishell, (*tmp)->index);
+		*tmp = (*tmp)->next;
+	}
+	else
+		*tmp = (*tmp)->next;
+}
 
 void	expand_token(t_token *token, t_ms *minishell)
 {
-	t_token	*tmp;
+	t_token	*tmp = token;
 
 	minishell->expand = NULL;
-	tmp = token;
 	while (tmp)
-	{
-		if (tmp->type == S_QUOTE)
-			tmp = tmp->next;
-		else if (tmp->type == WORD)
-		{
-			if (!ft_strcmp("$", tmp->value))
-			{
-				tmp = tmp->next;
-				continue ;
-			}
-			do_expand(tmp->value, minishell, tmp->index);
-			if (!ft_strcmp(tmp->value, ""))
-				delete_token(minishell, tmp->value);
-			tmp = tmp->next;
-		}
-		else if (tmp->type == D_QUOTE)
-		{
-			do_expand(tmp->value, minishell, tmp->index);
-			tmp = tmp->next;
-		}
-		else
-			tmp = tmp->next;
-	}
+		handle_token(&tmp, minishell);
 }
