@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/10 14:44:10 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/12 14:25:32 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,9 @@ void	word_token(char *input, int *i, t_ms *minishell);
 void	token_add_back(t_token **lst, t_token *new);
 void	special_token(char *input, int *i, t_ms *minishell);
 void	fill_token_list(t_ms *minishell, char *str, t_type type);
+int		verif_first_token(t_ms *minishell);
+void	select_is_space(t_ms *minishell);
+void	select_type(t_ms *minishell);
 
 // MERGER
 

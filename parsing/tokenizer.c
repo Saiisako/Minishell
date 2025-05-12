@@ -6,77 +6,11 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/05/11 19:35:27 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/12 14:25:38 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int	verif_first_token(t_ms *minishell)
-{
-	t_token	*tmp;
-
-	tmp = minishell->token;
-	if (tmp && tmp->type != WORD && tmp->type != D_QUOTE
-		&& tmp->type != S_QUOTE && !tmp->next)
-	{
-		minishell->unexpected = true;
-		return (1);
-	}
-	return (0);
-}
-
-void	select_is_space(t_ms *minishell)
-{
-	t_token	*tmp;
-
-	tmp = minishell->token;
-	while (tmp)
-	{
-		if (tmp->is_next_space == true)
-		{
-			if (tmp->type == REDIR_OUT || tmp->type == REDIR_IN
-				|| tmp->type == PIPE || tmp->type == HEREDOC
-				|| tmp->type == APPEND)
-				tmp->is_next_space = false;
-			else if (tmp->next && (tmp->type == D_QUOTE || tmp->type == S_QUOTE
-					|| tmp->type == WORD) && (tmp->next->type == REDIR_OUT
-					|| tmp->next->type == REDIR_IN || tmp->next->type == PIPE
-					|| tmp->next->type == HEREDOC || tmp->next->type == APPEND))
-				tmp->is_next_space = false;
-		}
-		tmp = tmp->next;
-	}
-	tmp = minishell->token;
-}
-
-void	select_type(t_ms *minishell)
-{
-	t_token	*tmp;
-
-	tmp = minishell->token;
-	while (tmp)
-	{
-		if (!ft_strcmp(tmp->value, ">>"))
-			tmp->type = APPEND;
-		else if (!ft_strcmp(tmp->value, "<<"))
-			tmp->type = HEREDOC;
-		else if (!ft_strcmp(tmp->value, "|"))
-			tmp->type = PIPE;
-		else if (!ft_strcmp(tmp->value, "<"))
-			tmp->type = REDIR_IN;
-		else if (!ft_strcmp(tmp->value, ">"))
-			tmp->type = REDIR_OUT;
-		else if (tmp->type == D_QUOTE)
-			tmp->type = D_QUOTE;
-		else if (tmp->type == S_QUOTE)
-			tmp->type = S_QUOTE;
-		else
-			tmp->type = WORD;
-		tmp = tmp->next;
-	}
-	select_is_space(minishell);
-}
 
 int	parsing_error(t_ms *minishell)
 {
@@ -107,52 +41,6 @@ void	ft_cmd(t_ms *minishell)
 {
 	fill_cmd_lst(minishell);
 	cut_weird(minishell->cmd_list);
-}
-
-char	**append_line(char **lines, char *line, int count)
-{
-	char	**tmp;
-	int		i;
-
-	tmp = malloc(sizeof(char *) * (count + 2));
-	if (!tmp)
-		return (NULL);
-	i = 0;
-	while (i < count)
-	{
-		tmp[i] = lines[i];
-		i++;
-	}
-	tmp[i] = line;
-	tmp[i + 1] = NULL;
-	free(lines);
-	return (tmp);
-}
-
-char	**malloc_file(char *filepath)
-{
-	int		fd;
-	int		count;
-	char	*line;
-	char	**lines;
-
-	count = 0;
-	fd = open(filepath, O_RDONLY);
-	if (fd < 0)
-		return (NULL);
-	lines = malloc(sizeof(char *) * 1);
-	if (!lines)
-		return (NULL);
-	lines[0] = NULL;
-	line = get_next_line(fd);
-	while (line != NULL)
-	{
-		lines = append_line(lines, line, count);
-		count++;
-		line = get_next_line(fd);
-	}
-	close(fd);
-	return (lines);
 }
 
 int	parsing_input(char *input, t_ms *minishell)

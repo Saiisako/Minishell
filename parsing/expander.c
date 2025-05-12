@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:02:46 by skock             #+#    #+#             */
-/*   Updated: 2025/05/11 19:04:15 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/12 11:25:38 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ void	join_expand(t_ms *minishell, int index)
 
 void	expand(t_ms *minishell)
 {
-	t_env *tmp_env;
-	t_token *tmp2;
-	int	found;
+	t_env	*tmp_env;
+	t_token	*tmp2;
+	int		found;
 
 	tmp2 = minishell->expand;
 	while (tmp2)

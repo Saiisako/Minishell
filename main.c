@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/10 17:36:50 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/12 16:57:25 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,27 @@ void	print_error_message(const char *msg, t_ms *minishell)
 	else
 		printf("%s\n", msg);
 }
+void	handle_signal(int sig)
+{
+	if (sig == SIGINT)
+	{
+		printf("\n");
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
+}
+
+void	handle_exit(int sig)
+{
+	if (sig == SIGQUIT)
+		return ;
+	// if \ in cmd core dump
+}
 
 void	prompt(t_ms *minishell)
 {
-	char	*input;
+	char				*input;
 
 	while (1)
 	{
@@ -50,6 +67,8 @@ void	prompt(t_ms *minishell)
 		char	*full_prompt;
 		char	*last;
 
+		signal(SIGINT, handle_signal);
+		signal(SIGQUIT, SIG_IGN);
 		cwd = getcwd(NULL, 0);
 		last = get_last_dir(cwd);
 		full_prompt = ft_strjoin(last, " > ");
@@ -58,7 +77,6 @@ void	prompt(t_ms *minishell)
 		free(full_prompt);
 		if (!input)
 		{
-			ft_printf("CTRL + D\n");
 			free_env(minishell);
 			free(minishell);
 			exit(0);

@@ -21,6 +21,8 @@ SRCS	=	main.c\
 			parsing/expander_lst.c\
 			parsing/free_expand.c\
 			parsing/expand_heredoc.c\
+			parsing/type_manager.c\
+			parsing/malloc_file.c\
 			execution/exec.c\
 			execution/free.c\
 			execution/create_path.c\
