@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ChloeMontaigut <ChloeMontaigut@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 16:14:03 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/10 05:16:46 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/11 17:57:53 by ChloeMontai      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ bool is_builtin(char *cmd)
 			!ft_strcmp(cmd, "unset") || !ft_strcmp(cmd, "env") || 
 			!ft_strcmp(cmd, "exit"));
 }
+
 void print_cmd_not_found(char *cmd)
 {
 	ft_putstr_fd(cmd, 2);
@@ -54,45 +55,25 @@ int	setup_pipes(t_cmd *cmd, int *pipe_fd, int *prev_pipe)
 	return (0);
 }
 
-// void	update_fds(t_cmd *cmd, int *pipe_fd, int *prev_pipe)
-// {
-// 	if (cmd->infile_fd != -2 && cmd->infile_fd != *prev_pipe)
-// 		close(cmd->infile_fd);
-// 	if (cmd->outfile_fd != -2 && (!cmd->next || cmd->outfile_fd != pipe_fd[1]))
-// 		close(cmd->outfile_fd);
-// 	if (*prev_pipe != -1)
-// 		close(*prev_pipe);
-// 	if (cmd->heredoc_fd > 0)
-// 		close(cmd->heredoc_fd);
-// 	if (cmd->next)
-// 	{
-// 		close(pipe_fd[1]);
-// 		*prev_pipe = pipe_fd[0];
-// 	}
-// }
-
 void update_fds(t_cmd *cmd, int *pipe_fd, int *prev_pipe)
 {
-    // Vérifiez que les descripteurs sont valides avant de les manipuler
-    if (cmd->infile_fd != -2 && cmd->infile_fd != *prev_pipe)
-        close(cmd->infile_fd);
-        
-    if (cmd->outfile_fd != -2 && (!cmd->next || cmd->outfile_fd != pipe_fd[1]))
-        close(cmd->outfile_fd);
-        
-    if (*prev_pipe != -1)
-        close(*prev_pipe);
-        
-    if (cmd->heredoc_fd > 0)
-        close(cmd->heredoc_fd);
-        
-    if (cmd->next && pipe_fd[1] != -1)  // Vérification ajoutée
-    {
-        close(pipe_fd[1]);
-        *prev_pipe = pipe_fd[0];
-    }
-    else
-    {
-        *prev_pipe = -1;  // Assurez-vous de réinitialiser si aucun pipe n'est créé
-    }
+	if (cmd->infile_fd != -2 && cmd->infile_fd != *prev_pipe)
+		close(cmd->infile_fd);
+		
+	if (cmd->outfile_fd != -2 && (!cmd->next || cmd->outfile_fd != pipe_fd[1]))
+		close(cmd->outfile_fd);
+		
+	if (*prev_pipe != -1)
+		close(*prev_pipe);
+		
+	if (cmd->heredoc_fd > 0)
+		close(cmd->heredoc_fd);
+		
+	if (cmd->next && pipe_fd[1] != -1)
+	{
+		close(pipe_fd[1]);
+		*prev_pipe = pipe_fd[0];
+	}
+	else
+		*prev_pipe = -1;
 }

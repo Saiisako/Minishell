@@ -3,97 +3,96 @@
 /*                                                        :::      ::::::::   */
 /*   create_path.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ChloeMontaigut <ChloeMontaigut@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 07:25:17 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/10 06:00:25 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/11 17:08:21 by ChloeMontai      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+char	*check_paths(char **paths, char *cmd)
+{
+	char	*tmp;
+	char	*full_path;
+	int		i;
+
+	i = 0;
+	while (paths[i])
+	{
+		tmp = ft_strjoin(paths[i], "/");
+		if (!tmp)
+			return (NULL);
+		full_path = ft_strjoin(tmp, cmd);
+		free(tmp);
+		if (!full_path)
+			return (NULL);
+		if (access(full_path, F_OK | X_OK) == 0)
+			return (full_path);
+		free(full_path);
+		i++;
+	}
+	return (NULL);
+}
+
 char	*find_command_path(char *cmd, t_env *env)
 {
 	char	*path_env;
 	char	**paths;
-	char	*full_path;
-	int		i;
-		
+	char	*found;
+
 	if (!cmd || !*cmd)
 		return (NULL);
 	if (ft_strchr(cmd, '/'))
 		return (ft_strdup(cmd));
 	path_env = get_env_value(env, "PATH");
-	if (!path_env)
+	if (!path_env || !(paths = ft_split(path_env, ':')))
 		return (NULL);
-	paths = ft_split(path_env, ':');
-	if (!paths)
-		return (NULL);
-	i = 0;
-	while (paths[i])
-	{
-		full_path = ft_strjoin3(paths[i], "/", cmd);
-		if (!full_path)
-		{
-			free_array(paths);
-			return (NULL);
-		}
-		if (access(full_path, F_OK | X_OK) == 0)
-		{
-			free_array(paths);
-			return (full_path);
-		}
-		free(full_path);
-		i++;
-	}
+	found = check_paths(paths, cmd);
 	free_array(paths);
-	return (NULL);
+	return (found);
 }
 
-// POUR EXVEC
+int	count_tokens(t_token *t)
+{
+	int	count = 0;
+
+	while (t && t->type != PIPE)
+	{
+		if (t->type == WORD || t->type == EXPANDING
+			|| t->type == S_QUOTE || t->type == D_QUOTE)
+			count++;
+		else if ((t->type == REDIR_IN || t->type == REDIR_OUT
+			|| t->type == APPEND || t->type == HEREDOC) && t->next)
+			t = t->next;
+		if (!t)
+			break;
+		t = t->next;
+	}
+	return (count);
+}
+
 char	**tokens_to_args(t_token *token)
 {
-	int		count;
-	t_token	*tmp;
 	char	**args;
-	int		i;
-	
-	i = 0;
-	count = 0;
-	tmp = token;
-	while (tmp && tmp->type != PIPE)
-	{
-		if (tmp->type == WORD || tmp->type == EXPANDING || 
-			tmp->type == S_QUOTE || tmp->type == D_QUOTE)
-			count++;
-		else if (tmp->type == REDIR_IN || tmp->type == REDIR_OUT || 
-				 tmp->type == APPEND || tmp->type == HEREDOC)
-			tmp = tmp->next;
-		if (!tmp) 
-			break;
-		tmp = tmp->next;
-	}
-	args = (char **)malloc(sizeof(char *) * (count + 1));
+	int		i = 0;
+	int		count = count_tokens(token);
+
+	args = malloc(sizeof(char *) * (count + 1));
 	if (!args)
 		return (NULL);
-	tmp = token;
-	while (tmp && tmp->type != PIPE)
+	while (token && token->type != PIPE)
 	{
-		if (tmp->type == WORD || tmp->type == EXPANDING || 
-			tmp->type == S_QUOTE || tmp->type == D_QUOTE)
-		{
-			args[i] = ft_strdup(tmp->value);
-			i++;
-		}
-		else if (tmp->type == REDIR_IN || tmp->type == REDIR_OUT || 
-				 tmp->type == APPEND || tmp->type == HEREDOC)
-		{
-			if (tmp->next)
-				tmp = tmp->next;
-		}
-		if (!tmp)
+		if (token->type == WORD || token->type == EXPANDING
+			|| token->type == S_QUOTE || token->type == D_QUOTE)
+			args[i++] = ft_strdup(token->value);
+		else if ((token->type == REDIR_IN || token->type == REDIR_OUT
+			|| token->type == APPEND || token->type == HEREDOC) && token->next)
+			token = token->next;
+		if (!token)
 			break;
-		tmp = tmp->next;
+		token = token->next;
 	}
 	args[i] = NULL;
 	return (args);
@@ -113,15 +112,3 @@ char *get_env_value(t_env *env, char *key)
 	return (NULL);
 }
 
-char *ft_strjoin3(char *s1, char *s2, char *s3)
-{
-	char *temp;
-	char *result;
-		
-	temp = ft_strjoin(s1, s2);
-	if (!temp)
-		return (NULL);
-	result = ft_strjoin(temp, s3);
-	free(temp);
-	return (result);
-}

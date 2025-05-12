@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ChloeMontaigut <ChloeMontaigut@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:34:45 by skock             #+#    #+#             */
-/*   Updated: 2025/05/10 14:10:57 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/11 17:52:39 by ChloeMontai      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,15 @@
 
 int	execute_pipeline(t_ms *minishell)
 {
-	t_cmd	*cmd = minishell->cmd_list;
+	t_cmd	*cmd;
 	int		pipe_fd[2];
-	int		prev_pipe = -1;
-	int		last_pid = -1;
+	int		prev_pipe;
+	int		last_pid;
 	int		redir_ok;
 
+	cmd = minishell->cmd_list;
+	prev_pipe = -1;
+	last_pid = -1;
 	while (cmd)
 	{
 		redir_ok = 1;
@@ -32,8 +35,7 @@ int	execute_pipeline(t_ms *minishell)
 			return (1);
 		if (redir_ok)
 			last_pid = handle_command(minishell, cmd, pipe_fd, &prev_pipe, &minishell->status);
-		else
-			cleanup_pipes(cmd, pipe_fd, &prev_pipe); 
+		cleanup_pipes(cmd, pipe_fd, &prev_pipe); 
 		cmd = cmd->next;
 	}
 	return (wait_all_children(minishell, last_pid, minishell->status));
@@ -41,9 +43,10 @@ int	execute_pipeline(t_ms *minishell)
 
 int	handle_command(t_ms *ms, t_cmd *cmd, int pipe_fd[2], int *prev_pipe, int *status)
 {
-	char **args = tokens_to_args(cmd->token);
-	int	pid;
+	char	**args;
+	int		pid;
 
+	args = tokens_to_args(cmd->token);
 	if (!args || !args[0])
 	{
 		pid = handle_empty_cmd(cmd, prev_pipe, pipe_fd, ms);
@@ -69,13 +72,15 @@ int	handle_command(t_ms *ms, t_cmd *cmd, int pipe_fd[2], int *prev_pipe, int *st
 
 int	handle_empty_cmd(t_cmd *cmd, int *prev_pipe, int pipe_fd[2], t_ms *ms)
 {	
+	int	child_pid;
+	
 	if (!cmd->is_redir)
 	{
 		ft_putstr_fd(": command not found", 2);
 		cleanup_pipes(cmd, pipe_fd, prev_pipe);
 		return (ms->status = 127, -1);
 	}
-	int child_pid = fork();
+	child_pid = fork();
 	if (child_pid == 0)
 	{
 		handle_redirections(cmd, *prev_pipe, pipe_fd);
@@ -123,20 +128,7 @@ int	execute_cmd(t_ms *minishell, t_cmd *cmd, char **args, int *pipe_fd, int prev
 		if (!cmd->path)
 			exit(EXIT_FAILURE);
 		execve(cmd->path, args, minishell->envp);
-		if (errno == EACCES)
-		{
-			ft_putstr_fd("minishell: ", 2);
-			ft_putstr_fd(args[0], 2);
-			ft_putstr_fd(": Permission denied\n", 2);			
-			minishell->status = 126;
-			exit(minishell->status);
-		}
-		else
-		{
-			ft_putstr_fd("minishell: ", 2);
-			perror(args[0]);
-			exit(EXIT_FAILURE);
-		}
+		handle_exec_error(minishell, args);
 	}
 	else if (cmd->pid < 0)
 	{
@@ -146,11 +138,30 @@ int	execute_cmd(t_ms *minishell, t_cmd *cmd, char **args, int *pipe_fd, int prev
 	return (cmd->pid);
 }
 
+void	handle_exec_error(t_ms *minishell, char **args)
+{
+	if (errno == EACCES)
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(args[0], 2);
+		ft_putstr_fd(": Permission denied\n", 2);
+		minishell->status = 126;
+		exit(minishell->status);
+	}
+	else
+	{
+		ft_putstr_fd("minishell: ", 2);
+		perror(args[0]);
+		exit(EXIT_FAILURE);
+	}
+}
+
 int	wait_all_children(t_ms *ms, int last_pid, int last_status)
 {
-	t_cmd	*cmd = ms->cmd_list;
+	t_cmd	*cmd;
 	int		status;
 
+	cmd = ms->cmd_list;
 	while (cmd)
 	{
 		if (cmd->pid > 0)

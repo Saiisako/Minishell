@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ChloeMontaigut <ChloeMontaigut@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/10 16:58:16 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/11 17:09:29 by ChloeMontai      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,9 +184,10 @@ void	handle_redirections(t_cmd *cmd, int prev_pipe, int *pipe_fd);
 // PATH
 
 char	*find_command_path(char *cmd, t_env *env);
+char	*check_paths(char **paths, char *cmd);
 char	**tokens_to_args(t_token *token);
+int		count_tokens(t_token *t);
 char	*get_env_value(t_env *env, char *key);
-char	*ft_strjoin3(char *s1, char *s2, char *s3);
 
 // HEREDOC //
 
