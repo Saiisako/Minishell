@@ -3,136 +3,137 @@
 /*                                                        :::      ::::::::   */
 /*   exec_redirection.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ChloeMontaigut <ChloeMontaigut@student.    +#+  +:+       +#+        */
+/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 16:15:22 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/11 18:01:57 by ChloeMontai      ###   ########.fr       */
+/*   Updated: 2025/05/12 14:57:49 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-// int	process_redirections(t_cmd *cmd, t_ms *ms)
-// {
-// 	t_token	*token = cmd->token;
-// 	int		fd;
+int	process_redirections(t_cmd *cmd, t_ms *ms)
+{
+	t_token	*token = cmd->token;
+	int		fd;
 
-// 	while (token && token->type != PIPE)
+	while (token && token->type != PIPE)
+	{
+		if ((token->type == REDIR_IN || token->type == REDIR_OUT || token->type == APPEND) &&
+			(!token->next || (token->next->type != WORD && token->next->type != D_QUOTE &&
+							  token->next->type != S_QUOTE && token->next->type != EXPANDING)))
+		{
+			ft_putstr_fd("minishell: syntax error near unexpected token\n", 2);
+			ms->status = 1;
+			return (1);
+		}
+		if (token->type == REDIR_IN)
+		{
+			if (cmd->infile_fd != -2)
+				close(cmd->infile_fd);
+			fd = open(token->next->value, O_RDONLY);
+			if (fd == -1)
+			{
+				ft_putstr_fd("minishell: ", 2);
+				perror(token->next->value);
+				ms->status = 1;
+				if (cmd->infile_fd != -2 && cmd->infile_fd != -1)
+					close(cmd->infile_fd);
+				return (1); 
+			}
+			cmd->infile_fd = fd;
+			cmd->is_redir = true;
+		}
+		else if (token->type == REDIR_OUT)
+		{
+			if (cmd->outfile_fd != -2)
+				close(cmd->outfile_fd);
+			fd = open(token->next->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			if (fd == -1)
+			{
+				ft_putstr_fd("minishell: ", 2);
+				perror(token->next->value);
+				ms->status = 1;
+				if (cmd->infile_fd != -2 && cmd->infile_fd != -1)
+					close(cmd->infile_fd);
+				return (1);
+			}
+			cmd->outfile_fd = fd;
+			cmd->is_redir = true;
+		}
+		else if (token->type == APPEND)
+		{
+			if (cmd->outfile_fd != -2)
+				close(cmd->outfile_fd);
+			fd = open(token->next->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
+			if (fd == -1)
+			{
+				ft_putstr_fd("minishell: ", 2);
+				perror(token->next->value);
+				ms->status = 1;
+				if (cmd->infile_fd != -2 && cmd->infile_fd != -1)
+					close(cmd->infile_fd);
+				return (1);
+			}
+			cmd->outfile_fd = fd;
+			cmd->is_redir = true;
+		}
+		if (token->type == REDIR_IN || token->type == REDIR_OUT || token->type == APPEND)
+			token = token->next;
+		token = token->next;
+	}
+	return (0);
+}
+
+// int	syntax_error(t_token *token, t_ms *ms)
+// {
+// 	(void)token;
+// 	ft_putstr_fd("minishell: syntax error near unexpected token\n", 2);
+// 	ms->status = 1;
+// 	return (1);
+// }
+
+// int	open_file(int *fd, char *filename, int flags, t_ms *ms)
+// {
+// 	if (*fd != -2)
+// 		close(*fd);
+// 	*fd = open(filename, flags, 0644);
+// 	if (*fd == -1)
 // 	{
-// 		if ((token->type == REDIR_IN || token->type == REDIR_OUT || token->type == APPEND) &&
-// 			(!token->next || (token->next->type != WORD && token->next->type != D_QUOTE &&
-// 							  token->next->type != S_QUOTE && token->next->type != EXPANDING)))
-// 		{
-// 			ft_putstr_fd("minishell: syntax error near unexpected token\n", 2);
-// 			ms->status = 1;
-// 			return (1);
-// 		}
-// 		if (token->type == REDIR_IN)
-// 		{
-// 			if (cmd->infile_fd != -2)
-// 				close(cmd->infile_fd);
-// 			fd = open(token->next->value, O_RDONLY);
-// 			if (fd == -1)
-// 			{
-// 				ft_putstr_fd("minishell: ", 2);
-// 				perror(token->next->value);
-// 				ms->status = 1;
-// 				if (cmd->infile_fd != -2 && cmd->infile_fd != -1)
-// 					close(cmd->infile_fd);
-// 				return (1); 
-// 			}
-// 			cmd->infile_fd = fd;
-// 			cmd->is_redir = true;
-// 		}
-// 		else if (token->type == REDIR_OUT)
-// 		{
-// 			if (cmd->outfile_fd != -2)
-// 				close(cmd->outfile_fd);
-// 			fd = open(token->next->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-// 			if (fd == -1)
-// 			{
-// 				ft_putstr_fd("minishell: ", 2);
-// 				perror(token->next->value);
-// 				ms->status = 1;
-// 				if (cmd->infile_fd != -2 && cmd->infile_fd != -1)
-// 					close(cmd->infile_fd);
-// 				return (1);
-// 			}
-// 			cmd->outfile_fd = fd;
-// 			cmd->is_redir = true;
-// 		}
-// 		else if (token->type == APPEND)
-// 		{
-// 			if (cmd->outfile_fd != -2)
-// 				close(cmd->outfile_fd);
-// 			fd = open(token->next->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
-// 			if (fd == -1)
-// 			{
-// 				ft_putstr_fd("minishell: ", 2);
-// 				perror(token->next->value);
-// 				ms->status = 1;
-// 				if (cmd->infile_fd != -2 && cmd->infile_fd != -1)
-// 					close(cmd->infile_fd);
-// 				return (1);
-// 			}
-// 			cmd->outfile_fd = fd;
-// 			cmd->is_redir = true;
-// 		}
-// 		if (token->type == REDIR_IN || token->type == REDIR_OUT || token->type == APPEND)
-// 			token = token->next;
-// 		token = token->next;
+// 		ft_putstr_fd("minishell: ", 2);
+// 		perror(filename);
+// 		ms->status = 1;
+// 		return (1);
 // 	}
 // 	return (0);
 // }
 
-static int	syntax_error(t_token *token, t_ms *ms)
-{
-	ft_putstr_fd("minishell: syntax error near unexpected token\n", 2);
-	ms->status = 1;
-	return (1);
-}
+// int	process_redirections(t_cmd *cmd, t_ms *ms)
+// {
+// 	t_token	*t = cmd->token;
+// 	// int		fd;
 
-static int	open_file(int *fd, char *filename, int flags, t_ms *ms)
-{
-	if (*fd != -2)
-		close(*fd);
-	*fd = open(filename, flags, 0644);
-	if (*fd == -1)
-	{
-		ft_putstr_fd("minishell: ", 2);
-		perror(filename);
-		ms->status = 1;
-		return (1);
-	}
-	return (0);
-}
-
-int	process_redirections(t_cmd *cmd, t_ms *ms)
-{
-	t_token	*t = cmd->token;
-	int		fd;
-
-	while (t && t->type != PIPE)
-	{
-		if ((t->type == REDIR_IN || t->type == REDIR_OUT || t->type == APPEND) &&
-			(!t->next || (t->next->type != WORD && t->next->type != D_QUOTE &&
-						  t->next->type != S_QUOTE && t->next->type != EXPANDING)))
-			return (syntax_error(t, ms));
-		if (t->type == REDIR_IN &&
-			open_file(&cmd->infile_fd, t->next->value, O_RDONLY, ms))
-			return (1);
-		else if (t->type == REDIR_OUT &&
-			open_file(&cmd->outfile_fd, t->next->value, O_WRONLY | O_CREAT | O_TRUNC, ms))
-			return (1);
-		else if (t->type == APPEND &&
-			open_file(&cmd->outfile_fd, t->next->value, O_WRONLY | O_CREAT | O_APPEND, ms))
-			return (1);
-		if (t->type == REDIR_IN || t->type == REDIR_OUT || t->type == APPEND)
-			cmd->is_redir = true;
-		t = (t->next) ? t->next->next : NULL;
-	}
-	return (0);
-}
+// 	while (t && t->type != PIPE)
+// 	{
+// 		if ((t->type == REDIR_IN || t->type == REDIR_OUT || t->type == APPEND) &&
+// 			(!t->next || (t->next->type != WORD && t->next->type != D_QUOTE &&
+// 						  t->next->type != S_QUOTE && t->next->type != EXPANDING)))
+// 			return (syntax_error(t, ms));
+// 		if (t->type == REDIR_IN &&
+// 			open_file(&cmd->infile_fd, t->next->value, O_RDONLY, ms))
+// 			return (1);
+// 		else if (t->type == REDIR_OUT &&
+// 			open_file(&cmd->outfile_fd, t->next->value, O_WRONLY | O_CREAT | O_TRUNC, ms))
+// 			return (1);
+// 		else if (t->type == APPEND &&
+// 			open_file(&cmd->outfile_fd, t->next->value, O_WRONLY | O_CREAT | O_APPEND, ms))
+// 			return (1);
+// 		if (t->type == REDIR_IN || t->type == REDIR_OUT || t->type == APPEND)
+// 			cmd->is_redir = true;
+// 		t = (t->next) ? t->next->next : NULL;
+// 	}
+// 	return (0);
+// }
 
 // void	handle_redirections(t_cmd *cmd, int prev_pipe, int *pipe_fd)
 // {
@@ -173,12 +174,10 @@ void	handle_redirections(t_cmd *cmd, int prev_pipe, int *pipe_fd)
 		dup2(cmd->infile_fd, STDIN_FILENO);
 	else if (prev_pipe != -1)
 		dup2(prev_pipe, STDIN_FILENO);
-
 	if (cmd->outfile_fd != -2)
 		dup2(cmd->outfile_fd, STDOUT_FILENO);
 	else if (cmd->next)
 		dup2(pipe_fd[1], STDOUT_FILENO);
-
 	if (cmd->heredoc_fd > 0 || cmd->infile_fd != -2)
 		close(cmd->heredoc_fd > 0 ? cmd->heredoc_fd : cmd->infile_fd);
 	if (cmd->outfile_fd != -2)

@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/10 14:46:50 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/12 18:14:43 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,9 @@ void	prompt(t_ms *minishell)
 		char	*cwd;
 		char	*full_prompt;
 		char	*last;
+		t_cmd	*cmd;
 
+		cmd = NULL;
 		cwd = getcwd(NULL, 0);
 		last = get_last_dir(cwd);
 		full_prompt = ft_strjoin(last, " > ");
@@ -80,7 +82,7 @@ void	prompt(t_ms *minishell)
 		}
 		if (minishell->cmd_list)
 		{
-			execute_pipeline(minishell);
+			execute_pipeline(minishell, cmd);
 			free_cmd_list(minishell->cmd_list);
 			minishell->cmd_list = NULL;
 		}

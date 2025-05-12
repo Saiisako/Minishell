@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 02:26:26 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/10 05:17:24 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/12 14:45:17 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	free_cmd_list(t_cmd *cmd)
 void	free_minishell(t_ms *minishell)
 {
 	if (!minishell)
-		return;
+		return ;
 	free_cmd_list(minishell->cmd_list);
 	free_token_list(minishell->token);
 	free_token_list(minishell->expand);

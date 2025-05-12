@@ -3,42 +3,42 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ChloeMontaigut <ChloeMontaigut@student.    +#+  +:+       +#+        */
+/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:34:45 by skock             #+#    #+#             */
-/*   Updated: 2025/05/11 17:52:39 by ChloeMontai      ###   ########.fr       */
+/*   Updated: 2025/05/12 18:27:20 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	execute_pipeline(t_ms *minishell)
+int	execute_pipeline(t_ms *ms, t_cmd *cmd)
 {
-	t_cmd	*cmd;
-	int		pipe_fd[2];
-	int		prev_pipe;
-	int		last_pid;
-	int		redir_ok;
+	int	pipe_fd[2]; 
+	int	prev_p;
+	int	last_pid;
+	int	redir_ok;
 
-	cmd = minishell->cmd_list;
-	prev_pipe = -1;
+	cmd = ms->cmd_list;
+	prev_p = -1;
 	last_pid = -1;
 	while (cmd)
 	{
 		redir_ok = 1;
-		if (process_redirections(cmd, minishell))
+		if (process_redirections(cmd, ms))
 		{
-			minishell->status = 1;
+			ms->status = 1;
 			redir_ok = 0;
 		}
-		if (setup_pipes(cmd, pipe_fd, &prev_pipe))
+		if (setup_pipes(cmd, pipe_fd, &prev_p))
 			return (1);
 		if (redir_ok)
-			last_pid = handle_command(minishell, cmd, pipe_fd, &prev_pipe, &minishell->status);
-		cleanup_pipes(cmd, pipe_fd, &prev_pipe); 
+			last_pid = handle_command(ms, cmd, pipe_fd, &prev_p, &ms->status);
+		else
+			cleanup_pipes(cmd, pipe_fd, &prev_p);
 		cmd = cmd->next;
 	}
-	return (wait_all_children(minishell, last_pid, minishell->status));
+	return (wait_all_children(ms, last_pid, ms->status));
 }
 
 int	handle_command(t_ms *ms, t_cmd *cmd, int pipe_fd[2], int *prev_pipe, int *status)
@@ -71,9 +71,9 @@ int	handle_command(t_ms *ms, t_cmd *cmd, int pipe_fd[2], int *prev_pipe, int *st
 }
 
 int	handle_empty_cmd(t_cmd *cmd, int *prev_pipe, int pipe_fd[2], t_ms *ms)
-{	
+{
 	int	child_pid;
-	
+
 	if (!cmd->is_redir)
 	{
 		ft_putstr_fd(": command not found", 2);
@@ -96,8 +96,8 @@ int	execute_cmd(t_ms *minishell, t_cmd *cmd, char **args, int *pipe_fd, int prev
 {
 	if (!args || !args[0])
 		return (-1);
-	if (is_builtin(args[0]) && !cmd->next && prev == -1 &&
-		cmd->infile_fd == -2 && cmd->outfile_fd == -2)
+	if (is_builtin(args[0]) && !cmd->next && prev == -1
+		&& cmd->infile_fd == -2 && cmd->outfile_fd == -2)
 	{
 		*status = execute_builtin(minishell, args);
 		return (-1);
@@ -105,30 +105,7 @@ int	execute_cmd(t_ms *minishell, t_cmd *cmd, char **args, int *pipe_fd, int prev
 	cmd->pid = fork();
 	if (cmd->pid == 0)
 	{
-		if (cmd->heredoc_fd > 0)
-			dup2(cmd->heredoc_fd, STDIN_FILENO);
-		else if (cmd->infile_fd != -2)
-			dup2(cmd->infile_fd, STDIN_FILENO);
-		else if (prev != -1)
-			dup2(prev, STDIN_FILENO);
-		if (cmd->outfile_fd != -2)
-			dup2(cmd->outfile_fd, STDOUT_FILENO);
-		else if (cmd->next)
-			dup2(pipe_fd[1], STDOUT_FILENO);
-		if (prev != -1)
-			close(prev);
-		if (cmd->next)
-		{
-			close(pipe_fd[0]);
-			if (cmd->outfile_fd != pipe_fd[1])
-				close(pipe_fd[1]);
-		}
-		if (is_builtin(args[0]))
-			exit(execute_builtin(minishell, args));
-		if (!cmd->path)
-			exit(EXIT_FAILURE);
-		execve(cmd->path, args, minishell->envp);
-		handle_exec_error(minishell, args);
+		exec_redir(cmd, prev, pipe_fd, args, minishell);
 	}
 	else if (cmd->pid < 0)
 	{
@@ -138,7 +115,35 @@ int	execute_cmd(t_ms *minishell, t_cmd *cmd, char **args, int *pipe_fd, int prev
 	return (cmd->pid);
 }
 
-void	handle_exec_error(t_ms *minishell, char **args)
+void	exec_redir(t_cmd *cmd, int prev, int *pipe_fd, char **args, t_ms *ms)
+{
+	if (cmd->heredoc_fd > 0)
+		dup2(cmd->heredoc_fd, STDIN_FILENO);
+	else if (cmd->infile_fd != -2)
+		dup2(cmd->infile_fd, STDIN_FILENO);
+	else if (prev != -1)
+		dup2(prev, STDIN_FILENO);
+	if (cmd->outfile_fd != -2)
+		dup2(cmd->outfile_fd, STDOUT_FILENO);
+	else if (cmd->next)
+		dup2(pipe_fd[1], STDOUT_FILENO);
+	if (prev != -1)
+		close(prev);
+	if (cmd->next)
+	{
+		close(pipe_fd[0]);
+		if (cmd->outfile_fd != pipe_fd[1])
+			close(pipe_fd[1]);
+	}
+	if (is_builtin(args[0]))
+		exit(execute_builtin(ms, args));
+	if (!cmd->path)
+		exit(EXIT_FAILURE);
+	execve(cmd->path, args, ms->envp);
+	handle_error_exec(ms, args);
+}
+
+void	handle_error_exec(t_ms *minishell, char **args)
 {
 	if (errno == EACCES)
 	{

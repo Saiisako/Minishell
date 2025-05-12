@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   create_path.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ChloeMontaigut <ChloeMontaigut@student.    +#+  +:+       +#+        */
+/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 07:25:17 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/11 17:08:21 by ChloeMontai      ###   ########.fr       */
+/*   Updated: 2025/05/12 14:48:03 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,8 @@ char	*find_command_path(char *cmd, t_env *env)
 	if (ft_strchr(cmd, '/'))
 		return (ft_strdup(cmd));
 	path_env = get_env_value(env, "PATH");
-	if (!path_env || !(paths = ft_split(path_env, ':')))
+	paths = ft_split(path_env, ':');
+	if (!path_env || !paths)
 		return (NULL);
 	found = check_paths(paths, cmd);
 	free_array(paths);
@@ -56,18 +57,19 @@ char	*find_command_path(char *cmd, t_env *env)
 
 int	count_tokens(t_token *t)
 {
-	int	count = 0;
+	int	count;
 
+	count = 0;
 	while (t && t->type != PIPE)
 	{
 		if (t->type == WORD || t->type == EXPANDING
 			|| t->type == S_QUOTE || t->type == D_QUOTE)
 			count++;
 		else if ((t->type == REDIR_IN || t->type == REDIR_OUT
-			|| t->type == APPEND || t->type == HEREDOC) && t->next)
+				|| t->type == APPEND || t->type == HEREDOC) && t->next)
 			t = t->next;
 		if (!t)
-			break;
+			break ;
 		t = t->next;
 	}
 	return (count);
@@ -76,9 +78,11 @@ int	count_tokens(t_token *t)
 char	**tokens_to_args(t_token *token)
 {
 	char	**args;
-	int		i = 0;
-	int		count = count_tokens(token);
+	int		i;
+	int		count;
 
+	i = 0;
+	count = count_tokens(token);
 	args = malloc(sizeof(char *) * (count + 1));
 	if (!args)
 		return (NULL);
@@ -88,20 +92,21 @@ char	**tokens_to_args(t_token *token)
 			|| token->type == S_QUOTE || token->type == D_QUOTE)
 			args[i++] = ft_strdup(token->value);
 		else if ((token->type == REDIR_IN || token->type == REDIR_OUT
-			|| token->type == APPEND || token->type == HEREDOC) && token->next)
+				|| token->type == APPEND || token->type == HEREDOC)
+			&& token->next)
 			token = token->next;
 		if (!token)
-			break;
+			break ;
 		token = token->next;
 	}
 	args[i] = NULL;
 	return (args);
 }
 
-char *get_env_value(t_env *env, char *key)
+char	*get_env_value(t_env *env, char *key)
 {
-	t_env *current;
-		
+	t_env	*current;
+
 	current = env;
 	while (current)
 	{
@@ -111,4 +116,3 @@ char *get_env_value(t_env *env, char *key)
 	}
 	return (NULL);
 }
-

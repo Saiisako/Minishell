@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ChloeMontaigut <ChloeMontaigut@student.    +#+  +:+       +#+        */
+/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/11 17:09:29 by ChloeMontai      ###   ########.fr       */
+/*   Updated: 2025/05/12 18:27:31 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,24 +162,28 @@ t_cmd	*new_cmd(void);
 
 ///////////////// EXECUTION /////////////////
 
-int		execute_pipeline(t_ms *minishell);
+int		execute_pipeline(t_ms *ms, t_cmd *cmd);
 void	free_array(char **array);
 int		create_token_chain(t_token *first_token, char **args);
 int		setup_pipes(t_cmd *cmd, int *pipe_fd, int *prev_pipe);
 int		execute_cmd(t_ms *ms, t_cmd *cmd, char **args, int *pipe_fd, int prev, int *status);
 void	update_fds(t_cmd *cmd, int *pipe_fd, int *prev_pipe);
 int		wait_all_children(t_ms *ms, int last_pid, int last_status);
-int		execute_pipeline(t_ms *minishell);
 int		handle_command(t_ms *ms, t_cmd *cmd, int pipe_fd[2], int *prev_pipe, int *status);
 int		handle_empty_cmd(t_cmd *cmd, int *prev_pipe, int pipe_fd[2], t_ms *ms);
 void	print_cmd_not_found(char *cmd);
 void	cleanup_pipes(t_cmd *cmd, int pipe_fd[2], int *prev_pipe);
 
+void	handle_error_exec(t_ms *minishell, char **args);
+void	exec_redir(t_cmd *cmd, int prev, int *pipe_fd, char **args, t_ms *ms);
+
+
 // REDIRECTION
 
-int	process_redirections(t_cmd *cmd, t_ms *ms);
-
+int		process_redirections(t_cmd *cmd, t_ms *ms);
 void	handle_redirections(t_cmd *cmd, int prev_pipe, int *pipe_fd);
+// int		syntax_error(t_token *token, t_ms *ms);
+// int		open_file(int *fd, char *filename, int flags, t_ms *ms);
 
 // PATH
 
@@ -188,6 +192,8 @@ char	*check_paths(char **paths, char *cmd);
 char	**tokens_to_args(t_token *token);
 int		count_tokens(t_token *t);
 char	*get_env_value(t_env *env, char *key);
+
+// char *ft_strjoin3(char *s1, char *s2, char *s3);
 
 // HEREDOC //
 
