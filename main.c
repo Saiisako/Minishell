@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/13 12:12:32 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/13 18:29:13 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ void	prompt(t_ms *minishell)
 		char	*cwd;
 		char	*full_prompt;
 		char	*last;
+		t_cmd	*cmd;
 
 		signal(SIGINT, handle_signal);
 		signal(SIGQUIT, SIG_IGN);
@@ -98,7 +99,7 @@ void	prompt(t_ms *minishell)
 		}
 		if (minishell->cmd_list)
 		{
-			execute_pipeline(minishell);
+			execute_pipeline(minishell, cmd);
 			free_cmd_list(minishell->cmd_list);
 			minishell->cmd_list = NULL;
 		}

@@ -12,12 +12,11 @@
 
 #include "../minishell.h"
 
-// +100 works but ++100 doesn't
 void	ft_exit(t_cmd *cmd, t_ms *minishell)
 {
 	int		exit_status;
 	t_token	*token;
-	
+
 	exit_status = 0;
 	if (cmd->token->next)
 	{
@@ -31,7 +30,7 @@ void	ft_exit(t_cmd *cmd, t_ms *minishell)
 			ft_putstr_fd("numeric argument required\n", 2);
 			exit_status = 2;
 		}
-		if (token->next) 
+		if (token->next)
 		{
 			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
 			exit_status = 1;
@@ -47,14 +46,14 @@ int	double_sign(char *str)
 	int	i;
 
 	i = 0;
-	if(str[i] == '+' || str[i] == '-')
+	if (str[i] == '+' || str[i] == '-')
 		i++;
 	if (!ft_isdigit(str[i]))
 		return (0);
-	while(str[i])
+	while (str[i])
 	{
 		if (!ft_isdigit(str[i]))
-		return (0);
+			return (0);
 		i++;
 	}
 	return (1);

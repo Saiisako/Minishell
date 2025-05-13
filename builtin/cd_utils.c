@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:59:40 by skock             #+#    #+#             */
-/*   Updated: 2025/03/13 10:25:05 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/10 15:46:49 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,4 +80,14 @@ char	*get_oldpwd(t_ms *minishell)
 		tmp = tmp->next;
 	}
 	return (tmp->value);
+}
+
+void	go_back(t_ms *minishell)
+{
+	char	*last_folder;
+
+	last_folder = NULL;
+	last_folder = get_last_folder(getcwd(NULL, 0));
+	chdir(last_folder);
+	update_pwd(minishell);
 }

@@ -37,6 +37,8 @@ SRCS	=	main.c\
 			builtin/echo.c\
 			builtin/exit.c\
 			builtin/export.c\
+			builtin/export_utils.c\
+			builtin/export_update_env.c\
 			builtin/unset.c\
 
 RED = \033[0;31m
