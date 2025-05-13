@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 16:14:03 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/12 18:08:23 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/13 16:06:37 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,19 @@ void	print_cmd_not_found(char *cmd)
 void	cleanup_pipes(t_cmd *cmd, int pipe_fd[2], int *prev_pipe)
 {
 	if (*prev_pipe != -1)
+	{
 		close(*prev_pipe);
-	if (cmd->next && pipe_fd[0] != -1)
+		*prev_pipe = -1;
+	}
+	if (cmd->next)
+	{
+		*prev_pipe = pipe_fd[0];
+		close(pipe_fd[1]);
+	}
+	else if (pipe_fd[0] != -1)
 		close(pipe_fd[0]);
+	// if (cmd->next && pipe_fd[0] != -1)
+	// 	close(pipe_fd[0]);
 }
 
 int	setup_pipes(t_cmd *cmd, int *pipe_fd, int *prev_pipe)
@@ -72,4 +82,17 @@ void	update_fds(t_cmd *cmd, int *pipe_fd, int *prev_pipe)
 	}
 	else
 		*prev_pipe = -1;
+}
+
+int	is_directory(const char *path)
+{
+	DIR *dir;
+	
+	dir = opendir(path);
+	if (dir)
+	{
+		closedir(dir);
+		return (1);
+	}
+	return (0);
 }

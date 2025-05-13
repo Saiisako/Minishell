@@ -6,11 +6,40 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:34:45 by skock             #+#    #+#             */
-/*   Updated: 2025/05/12 18:27:20 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/13 17:36:15 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+// int	execute_pipeline(t_ms *ms, t_cmd *cmd)
+// {
+// 	int	pipe_fd[2]; 
+// 	int	prev_p;
+// 	int	last_pid;
+// 	int	redir_ok;
+
+// 	cmd = ms->cmd_list;
+// 	prev_p = -1;
+// 	last_pid = -1;
+// 	while (cmd)
+// 	{
+// 		redir_ok = 1;
+// 		if (process_redirections(cmd, ms))
+// 		{
+// 			ms->status = 1;
+// 			redir_ok = 0;
+// 		}
+// 		if (setup_pipes(cmd, pipe_fd, &prev_p))
+// 			return (1);
+// 		if (redir_ok)
+// 			last_pid = handle_command(ms, cmd, pipe_fd, &prev_p, &ms->status);
+// 		else
+// 			cleanup_pipes(cmd, pipe_fd, &prev_p);
+// 		cmd = cmd->next;
+// 	}
+// 	return (wait_all_children(ms, last_pid, ms->status));
+// }
 
 int	execute_pipeline(t_ms *ms, t_cmd *cmd)
 {
@@ -24,6 +53,8 @@ int	execute_pipeline(t_ms *ms, t_cmd *cmd)
 	last_pid = -1;
 	while (cmd)
 	{
+		pipe_fd[0] = -1;
+		pipe_fd[1] = -1;
 		redir_ok = 1;
 		if (process_redirections(cmd, ms))
 		{
@@ -35,10 +66,40 @@ int	execute_pipeline(t_ms *ms, t_cmd *cmd)
 		if (redir_ok)
 			last_pid = handle_command(ms, cmd, pipe_fd, &prev_p, &ms->status);
 		else
-			cleanup_pipes(cmd, pipe_fd, &prev_p);
+			last_pid = handle_redir_error(ms, cmd, pipe_fd, &prev_p);
 		cmd = cmd->next;
 	}
 	return (wait_all_children(ms, last_pid, ms->status));
+}
+
+// try
+int	handle_redir_error(t_ms *ms, t_cmd *cmd, int pipe_fd[2], int *prev_pipe)
+{
+	int	pid = fork();
+
+	if (pid == 0)
+	{
+		if (*prev_pipe != -1)
+			close(*prev_pipe);
+		if (cmd->next)
+		{
+			close(pipe_fd[0]);
+			close(pipe_fd[1]);
+		}
+		ms->status = 1;
+		exit (ms->status);
+	}
+	else if (pid > 0)
+	{
+		cmd->pid = pid;
+		cleanup_pipes(cmd, pipe_fd, prev_pipe);
+	}
+	else
+	{
+		perror("minishell : fork");
+		return (-1);
+	}
+	return (pid);
 }
 
 int	handle_command(t_ms *ms, t_cmd *cmd, int pipe_fd[2], int *prev_pipe, int *status)
@@ -104,9 +165,7 @@ int	execute_cmd(t_ms *minishell, t_cmd *cmd, char **args, int *pipe_fd, int prev
 	}
 	cmd->pid = fork();
 	if (cmd->pid == 0)
-	{
 		exec_redir(cmd, prev, pipe_fd, args, minishell);
-	}
 	else if (cmd->pid < 0)
 	{
 		perror("minishell: fork");
@@ -135,10 +194,23 @@ void	exec_redir(t_cmd *cmd, int prev, int *pipe_fd, char **args, t_ms *ms)
 		if (cmd->outfile_fd != pipe_fd[1])
 			close(pipe_fd[1]);
 	}
+	if(cmd->infile_fd == -1 || cmd->outfile_fd == -1)
+	{
+		printf("caca");
+		exit (0);
+	}
 	if (is_builtin(args[0]))
 		exit(execute_builtin(ms, args));
 	if (!cmd->path)
 		exit(EXIT_FAILURE);
+	if(is_directory(cmd->path))
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(cmd->path, 2);
+		ft_putstr_fd(": Is a directory\n", 2);
+		ms->status = 126;
+		exit(ms->status);
+	}
 	execve(cmd->path, args, ms->envp);
 	handle_error_exec(ms, args);
 }
@@ -151,6 +223,14 @@ void	handle_error_exec(t_ms *minishell, char **args)
 		ft_putstr_fd(args[0], 2);
 		ft_putstr_fd(": Permission denied\n", 2);
 		minishell->status = 126;
+		exit(minishell->status);
+	}
+	else if (errno == ENOENT)
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(args[0], 2);
+		ft_putstr_fd(": No such file or directory\n", 2);
+		minishell->status = 127;
 		exit(minishell->status);
 	}
 	else

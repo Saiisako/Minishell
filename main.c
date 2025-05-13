@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/12 18:14:43 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/13 10:43:13 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,7 +205,6 @@ int	main(int ac, char **av, char **envp)
 		minishell->unexpected = false;
 		fill_env_cpy(minishell, envp);
 		prompt(minishell);
-		// exec_line(minishell);
 		free_minishell(minishell);
 		return (0);
 	}

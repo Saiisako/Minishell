@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/12 18:27:31 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/13 17:33:41 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,6 +174,8 @@ int		handle_empty_cmd(t_cmd *cmd, int *prev_pipe, int pipe_fd[2], t_ms *ms);
 void	print_cmd_not_found(char *cmd);
 void	cleanup_pipes(t_cmd *cmd, int pipe_fd[2], int *prev_pipe);
 
+int		is_directory(const char *path);
+int		handle_redir_error(t_ms *ms, t_cmd *cmd, int pipe_fd[2], int *prev_pipe);
 void	handle_error_exec(t_ms *minishell, char **args);
 void	exec_redir(t_cmd *cmd, int prev, int *pipe_fd, char **args, t_ms *ms);
 
