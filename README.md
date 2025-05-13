@@ -56,3 +56,24 @@ env | grep SHLVL
 ==238394==    by 0x4022B6: lst_new (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
 ==238394==    by 0x40254E: fill_env_cpy (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
 ==238394==    by 0x4019F5: main (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
+
+
+lazyshell > mkdir test
+lazyshell > cd test
+test > mkdir test
+test > cd test
+test > pwd
+/home/skock/Documents/CC/Circle3/lazyshell/test/test
+test > rm -rf ../test
+AddressSanitizer:DEADLYSIGNAL
+=================================================================
+==848065==ERROR: AddressSanitizer: SEGV on unknown address 0x000000000000 (pc 0x0000004e16e3 bp 0x7ffcd038abd0 sp 0x7ffcd038abd0 T0)
+==848065==The signal is caused by a READ memory access.
+==848065==Hint: address points to the zero page.
+    #0 0x4e16e3 in ft_strrchr (/home/skock/Documents/CC/Circle3/lazyshell/minishell+0x4e16e3)
+    #1 0x4cb969 in get_last_dir /home/skock/Documents/CC/Circle3/lazyshell/main.c:199:21
+    #2 0x4cb70c in prompt /home/skock/Documents/CC/Circle3/lazyshell/main.c:73:10
+    #3 0x4ccbe8 in main /home/skock/Documents/CC/Circle3/lazyshell/main.c:229:3
+    #4 0x7f63bc7c3d8f in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #5 0x7f63bc7c3e3f in __libc_start_main csu/../csu/libc-start.c:392:3
+    #6 0x41f384 in _start (/home/skock/Documents/CC/Circle3/lazyshell/minishell+0x41f384)

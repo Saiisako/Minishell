@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/12 14:25:32 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/13 15:38:41 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,8 @@ void	expand_add_back(t_token **lst, t_token *new);
 t_token	*new_expand(char *str);
 void	join_expand(t_ms *minishell, int index);
 void	expand(t_ms *minishell);
+void	expand_env(t_env *tmp_env, t_token **tmp2, int *found);
+
 
 // HEREDOC EXPANDER
 
@@ -180,7 +182,7 @@ void	cleanup_pipes(t_cmd *cmd, int pipe_fd[2], int *prev_pipe);
 
 // REDIRECTION
 
-int	process_redirections(t_cmd *cmd, t_ms *ms);
+int		process_redirections(t_cmd *cmd, t_ms *ms);
 
 void	handle_redirections(t_cmd *cmd, int prev_pipe, int *pipe_fd);
 
