@@ -6,7 +6,7 @@
 /*   By: ChloeMontaigut <ChloeMontaigut@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/15 17:52:01 by ChloeMontai      ###   ########.fr       */
+/*   Updated: 2025/05/15 20:22:38 by ChloeMontai      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	prompt(t_ms *minishell)
 		// char	*cwd;
 		char	*full_prompt;
 		// char	*last;
-		t_cmd	*cmd = NULL;
+		// t_cmd	*cmd = NULL;
 
 		signal(SIGINT, handle_signal);
 		signal(SIGQUIT, SIG_IGN);
@@ -109,7 +109,8 @@ void	prompt(t_ms *minishell)
 		}
 		if (minishell->cmd_list)
 		{
-			execute_pipeline(minishell, cmd);
+			// execute_pipeline(minishell, cmd);
+			execute_pipeline(minishell, minishell->cmd_list);
 			free_cmd_list(minishell->cmd_list);
 			minishell->cmd_list = NULL;
 		}

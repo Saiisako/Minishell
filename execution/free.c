@@ -25,21 +25,42 @@ void	free_token_list(t_token *token)
 	}
 }
 
+// void	free_cmd_list(t_cmd *cmd)
+// {
+// 	t_cmd	*tmp;
+
+// 	while (cmd)
+// 	{
+// 		tmp = cmd->next;
+// 		free_token_list(cmd->token);
+// 		free(cmd->path);
+// 		if (cmd->infile_fd != -2)
+// 			close(cmd->infile_fd);
+// 		if (cmd->outfile_fd != -2)
+// 			close(cmd->outfile_fd);
+// 		free(cmd);
+// 		cmd = tmp;
+// 	}
+// }
+
 void	free_cmd_list(t_cmd *cmd)
 {
-	t_cmd	*tmp;
+	t_cmd *tmp;
 
 	while (cmd)
 	{
-		tmp = cmd->next;
-		free_token_list(cmd->token);
-		free(cmd->path);
-		if (cmd->infile_fd != -2)
-			close(cmd->infile_fd);
-		if (cmd->outfile_fd != -2)
-			close(cmd->outfile_fd);
-		free(cmd);
-		cmd = tmp;
+		tmp = cmd;
+		cmd = cmd->next;
+
+		if (tmp->path)
+			free(tmp->path);
+		if (tmp->token)
+			free_token_list(tmp->token);
+		if (tmp->infile_fd > 2)
+			close(tmp->infile_fd);
+		if (tmp->outfile_fd > 2)
+			close(tmp->outfile_fd);
+		free(tmp);
 	}
 }
 

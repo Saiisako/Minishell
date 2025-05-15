@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ChloeMontaigut <ChloeMontaigut@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:34:45 by skock             #+#    #+#             */
-/*   Updated: 2025/05/13 18:30:13 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/15 20:19:57 by ChloeMontai      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,8 @@ int	handle_redir_error(t_ms *ms, t_cmd *cmd, int pipe_fd[2], int *prev_pipe)
 			close(pipe_fd[0]);
 			close(pipe_fd[1]);
 		}
+		if (cmd->heredoc_fd > 0)
+			close(cmd->heredoc_fd); ///////
 		ms->status = 1;
 		exit (ms->status);
 	}
@@ -161,6 +163,8 @@ int	execute_cmd(t_ms *minishell, t_cmd *cmd, char **args, int *pipe_fd, int prev
 		&& cmd->infile_fd == -2 && cmd->outfile_fd == -2)
 	{
 		*status = execute_builtin(minishell, args);
+		free(cmd->path); //////
+		cmd->path = NULL; ///////
 		return (-1);
 	}
 	cmd->pid = fork();

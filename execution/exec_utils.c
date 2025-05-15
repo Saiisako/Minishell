@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ChloeMontaigut <ChloeMontaigut@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 16:14:03 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/13 16:06:37 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/15 20:09:25 by ChloeMontai      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,12 @@ void	cleanup_pipes(t_cmd *cmd, int pipe_fd[2], int *prev_pipe)
 
 int	setup_pipes(t_cmd *cmd, int *pipe_fd, int *prev_pipe)
 {
-	if (cmd->next && pipe(pipe_fd) == -1)
+	if (cmd->next && pipe(pipe_fd) == -1) //////////////
+	{
+		if (*prev_pipe != -1)
+			close(*prev_pipe);
 		return (perror("pipe"), 1);
+	} ////////////
 	if (*prev_pipe != -1)
 	{
 		if (cmd->infile_fd == -2)
