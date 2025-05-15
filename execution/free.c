@@ -1,12 +1,12 @@
 /* ************************************************************************** */
-/*                                                                            */
+/*		                                                                    */
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ChloeMontaigut <ChloeMontaigut@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 02:26:26 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/13 18:27:36 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/15 17:51:11 by ChloeMontai      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ void	free_minishell(t_ms *minishell)
 	free_cmd_list(minishell->cmd_list);
 	free_token_list(minishell->token);
 	free_token_list(minishell->expand);
+	if (minishell->current_prompt)
+		free(minishell->current_prompt);
 	free_env(minishell);
 	free(minishell->envp);
 	free((void *)minishell);

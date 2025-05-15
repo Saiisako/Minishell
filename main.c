@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ChloeMontaigut <ChloeMontaigut@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/15 14:27:41 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/15 17:52:01 by ChloeMontai      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	handle_signal(int sig)
 	{
 		printf("\n");
 		rl_on_new_line();
-		rl_replace_line("", 0);
+		// rl_replace_line("", 0);
 		rl_redisplay();
 	}
 }
@@ -63,26 +63,27 @@ void	prompt(t_ms *minishell)
 
 	while (1)
 	{
-		char	*cwd;
+		// char	*cwd;
 		char	*full_prompt;
-		char	*last;
+		// char	*last;
 		t_cmd	*cmd = NULL;
 
 		signal(SIGINT, handle_signal);
 		signal(SIGQUIT, SIG_IGN);
-		cwd = getcwd(NULL, 0);
-		if (!cwd)
-		{
-			ft_putstr_fd("nonononon\n", 2);
-			minishell->status = 1;
-			full_prompt = ft_strdup("caca >");
-		}
-		else
-		{
-			last = get_last_dir(cwd);
-			full_prompt = ft_strjoin(last, " > ");
-			free(cwd);
-		}
+		// cwd = getcwd(NULL, 0);
+		// if (!cwd)
+		// {
+		// 	ft_putstr_fd("nonononon\n", 2);
+		// 	minishell->status = 1;
+		// 	full_prompt = ft_strdup("caca >");
+		// }
+		// else
+		// {
+		// 	last = get_last_dir(cwd);
+		// 	full_prompt = ft_strjoin(last, " > ");
+		// 	free(cwd);
+		// }
+		full_prompt = ft_strjoin(minishell->current_prompt, " > ");
 		input = readline(full_prompt);
 		free(full_prompt);
 		if (!input)
@@ -227,6 +228,16 @@ void	setup_minishell(t_ms **minishell, char **envp)
 		(*minishell)->status = 0;
 		(*minishell)->go_cmd = true;
 		(*minishell)->unexpected = false;
+
+	char *cwd = getcwd(NULL, 0);
+	if (cwd)
+	{
+		char *last = get_last_dir(cwd);
+		(*minishell)->current_prompt = ft_strdup(last);
+		free(cwd);
+	}
+	else
+		(*minishell)->current_prompt = ft_strdup("?");
 }
 
 int	main(int ac, char **av, char **envp)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ChloeMontaigut <ChloeMontaigut@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/15 10:55:13 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/15 17:44:57 by ChloeMontai      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ typedef struct s_ms
 	bool		unexpected;
 	const char	*prompt_msg;
 	bool		is_next_space;
+	char		*current_prompt;
 	t_env		*env_lst;
 	t_token		*token;
 	t_token		*expand;
