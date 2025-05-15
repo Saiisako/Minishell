@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 14:08:59 by skock             #+#    #+#             */
-/*   Updated: 2025/05/10 15:46:43 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/15 10:29:36 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,25 +44,35 @@ void	special_cd(t_token *arg, t_ms *ms)
 		ms->status = -1;
 }
 
-void	cd(t_cmd *cmd, t_ms *ms)
+int	cd(t_cmd *cmd, t_ms *ms)
 {
 	t_token	*arg;
 
 	if (!cmd || !cmd->token)
-		return ;
+		return (ms->status = 1);
+	ms->status = 0;
 	arg = cmd->token->next;
+	if (arg && arg->next)
+	{
+		ft_putstr_fd("minishell: cd: too many arguments\n", 2);;
+		return (ms->status = 1);
+	}
 	special_cd(arg, ms);
 	if (ms->status == -1)
 	{
 		if (chdir(arg->value) == 0)
+		{
 			update_pwd(ms);
+			ms->status = 0;
+		}
 		else
 		{
 			ft_putstr_fd("minishell: cd: ", 2);
 			ft_printf("%s: ", arg->value);
 			ft_putstr_fd("No such file or directory\n", 2);
 			ms->status = 1;
-			exit(ms->status);
+			return (ms->status);
 		}
 	}
+	return (ms->status);
 }

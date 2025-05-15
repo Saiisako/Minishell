@@ -12,34 +12,40 @@
 
 #include "../minishell.h"
 
-void	ft_exit(t_cmd *cmd, t_ms *minishell)
+int	ft_exit(t_cmd *cmd, t_ms *minishell)
 {
-	int		exit_status;
 	t_token	*token;
+	int		exit_status;
 
 	exit_status = 0;
-	if (cmd->token->next)
+	token = cmd->token->next;
+	if (token)
 	{
-		token = cmd->token->next;
-		exit_status = ft_atoi(token->value);
+		ft_putstr_fd("exit\n", 1);
 		if (!double_sign(token->value))
 		{
-			ft_putstr_fd("exit\n", 2);
 			ft_putstr_fd("minishell: exit: ", 2);
-			ft_printf("%s: ", token->value);
-			ft_putstr_fd("numeric argument required\n", 2);
+			ft_putstr_fd(token->value, 2);
+			ft_putstr_fd(": numeric argument required\n", 2);
 			exit_status = 2;
 		}
-		if (token->next)
+		else if (token->next)
 		{
 			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
-			exit_status = 1;
+			minishell->status = 1;
+			return (1);
 		}
+		else
+			exit_status = ft_atoi(token->value);
 	}
+	else
+		ft_putstr_fd("exit\n", 1);
+	minishell->status = exit_status;
 	free_env(minishell);
 	free(minishell);
 	exit(exit_status);
 }
+
 
 int	double_sign(char *str)
 {

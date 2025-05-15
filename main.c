@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/13 18:29:13 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/15 10:54:47 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	prompt(t_ms *minishell)
 		char	*cwd;
 		char	*full_prompt;
 		char	*last;
-		t_cmd	*cmd;
+		t_cmd	*cmd = NULL;
 
 		signal(SIGINT, handle_signal);
 		signal(SIGQUIT, SIG_IGN);
@@ -139,7 +139,7 @@ int	run_builtin_command(t_ms *minishell, t_cmd *cmd, char **args)
 	if (!ft_strcmp(args[0], "echo"))
 		print_echo(cmd);
 	else if (!ft_strcmp(args[0], "cd"))
-		cd(cmd, minishell);
+		result = cd(cmd, minishell);
 	else if (!ft_strcmp(args[0], "pwd"))
 		print_pwd();
 	else if (!ft_strcmp(args[0], "export"))
@@ -149,7 +149,7 @@ int	run_builtin_command(t_ms *minishell, t_cmd *cmd, char **args)
 	else if (!ft_strcmp(args[0], "env"))
 		print_env(minishell);
 	else if (!ft_strcmp(args[0], "exit"))
-		ft_exit(cmd, minishell);
+		result = ft_exit(cmd, minishell);
 	else
 		return (minishell->status = 1, 1);
 	minishell->status = result;
