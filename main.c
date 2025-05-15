@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/15 10:54:47 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/15 14:27:41 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	handle_exit(int sig)
 
 void	prompt(t_ms *minishell)
 {
-	char				*input;
+	char	*input;
 
 	while (1)
 	{
@@ -71,9 +71,18 @@ void	prompt(t_ms *minishell)
 		signal(SIGINT, handle_signal);
 		signal(SIGQUIT, SIG_IGN);
 		cwd = getcwd(NULL, 0);
-		last = get_last_dir(cwd);
-		full_prompt = ft_strjoin(last, " > ");
-		free(cwd);
+		if (!cwd)
+		{
+			ft_putstr_fd("nonononon\n", 2);
+			minishell->status = 1;
+			full_prompt = ft_strdup("caca >");
+		}
+		else
+		{
+			last = get_last_dir(cwd);
+			full_prompt = ft_strjoin(last, " > ");
+			free(cwd);
+		}
 		input = readline(full_prompt);
 		free(full_prompt);
 		if (!input)
@@ -197,7 +206,10 @@ int	execute_builtin(t_ms *minishell, char **args)
 
 char	*get_last_dir(char *path)
 {
-	char	*last_slash = ft_strrchr(path, '/');
+	char	*last_slash;
+	if (!path)
+		return ("?");
+	last_slash = ft_strrchr(path, '/');
 	if (!last_slash)
 		return (path);
 	return (last_slash + 1);

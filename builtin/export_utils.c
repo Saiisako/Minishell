@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 15:56:05 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/10 16:54:57 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/15 13:32:43 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	sort_env_array(t_env **array)
 	{
 		swapped = 0;
 		i = 0;
-		while (array[i + 1])
+		while (array[i] && array[i + 1])
 		{
 			if (ft_strcmp(array[i]->key, array[i + 1]->key) > 0)
 			{

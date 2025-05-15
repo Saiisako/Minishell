@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 14:08:59 by skock             #+#    #+#             */
-/*   Updated: 2025/05/15 10:29:36 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/15 14:27:58 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,11 @@ int	cd(t_cmd *cmd, t_ms *ms)
 	special_cd(arg, ms);
 	if (ms->status == -1)
 	{
+		// if (access(arg->value, F_OK) != 0)
+		// {
+		// 	ft_putstr_fd("AHAHAHAH", 2);
+		// 	return (ms->status = 1);
+		// }
 		if (chdir(arg->value) == 0)
 		{
 			update_pwd(ms);
