@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/13 18:25:44 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/15 10:55:13 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,7 +216,7 @@ int		run_builtin_command(t_ms *minishell, t_cmd *temp_cmd, char **args);
 
 // CD
 
-void	cd(t_cmd *cmd, t_ms *ms);
+int	cd(t_cmd *cmd, t_ms *ms);
 void	update_pwd(t_ms *minishell);
 void	go_tilde(t_ms *minishell);
 void	go_back(t_ms *minishell);
@@ -243,7 +243,7 @@ void	print_echo(t_cmd *cmd);
 
 // EXIT
 
-void	ft_exit(t_cmd *cmd, t_ms *minishell);
+int		ft_exit(t_cmd *cmd, t_ms *minishell);
 int		double_sign(char *str);
 
 // EXPORT

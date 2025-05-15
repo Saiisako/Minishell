@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/05/13 18:32:28 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/15 11:37:45 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	parsing_error(t_ms *minishell)
 		return (0);
 	while (tmp && tmp->next)
 	{
-		if (tmp->type != 1 && tmp->next->type != 1)
+		if (tmp->type != 1 && tmp->next->type != 1 && tmp->type != PIPE)
 		{
 			minishell->first_special = tmp->type;
 			minishell->second_special = tmp->next->type;
