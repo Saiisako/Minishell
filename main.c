@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/16 11:32:35 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/16 13:51:24 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,23 +39,6 @@ void	print_error_message(const char *msg, t_ms *minishell)
 	else
 		printf("%s\n", msg);
 }
-void	handle_signal(int sig)
-{
-	if (sig == SIGINT)
-	{
-		printf("\n");
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
-}
-
-void	handle_exit(int sig)
-{
-	if (sig == SIGQUIT)
-		return ;
-	// if \ in cmd core dump
-}
 
 void	prompt(t_ms *minishell)
 {
@@ -63,26 +46,10 @@ void	prompt(t_ms *minishell)
 
 	while (1)
 	{
-		// char	*cwd;
 		char	*full_prompt;
-		// char	*last;
-		// t_cmd	*cmd = NULL;
 
 		signal(SIGINT, handle_signal);
 		signal(SIGQUIT, SIG_IGN);
-		// cwd = getcwd(NULL, 0);
-		// if (!cwd)
-		// {
-		// 	ft_putstr_fd("nonononon\n", 2);
-		// 	minishell->status = 1;
-		// 	full_prompt = ft_strdup("caca >");
-		// }
-		// else
-		// {
-		// 	last = get_last_dir(cwd);
-		// 	full_prompt = ft_strjoin(last, " > ");
-		// 	free(cwd);
-		// }
 		full_prompt = ft_strjoin(minishell->current_prompt, " > ");
 		input = readline(full_prompt);
 		free(full_prompt);
@@ -109,7 +76,6 @@ void	prompt(t_ms *minishell)
 		}
 		if (minishell->cmd_list)
 		{
-			// execute_pipeline(minishell, cmd);
 			execute_pipeline(minishell, minishell->cmd_list);
 			free_cmd_list(minishell->cmd_list);
 			minishell->cmd_list = NULL;
@@ -179,6 +145,7 @@ int	execute_builtin(t_ms *minishell, char **args)
 	cmd.path = NULL;
 	cmd.infile_fd = -2;
 	cmd.outfile_fd = -2;
+	cmd.heredoc_fd = -1;
 	cmd.is_pipe = false;
 	cmd.is_redir = false;
 	cmd.pid = -1;
@@ -222,13 +189,13 @@ void	setup_minishell(t_ms **minishell, char **envp)
 		*minishell = malloc(sizeof(t_ms));
 		if (!minishell)
 			exit(1);
+		(*minishell)->status = 0;
 		(*minishell)->envp = envp;
+		(*minishell)->unexpected = false;
 		(*minishell)->is_next_space = false;
 		(*minishell)->first_special = 69;
 		(*minishell)->second_special = 69;
-		(*minishell)->status = 0;
 		(*minishell)->go_cmd = true;
-		(*minishell)->unexpected = false;
 
 	char *cwd = getcwd(NULL, 0);
 	if (cwd)

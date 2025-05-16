@@ -30,6 +30,7 @@ SRCS	=	main.c\
 			execution/exec_utils.c\
 			execution/exec_redirection.c\
 			execution/heredoc.c\
+			execution/signals.c\
 			builtin/env.c\
 			builtin/pwd.c\
 			builtin/cd.c\

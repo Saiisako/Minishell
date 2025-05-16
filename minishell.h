@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/16 11:31:54 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/16 14:02:44 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,6 +186,11 @@ int		handle_redir_error(t_ms *ms, t_cmd *cmd, int pipe_fd[2], int *prev_pipe);
 void	handle_error_exec(t_ms *minishell, char **args);
 void	exec_redir(t_cmd *cmd, int prev, int *pipe_fd, char **args, t_ms *ms);
 
+// SIGNALS
+
+void	handle_signal(int sig);
+void	handle_exit(int sig);
+void	handle_heredoc(void);
 
 // REDIRECTION
 

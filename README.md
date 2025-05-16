@@ -77,3 +77,86 @@ AddressSanitizer:DEADLYSIGNAL
     #4 0x7f63bc7c3d8f in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
     #5 0x7f63bc7c3e3f in __libc_start_main csu/../csu/libc-start.c:392:3
     #6 0x41f384 in _start (/home/skock/Documents/CC/Circle3/lazyshell/minishell+0x41f384)
+
+
+
+	///////
+
+	==1643357== 4,150 (496 direct, 3,654 indirect) bytes in 1 blocks are definitely lost in loss record 62 of 76
+==1643357==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1643357==    by 0x4076C5: update_envp (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x4070EC: ft_export (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x401784: run_builtin_command (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x401934: execute_builtin (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x404C1F: execute_cmd (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x4048F2: handle_command (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x404789: execute_pipeline (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x4015B7: prompt (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x401B7E: main (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+
+
+==1643357== 3,654 bytes in 61 blocks are indirectly lost in loss record 50 of 76
+==1643357==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1643357==    by 0x409159: ft_strjoin (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x406F06: concat_env_var (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x407716: update_envp (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x4070EC: ft_export (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x401784: run_builtin_command (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x401934: execute_builtin (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x404C1F: execute_cmd (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x4048F2: handle_command (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x404789: execute_pipeline (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x4015B7: prompt (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x401B7E: main (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+
+==1643357== 48 bytes in 1 blocks are still reachable in loss record 23 of 76
+==1643357==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1643357==    by 0x401FD1: new_cmd (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x402030: create_cmd_until_pipe (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x40210B: fill_cmd_lst (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x402864: ft_cmd (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x4029CC: parsing_input (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x401500: prompt (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x401B7E: main (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+ 
+
+ ==1643357== 32 bytes in 1 blocks are still reachable in loss record 18 of 76
+==1643357==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1643357==    by 0x4029FC: new_token (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x402B12: fill_token_list (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x403090: word_token (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x4032D5: process_token (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x40293F: parsing_input (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x401500: prompt (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x401B7E: main (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357== 
+==1643357== 42 bytes in 1 blocks are definitely lost in loss record 19 of 76
+==1643357==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1643357==    by 0x408C49: ft_strdup (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x401AC9: setup_minishell (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x401B68: main (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+
+
+==1643357== 16 bytes in 1 blocks are still reachable in loss record 14 of 76
+==1643357==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1643357==    by 0x4055E0: tokens_to_args (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x404808: handle_command (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x404789: execute_pipeline (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x4015B7: prompt (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x401B7E: main (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+
+==1643357== 5 bytes in 1 blocks are still reachable in loss record 2 of 76
+==1643357==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1643357==    by 0x408C49: ft_strdup (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x403854: modify_main_token_lst (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x403A3A: join_expand (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x403CF5: do_expand (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x403425: handle_word_token (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x4034F5: handle_token (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x4035AB: expand_token (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x402993: parsing_input (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x401500: prompt (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+==1643357==    by 0x401B7E: main (in /home/cmontaig/Documents/cursus/Minishell/minishell)
+
+SIGNAUX
+Ctrl C doit quitter le heredoc
