@@ -74,6 +74,7 @@ void	free_minishell(t_ms *minishell)
 	if (minishell->current_prompt)
 		free(minishell->current_prompt);
 	free_env(minishell);
+	free(minishell->pwd);
 	free(minishell->envp);
 	free((void *)minishell);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ChloeMontaigut <ChloeMontaigut@student.    +#+  +:+       +#+        */
+/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/15 20:22:38 by ChloeMontai      ###   ########.fr       */
+/*   Updated: 2025/05/16 11:32:35 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	handle_signal(int sig)
 	{
 		printf("\n");
 		rl_on_new_line();
-		// rl_replace_line("", 0);
+		rl_replace_line("", 0);
 		rl_redisplay();
 	}
 }
@@ -152,7 +152,7 @@ int	run_builtin_command(t_ms *minishell, t_cmd *cmd, char **args)
 	else if (!ft_strcmp(args[0], "cd"))
 		result = cd(cmd, minishell);
 	else if (!ft_strcmp(args[0], "pwd"))
-		print_pwd();
+		print_pwd(minishell);
 	else if (!ft_strcmp(args[0], "export"))
 		result = ft_export(minishell, cmd);
 	else if (!ft_strcmp(args[0], "unset"))
@@ -235,10 +235,15 @@ void	setup_minishell(t_ms **minishell, char **envp)
 	{
 		char *last = get_last_dir(cwd);
 		(*minishell)->current_prompt = ft_strdup(last);
+		(*minishell)->pwd = ft_strdup(cwd);
 		free(cwd);
 	}
 	else
+	{
 		(*minishell)->current_prompt = ft_strdup("?");
+		(*minishell)->pwd = ft_strdup("?");
+	}
+
 }
 
 int	main(int ac, char **av, char **envp)

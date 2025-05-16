@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ChloeMontaigut <ChloeMontaigut@student.    +#+  +:+       +#+        */
+/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:59:40 by skock             #+#    #+#             */
-/*   Updated: 2025/05/15 18:27:26 by ChloeMontai      ###   ########.fr       */
+/*   Updated: 2025/05/16 11:28:08 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,9 @@ void	update_pwd(t_ms *minishell)
 	{
 		free(current->value);
 		current->value = cwd;
+
+		free(minishell->pwd);
+		minishell->pwd = ft_strdup(cwd);
 		
 		free(minishell->current_prompt);
 		minishell->current_prompt = ft_strdup(get_last_dir(cwd));
@@ -51,6 +54,7 @@ void	update_pwd(t_ms *minishell)
 	{
 		free(current->value);
 		current->value = ft_strdup(current->value);
+		current->value = ft_strdup(minishell->pwd);
 	}
 	if (!old)
 		free(old_pwd_value);

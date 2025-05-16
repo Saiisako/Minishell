@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ChloeMontaigut <ChloeMontaigut@student.    +#+  +:+       +#+        */
+/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/15 17:44:57 by ChloeMontai      ###   ########.fr       */
+/*   Updated: 2025/05/16 11:31:54 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ typedef struct s_ms
 	char		**envp;
 	bool		unexpected;
 	const char	*prompt_msg;
+	char		*pwd; //
 	bool		is_next_space;
 	char		*current_prompt;
 	t_env		*env_lst;
@@ -236,7 +237,9 @@ void	print_env(t_ms *minishell);
 
 // PWD
 
-void	print_pwd(void);
+// void	print_pwd(void);
+void	print_pwd(t_ms *ms);
+
 
 // ECHO
 
