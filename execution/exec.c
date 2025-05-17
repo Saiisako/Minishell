@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:34:45 by skock             #+#    #+#             */
-/*   Updated: 2025/05/17 19:32:25 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/17 20:50:25 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,6 +176,7 @@ int	execute_cmd(t_ms *minishell, t_cmd *cmd, char **args, int *pipe_fd, int prev
 		free(minishell->current_prompt);
 		free(minishell->pwd);
 		rl_clear_history();
+		exit(EXIT_FAILURE); //ff
 	}
 	else if (cmd->pid < 0)
 	{
@@ -207,17 +208,21 @@ void	exec_redir(t_cmd *cmd, int prev, int *pipe_fd, char **args, t_ms *ms)
 	}
 	if (is_builtin(args[0]))
 	{
-		// exit(execute_builtin(ms, args));
 		int ret = execute_builtin(ms, args);
 		free_array(args); ////
 		free_env(ms);
 		free_token_list(ms->expand);
 		free_cmd_list(ms->cmd_list);
-		// free_minishell(ms);
 		exit(ret);
 	}
-	if (!cmd->path)
-		exit(EXIT_FAILURE);
+	if (!cmd->path) //
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(args[0], 2);
+		ft_putstr_fd(": command not found\n", 2);
+		ms->status = 127;
+		exit(ms->status);
+	}
 	if(is_directory(cmd->path))
 	{
 		ft_putstr_fd("minishell: ", 2);
@@ -226,16 +231,34 @@ void	exec_redir(t_cmd *cmd, int prev, int *pipe_fd, char **args, t_ms *ms)
 		ms->status = 126;
 		exit(ms->status);
 	}
-	execve(cmd->path, args, ms->envp);
-	free_array(args); //
-	free_minishell(ms); ///
-	handle_error_exec(ms, args);
 
+	if (access(cmd->path, F_OK) != 0)
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(args[0], 2);
+		ft_putstr_fd(": No such file or directory\n", 2);
+		ms->status = 127;
+		exit(ms->status);
+	}
+	if (access(cmd->path, X_OK) != 0)
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(args[0], 2);
+		ft_putstr_fd(": Permission denied\n", 2);
+		ms->status = 126;
+		exit(ms->status);
+	}
+
+	execve(cmd->path, args, ms->envp);
+	int errno_code = errno;
+	free_array(args); // a voir
+	free_minishell(ms); // a voir
+	handle_error_exec(ms, args, errno_code);
 }
 
-void	handle_error_exec(t_ms *minishell, char **args)
+void	handle_error_exec(t_ms *minishell, char **args, int	errno_code)
 {
-	if (errno == EACCES)
+	if (errno_code == EACCES)
 	{
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(args[0], 2);
@@ -245,7 +268,7 @@ void	handle_error_exec(t_ms *minishell, char **args)
 		free_minishell(minishell);
 		exit(minishell->status);
 	}
-	else if (errno == ENOENT)
+	else if (errno_code == ENOENT)
 	{
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(args[0], 2);
@@ -263,6 +286,7 @@ void	handle_error_exec(t_ms *minishell, char **args)
 		free_minishell(minishell); ///
 		exit(EXIT_FAILURE);
 	}
+	
 }
 
 int	wait_all_children(t_ms *ms, int last_pid, int last_status)

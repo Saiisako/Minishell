@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/17 18:39:22 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/17 20:28:31 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,7 +185,7 @@ void	cleanup_pipes(t_cmd *cmd, int pipe_fd[2], int *prev_pipe);
 
 int		is_directory(const char *path);
 int		handle_redir_error(t_ms *ms, t_cmd *cmd, int pipe_fd[2], int *prev_pipe);
-void	handle_error_exec(t_ms *minishell, char **args);
+void	handle_error_exec(t_ms *minishell, char **args, int	errno_code);
 void	exec_redir(t_cmd *cmd, int prev, int *pipe_fd, char **args, t_ms *ms);
 
 // SIGNALS
