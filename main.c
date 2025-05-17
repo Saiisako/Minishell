@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ChloeMontaigut <ChloeMontaigut@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/16 13:51:24 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/16 23:40:15 by ChloeMontai      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,21 +40,42 @@ void	print_error_message(const char *msg, t_ms *minishell)
 		printf("%s\n", msg);
 }
 
+int	g_sig = 0;
+
+void	handle_signal_prompt(int sig)
+{
+	if (sig == SIGINT)
+	{
+		g_sig = 1;
+		rl_on_new_line();
+		// rl_replace_line("", 0);
+		write(1, "\n", 1);
+		rl_redisplay();
+	}
+}
+
 void	prompt(t_ms *minishell)
 {
 	char	*input;
+	char	*full_prompt;
 
 	while (1)
 	{
-		char	*full_prompt;
-
-		signal(SIGINT, handle_signal);
+		g_sig = 0;
+		signal(SIGINT, handle_signal_prompt);
 		signal(SIGQUIT, SIG_IGN);
+		
 		full_prompt = ft_strjoin(minishell->current_prompt, " > ");
 		input = readline(full_prompt);
 		free(full_prompt);
-		if (!input)
+		if (!input && g_sig == 1) //
 		{
+			write(1, "\n", 1);
+			continue;
+		}
+		else if (!input)
+		{
+			write(1, "exit\n", 5);
 			free_env(minishell);
 			free(minishell);
 			exit(0);
@@ -66,7 +87,7 @@ void	prompt(t_ms *minishell)
  		}
 		if (input && *input)
 			add_history(input);
-		if (setup_heredocs(minishell->cmd_list, minishell) < 0)
+		if (setup_heredocs(minishell->cmd_list, minishell) != 0)
 		{
 			print_error_message("heredoc failed", minishell);
 			free(input);
@@ -77,6 +98,7 @@ void	prompt(t_ms *minishell)
 		if (minishell->cmd_list)
 		{
 			execute_pipeline(minishell, minishell->cmd_list);
+			g_sig = 0;
 			free_cmd_list(minishell->cmd_list);
 			minishell->cmd_list = NULL;
 		}

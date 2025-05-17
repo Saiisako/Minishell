@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ChloeMontaigut <ChloeMontaigut@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/16 14:02:44 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/16 23:29:37 by ChloeMontai      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,6 +214,7 @@ char	*get_env_value(t_env *env, char *key);
 
 int		create_heredoc(char *limiter, t_ms *minishell);
 int		setup_heredocs(t_cmd *cmd_list, t_ms *minishell);
+void	heredoc_child(int write_fd, char *limiter, t_ms *minishell);
 
 ///////////////// BUILTIN /////////////////
 
