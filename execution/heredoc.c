@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ChloeMontaigut <ChloeMontaigut@student.    +#+  +:+       +#+        */
+/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 11:15:11 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/16 23:26:42 by ChloeMontai      ###   ########.fr       */
+/*   Updated: 2025/05/17 15:40:37 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,8 +112,8 @@ int	create_heredoc(char *limiter, t_ms *minishell)
 	if (WIFSIGNALED(status))
 	{
 		close(fd[0]);
-		// minishell->status = 130;
 		minishell->status = 128 + WTERMSIG(status);
+		rl_done = 1; 
 		return (-1);
 	}
 	return (fd[0]);

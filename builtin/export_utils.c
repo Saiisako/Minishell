@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 15:56:05 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/15 13:32:43 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/17 15:16:33 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,6 @@ void	export_set_var(t_ms *ms, char *arg)
 	free(key);
 	free(value);
 }
-
-// export print sorted
 
 void	fill_env_array(t_env *env_lst, t_env **array)
 {

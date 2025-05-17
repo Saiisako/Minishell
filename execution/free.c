@@ -23,59 +23,46 @@ void	free_token_list(t_token *token)
 		free(token);
 		token = tmp;
 	}
+	// token = NULL;
 }
-
-// void	free_cmd_list(t_cmd *cmd)
-// {
-// 	t_cmd	*tmp;
-
-// 	while (cmd)
-// 	{
-// 		tmp = cmd->next;
-// 		free_token_list(cmd->token);
-// 		free(cmd->path);
-// 		if (cmd->infile_fd != -2)
-// 			close(cmd->infile_fd);
-// 		if (cmd->outfile_fd != -2)
-// 			close(cmd->outfile_fd);
-// 		free(cmd);
-// 		cmd = tmp;
-// 	}
-// }
 
 void	free_cmd_list(t_cmd *cmd)
 {
-	t_cmd *tmp;
-
-	while (cmd)
+	t_cmd	*tmp;
+	t_cmd	*next;
+	tmp = cmd;
+	while (tmp)
 	{
-		tmp = cmd;
-		cmd = cmd->next;
-
-		if (tmp->path)
-			free(tmp->path);
-		if (tmp->token)
-			free_token_list(tmp->token);
-		if (tmp->infile_fd > 2)
+		next = tmp->next;
+		free_token_list(tmp->token); // beaucoup moins d'invalid free mais d'autres leaks sa mere
+		free(tmp->path);
+		if (tmp->infile_fd != -2)
 			close(tmp->infile_fd);
-		if (tmp->outfile_fd > 2)
+		if (tmp->outfile_fd != -2)
 			close(tmp->outfile_fd);
 		free(tmp);
+		tmp = next;
 	}
+	cmd = NULL;
 }
 
 void	free_minishell(t_ms *minishell)
 {
 	if (!minishell)
 		return ;
-	free_cmd_list(minishell->cmd_list);
-	free_token_list(minishell->token);
-	free_token_list(minishell->expand);
-	if (minishell->current_prompt)
-		free(minishell->current_prompt);
-	free_env(minishell);
-	free(minishell->pwd);
-	free(minishell->envp);
+	if (minishell->cmd_list)
+		free_cmd_list(minishell->cmd_list);
+	if (minishell->token)
+		free_token_list(minishell->token);
+	if (minishell->expand)
+		free_token_list(minishell->expand);
+	if (minishell->env_lst)
+		free_env(minishell);
+	if (minishell->envp)
+	{
+		free(minishell->envp);
+		minishell->envp = NULL;
+	}
 	free((void *)minishell);
 }
 
@@ -98,7 +85,6 @@ void	free_env(t_ms *minishell)
 {
 	t_env	*tmp;
 	t_env	*next_node;
-
 	tmp = minishell->env_lst;
 	while (tmp)
 	{
@@ -108,4 +94,11 @@ void	free_env(t_ms *minishell)
 		free(tmp);
 		tmp = next_node;
 	}
+	minishell->env_lst = NULL;
 }
+
+// void	free_all_that_shit(t_ms *ms)
+// {
+
+// }
+

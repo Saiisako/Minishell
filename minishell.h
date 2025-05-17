@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ChloeMontaigut <ChloeMontaigut@student.    +#+  +:+       +#+        */
+/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/16 23:29:37 by ChloeMontai      ###   ########.fr       */
+/*   Updated: 2025/05/17 18:39:22 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@
 # include <stdbool.h>
 # include "library/libft/libft.h"
 # include <errno.h>
+
+// int	g_sig = 0;
 
 typedef enum e_type
 {
@@ -215,6 +217,7 @@ char	*get_env_value(t_env *env, char *key);
 int		create_heredoc(char *limiter, t_ms *minishell);
 int		setup_heredocs(t_cmd *cmd_list, t_ms *minishell);
 void	heredoc_child(int write_fd, char *limiter, t_ms *minishell);
+void	heredoc_signal_handler(int sig);
 
 ///////////////// BUILTIN /////////////////
 
@@ -270,6 +273,9 @@ void	export_print_sorted(t_env *env_lst);
 char	*concat_env_var(char *key, char *value);
 int		process_export_arg(t_ms *ms, t_token *arg);
 int		ft_export(t_ms *ms, t_cmd *cmd);
+
+
+void child_cleanup(t_ms *ms, char **args);
 
 // UNSET
 

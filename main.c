@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ChloeMontaigut <ChloeMontaigut@student.    +#+  +:+       +#+        */
+/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/16 23:40:15 by ChloeMontai      ###   ########.fr       */
+/*   Updated: 2025/05/17 19:34:27 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	print_error_message(const char *msg, t_ms *minishell)
 		if (minishell->second_special == PIPE)
 			special = ft_strdup("|");
 		printf("bash: syntax error near unexpected token '%s'\n", special);
+		free(special); //
 	}
 	else
 		printf("%s\n", msg);
@@ -48,7 +49,7 @@ void	handle_signal_prompt(int sig)
 	{
 		g_sig = 1;
 		rl_on_new_line();
-		// rl_replace_line("", 0);
+		rl_replace_line("", 0);
 		write(1, "\n", 1);
 		rl_redisplay();
 	}
@@ -77,23 +78,27 @@ void	prompt(t_ms *minishell)
 		{
 			write(1, "exit\n", 5);
 			free_env(minishell);
+			free(minishell->current_prompt);
+			free(minishell->pwd);
 			free(minishell);
 			exit(0);
 		}
 		if (!parsing_input(input, minishell))
  		{
  			print_error_message("", minishell);
+			free(input);
  			continue;
  		}
 		if (input && *input)
 			add_history(input);
 		if (setup_heredocs(minishell->cmd_list, minishell) != 0)
 		{
-			print_error_message("heredoc failed", minishell);
+			free_cmd_list(minishell->cmd_list);
+			minishell->cmd_list = NULL;
 			free(input);
-			free_env(minishell);
-			free(minishell);
-			exit(1);
+			rl_on_new_line();
+			rl_replace_line("", 0);
+			continue;
 		}
 		if (minishell->cmd_list)
 		{
@@ -102,6 +107,7 @@ void	prompt(t_ms *minishell)
 			free_cmd_list(minishell->cmd_list);
 			minishell->cmd_list = NULL;
 		}
+		free_token_list(minishell->expand);
 		free(input);
 	}
 }
@@ -119,7 +125,10 @@ int	create_token_chain(t_token *first_token, char **args)
 		new_token = malloc(sizeof(t_token));
 		if (!new_token)
 			return (1);
-		new_token->value = args[i];
+		// new_token->value = args[i];
+		new_token->value = ft_strdup(args[i]);
+		if (!new_token->value)
+			return (1);
 		new_token->is_next_space = true;
 		new_token->type = WORD;
 		new_token->index = i;
@@ -190,6 +199,7 @@ int	execute_builtin(t_ms *minishell, char **args)
 	{
 		t_token *to_free = current;
 		current = current->next;
+		free(to_free->value);
 		free(to_free);
 	}
 	return (result);
@@ -209,7 +219,7 @@ char	*get_last_dir(char *path)
 void	setup_minishell(t_ms **minishell, char **envp)
 {
 		*minishell = malloc(sizeof(t_ms));
-		if (!minishell)
+		if (!*minishell)
 			exit(1);
 		(*minishell)->status = 0;
 		(*minishell)->envp = envp;

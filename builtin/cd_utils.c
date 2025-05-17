@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:59:40 by skock             #+#    #+#             */
-/*   Updated: 2025/05/16 11:28:08 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/17 14:51:31 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ void	update_pwd(t_ms *minishell)
 	else
 	{
 		free(current->value);
-		current->value = ft_strdup(current->value);
 		current->value = ft_strdup(minishell->pwd);
+
 	}
 	if (!old)
 		free(old_pwd_value);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ChloeMontaigut <ChloeMontaigut@student.    +#+  +:+       +#+        */
+/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:34:45 by skock             #+#    #+#             */
-/*   Updated: 2025/05/16 23:11:04 by ChloeMontai      ###   ########.fr       */
+/*   Updated: 2025/05/17 19:32:25 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,6 +173,9 @@ int	execute_cmd(t_ms *minishell, t_cmd *cmd, char **args, int *pipe_fd, int prev
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
 		exec_redir(cmd, prev, pipe_fd, args, minishell);
+		free(minishell->current_prompt);
+		free(minishell->pwd);
+		rl_clear_history();
 	}
 	else if (cmd->pid < 0)
 	{
@@ -202,13 +205,17 @@ void	exec_redir(t_cmd *cmd, int prev, int *pipe_fd, char **args, t_ms *ms)
 		if (cmd->outfile_fd != pipe_fd[1])
 			close(pipe_fd[1]);
 	}
-	if(cmd->infile_fd == -1 || cmd->outfile_fd == -1)
-	{
-		printf("caca");
-		exit (0);
-	}
 	if (is_builtin(args[0]))
-		exit(execute_builtin(ms, args));
+	{
+		// exit(execute_builtin(ms, args));
+		int ret = execute_builtin(ms, args);
+		free_array(args); ////
+		free_env(ms);
+		free_token_list(ms->expand);
+		free_cmd_list(ms->cmd_list);
+		// free_minishell(ms);
+		exit(ret);
+	}
 	if (!cmd->path)
 		exit(EXIT_FAILURE);
 	if(is_directory(cmd->path))
@@ -220,7 +227,10 @@ void	exec_redir(t_cmd *cmd, int prev, int *pipe_fd, char **args, t_ms *ms)
 		exit(ms->status);
 	}
 	execve(cmd->path, args, ms->envp);
+	free_array(args); //
+	free_minishell(ms); ///
 	handle_error_exec(ms, args);
+
 }
 
 void	handle_error_exec(t_ms *minishell, char **args)
@@ -231,6 +241,8 @@ void	handle_error_exec(t_ms *minishell, char **args)
 		ft_putstr_fd(args[0], 2);
 		ft_putstr_fd(": Permission denied\n", 2);
 		minishell->status = 126;
+		free_array(args); ////
+		free_minishell(minishell);
 		exit(minishell->status);
 	}
 	else if (errno == ENOENT)
@@ -239,12 +251,16 @@ void	handle_error_exec(t_ms *minishell, char **args)
 		ft_putstr_fd(args[0], 2);
 		ft_putstr_fd(": No such file or directory\n", 2);
 		minishell->status = 127;
+		free_array(args); ////
+		free_minishell(minishell);
 		exit(minishell->status);
 	}
 	else
 	{
 		ft_putstr_fd("minishell: ", 2);
 		perror(args[0]);
+		free_array(args);
+		free_minishell(minishell); ///
 		exit(EXIT_FAILURE);
 	}
 }
