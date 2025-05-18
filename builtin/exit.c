@@ -17,7 +17,7 @@ int	ft_exit(t_cmd *cmd, t_ms *minishell)
 	t_token	*token;
 	int		exit_status;
 
-	exit_status = 0;
+	exit_status = 0;	
 	token = cmd->token->next;
 	if (token)
 	{
@@ -41,11 +41,12 @@ int	ft_exit(t_cmd *cmd, t_ms *minishell)
 	else
 		ft_putstr_fd("exit\n", 1);
 	minishell->status = exit_status;
+	free(minishell->pwd);
+	free(minishell->current_prompt);
 	free_env(minishell);
 	free(minishell);
 	exit(exit_status);
 }
-
 
 int	double_sign(char *str)
 {

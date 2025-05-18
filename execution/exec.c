@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:34:45 by skock             #+#    #+#             */
-/*   Updated: 2025/05/17 20:50:25 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/18 18:12:56 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -286,7 +286,6 @@ void	handle_error_exec(t_ms *minishell, char **args, int	errno_code)
 		free_minishell(minishell); ///
 		exit(EXIT_FAILURE);
 	}
-	
 }
 
 int	wait_all_children(t_ms *ms, int last_pid, int last_status)

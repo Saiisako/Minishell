@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 16:15:22 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/12 14:57:49 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/18 14:42:08 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,28 @@ int	process_redirections(t_cmd *cmd, t_ms *ms)
 		token = token->next;
 	}
 	return (0);
+}
+
+void	handle_redirections(t_cmd *cmd, int prev_pipe, int *pipe_fd)
+{
+	if (cmd->heredoc_fd > 0)
+		dup2(cmd->heredoc_fd, STDIN_FILENO);
+	else if (cmd->infile_fd != -2)
+		dup2(cmd->infile_fd, STDIN_FILENO);
+	else if (prev_pipe != -1)
+		dup2(prev_pipe, STDIN_FILENO);
+	if (cmd->outfile_fd != -2)
+		dup2(cmd->outfile_fd, STDOUT_FILENO);
+	else if (cmd->next)
+		dup2(pipe_fd[1], STDOUT_FILENO);
+	if (cmd->heredoc_fd > 0 || cmd->infile_fd != -2)
+		close(cmd->heredoc_fd > 0 ? cmd->heredoc_fd : cmd->infile_fd);
+	if (cmd->outfile_fd != -2)
+		close(cmd->outfile_fd);
+	else if (cmd->next)
+		close(pipe_fd[1]);
+	if (cmd->next)
+		close(pipe_fd[0]);
 }
 
 // int	syntax_error(t_token *token, t_ms *ms)
@@ -166,24 +188,3 @@ int	process_redirections(t_cmd *cmd, t_ms *ms)
 // 		close(pipe_fd[0]);
 // }
 
-void	handle_redirections(t_cmd *cmd, int prev_pipe, int *pipe_fd)
-{
-	if (cmd->heredoc_fd > 0)
-		dup2(cmd->heredoc_fd, STDIN_FILENO);
-	else if (cmd->infile_fd != -2)
-		dup2(cmd->infile_fd, STDIN_FILENO);
-	else if (prev_pipe != -1)
-		dup2(prev_pipe, STDIN_FILENO);
-	if (cmd->outfile_fd != -2)
-		dup2(cmd->outfile_fd, STDOUT_FILENO);
-	else if (cmd->next)
-		dup2(pipe_fd[1], STDOUT_FILENO);
-	if (cmd->heredoc_fd > 0 || cmd->infile_fd != -2)
-		close(cmd->heredoc_fd > 0 ? cmd->heredoc_fd : cmd->infile_fd);
-	if (cmd->outfile_fd != -2)
-		close(cmd->outfile_fd);
-	else if (cmd->next)
-		close(pipe_fd[1]);
-	if (cmd->next)
-		close(pipe_fd[0]);
-}

@@ -6,38 +6,11 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 11:15:11 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/17 15:40:37 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/18 19:27:37 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-// int	create_heredoc(char *limiter, t_ms *minishell)
-// {
-// 	int		fd[2];
-// 	char	*line;
-// 	char	*tmp_line[2];
-
-// 	if (pipe(fd) == -1)
-// 		return (perror("pipe"), -1);
-// 	while (1)
-// 	{
-// 		line = readline("> ");
-// 		if (!line || ft_strcmp(line, limiter) == 0)
-// 		{
-// 			free(line);
-// 			break ;
-// 		}
-// 		tmp_line[0] = line;
-// 		tmp_line[1] = NULL;
-// 		do_expand_heredoc(tmp_line, minishell);
-// 		write(fd[1], tmp_line[0], ft_strlen(tmp_line[0]));
-// 		write(fd[1], "\n", 1);
-// 		free(tmp_line[0]);
-// 	}
-// 	close(fd[1]);
-// 	return (fd[0]);
-// }
 
 int	setup_heredocs(t_cmd *cmd_list, t_ms *minishell)
 {
@@ -113,7 +86,6 @@ int	create_heredoc(char *limiter, t_ms *minishell)
 	{
 		close(fd[0]);
 		minishell->status = 128 + WTERMSIG(status);
-		rl_done = 1; 
 		return (-1);
 	}
 	return (fd[0]);

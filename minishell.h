@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/17 20:28:31 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/18 18:45:33 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -273,6 +273,7 @@ void	export_print_sorted(t_env *env_lst);
 char	*concat_env_var(char *key, char *value);
 int		process_export_arg(t_ms *ms, t_token *arg);
 int		ft_export(t_ms *ms, t_cmd *cmd);
+char	**dup_envp(char **envp);
 
 
 void child_cleanup(t_ms *ms, char **args);
@@ -297,4 +298,10 @@ void	free_token_list(t_token *token);
 void	free_cmd_list(t_cmd *cmd);
 void	free_minishell(t_ms *minishell);
 
+
+void	handle_signal_prompt(int sig);
+
+
 #endif
+
+

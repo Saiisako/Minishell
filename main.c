@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/17 19:34:27 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/18 19:26:45 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,12 +69,7 @@ void	prompt(t_ms *minishell)
 		full_prompt = ft_strjoin(minishell->current_prompt, " > ");
 		input = readline(full_prompt);
 		free(full_prompt);
-		if (!input && g_sig == 1) //
-		{
-			write(1, "\n", 1);
-			continue;
-		}
-		else if (!input)
+		if (!input)
 		{
 			write(1, "exit\n", 5);
 			free_env(minishell);
@@ -218,16 +213,16 @@ char	*get_last_dir(char *path)
 
 void	setup_minishell(t_ms **minishell, char **envp)
 {
-		*minishell = malloc(sizeof(t_ms));
-		if (!*minishell)
-			exit(1);
-		(*minishell)->status = 0;
-		(*minishell)->envp = envp;
-		(*minishell)->unexpected = false;
-		(*minishell)->is_next_space = false;
-		(*minishell)->first_special = 69;
-		(*minishell)->second_special = 69;
-		(*minishell)->go_cmd = true;
+	*minishell = malloc(sizeof(t_ms));
+	if (!*minishell)
+		exit(1);
+	(*minishell)->status = 0;
+	(*minishell)->envp = envp;
+	(*minishell)->unexpected = false;
+	(*minishell)->is_next_space = false;
+	(*minishell)->first_special = 69;
+	(*minishell)->second_special = 69;
+	(*minishell)->go_cmd = true;
 
 	char *cwd = getcwd(NULL, 0);
 	if (cwd)

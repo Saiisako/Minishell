@@ -60,7 +60,7 @@ void	free_minishell(t_ms *minishell)
 		free_env(minishell);
 	if (minishell->envp)
 	{
-		free(minishell->envp);
+		free_env(minishell);
 		minishell->envp = NULL;
 	}
 	free((void *)minishell);
@@ -81,6 +81,7 @@ void	free_array(char **args)
 	free(args);
 }
 
+
 void	free_env(t_ms *minishell)
 {
 	t_env	*tmp;
@@ -94,7 +95,7 @@ void	free_env(t_ms *minishell)
 		free(tmp);
 		tmp = next_node;
 	}
-	minishell->env_lst = NULL;
+	// minishell->env_lst = NULL;
 }
 
 // void	free_all_that_shit(t_ms *ms)
