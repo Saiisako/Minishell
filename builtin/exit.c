@@ -14,15 +14,16 @@
 
 int	ft_exit(t_cmd *cmd, t_ms *minishell)
 {
-	t_token	*token;
-	int		exit_status;
+	t_token		*token;
+	int			exit_status;
+	long long	numeric_value;
 
 	exit_status = 0;	
 	token = cmd->token->next;
 	if (token)
 	{
 		ft_putstr_fd("exit\n", 1);
-		if (!double_sign(token->value))
+		if (!db_sign(token->value) || !ft_atoll(token->value, &numeric_value))
 		{
 			ft_putstr_fd("minishell: exit: ", 2);
 			ft_putstr_fd(token->value, 2);
@@ -36,19 +37,16 @@ int	ft_exit(t_cmd *cmd, t_ms *minishell)
 			return (1);
 		}
 		else
-			exit_status = ft_atoi(token->value);
+			exit_status = (unsigned char)numeric_value;
 	}
 	else
 		ft_putstr_fd("exit\n", 1);
+	exit_clean(minishell);
 	minishell->status = exit_status;
-	free(minishell->pwd);
-	free(minishell->current_prompt);
-	free_env(minishell);
-	free(minishell);
 	exit(exit_status);
 }
 
-int	double_sign(char *str)
+int	db_sign(char *str)
 {
 	int	i;
 
@@ -64,4 +62,44 @@ int	double_sign(char *str)
 		i++;
 	}
 	return (1);
+}
+
+int	ft_atoll(const char *str, long long *out)
+{
+	int			i;
+	int			sign;
+	long long	result;
+
+	i = 0;
+	sign = 1;
+	result = 0;
+	if (str[i] == '-' || str[i] == '+')
+	{
+		if (str[i] == '-')
+			sign = -1;
+		i++;
+	}
+	while (str[i])
+	{
+		if (str[i] < '0' || str[i] > '9')
+			return (0);
+		int digit = str[i] - '0';
+
+		if (sign == 1 && (result > (LLONG_MAX - digit) / 10))
+			return (0);
+		if (sign == -1 && (-result < (LLONG_MIN + digit) / 10))
+			return (0);
+		result = result * 10 + digit;
+		i++;
+	}
+	*out = result * sign;
+	return (1);
+}
+
+void	exit_clean(t_ms *ms)
+{
+	free(ms->pwd);
+	free(ms->current_prompt);
+	free_env(ms);
+	free(ms);
 }

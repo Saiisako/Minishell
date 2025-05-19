@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:34:45 by skock             #+#    #+#             */
-/*   Updated: 2025/05/19 14:28:34 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/19 16:35:46 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,10 @@ int	execute_pipeline(t_ms *ms, t_cmd *cmd)
 	int	prev_p;
 	int	last_pid;
 	int	redir_ok;
+	int	result;
 
+	signal(SIGINT, handle_signal_exec);
+	signal(SIGQUIT, handle_signal_exec);
 	cmd = ms->cmd_list;
 	prev_p = -1;
 	last_pid = -1;
@@ -69,7 +72,10 @@ int	execute_pipeline(t_ms *ms, t_cmd *cmd)
 			last_pid = handle_redir_error(ms, cmd, pipe_fd, &prev_p);
 		cmd = cmd->next;
 	}
-	return (wait_all_children(ms, last_pid, ms->status));
+	result = wait_all_children(ms, last_pid, ms->status);
+	// signal(SIGINT, handle_signal_prompt);
+	// signal(SIGQUIT, SIG_IGN);
+	return (result);
 }
 
 // try
@@ -288,24 +294,39 @@ void	handle_error_exec(t_ms *minishell, char **args, int	errno_code)
 	}
 }
 
-int	wait_all_children(t_ms *ms, int last_pid, int last_status)
-{
-	t_cmd	*cmd;
-	int		status;
+// int	wait_all_children(t_ms *ms, int last_pid, int last_status)
+// {
+// 	t_cmd	*cmd;
+// 	int		status;
 
-	cmd = ms->cmd_list;
-	while (cmd)
-	{
-		if (cmd->pid > 0)
-		{
-			waitpid(cmd->pid, &status, 0);
-			if (cmd->pid == last_pid && WIFEXITED(status))
-			{
-				last_status = WEXITSTATUS(status);
-				ms->status = last_status;
-			}
-		}
-		cmd = cmd->next;
-	}
-	return (last_status);
-}
+// 	cmd = ms->cmd_list;
+// 	while (cmd)
+// 	{
+// 		if (cmd->pid > 0)
+// 		{
+// 			waitpid(cmd->pid, &status, 0);
+// 			if (cmd->pid == last_pid)
+// 			{
+// 				if (WIFEXITED(status))
+// 					last_status = WEXITSTATUS(status);
+// 				else if (WIFSIGNALED(status))
+// 				{
+// 					last_status = 128 + WTERMSIG(status);
+// 					if (WTERMSIG(status) == SIGQUIT)
+// 					{
+// 						write(1, "Quit (core dumped)\n", 20);
+// 						g_sig = 131;
+// 					}
+// 					else
+// 					{
+// 						write(1, "\n", 1);
+// 						g_sig = 130;
+// 					}
+// 				}
+// 				ms->status = last_status;
+// 			}
+// 		}
+// 		cmd = cmd->next;
+// 	}
+// 	return (last_status);
+// }

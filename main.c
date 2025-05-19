@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/19 14:28:45 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/19 16:35:26 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,54 @@ void	handle_signal_prompt(int sig)
 		write(1, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
-		// rl_done = 1;
 		rl_redisplay();
 	}
+}
+
+void	handle_signal_exec(int sig)
+{
+	if (sig == SIGINT)
+		g_sig = 130;
+	else if (sig == SIGQUIT)
+		g_sig = 131;
+}
+
+
+int	wait_all_children(t_ms *ms, int last_pid, int last_status)
+{
+	t_cmd	*cmd;
+	int		status;
+
+	cmd = ms->cmd_list;
+	while (cmd)
+	{
+		if (cmd->pid > 0)
+		{
+			waitpid(cmd->pid, &status, 0);
+			if (cmd->pid == last_pid)
+			{
+				if (WIFEXITED(status))
+					last_status = WEXITSTATUS(status);
+				else if (WIFSIGNALED(status))
+				{
+					last_status = 128 + WTERMSIG(status);
+					if (WTERMSIG(status) == SIGQUIT)
+					{
+						write(1, "Quit (core dumped)\n", 20);
+						g_sig = 131;
+					}
+					else
+					{
+						write(1, "\n", 1);
+						g_sig = 130;
+					}
+				}
+				ms->status = last_status;
+			}
+		}
+		cmd = cmd->next;
+	}
+	return (last_status);
 }
 
 void	prompt(t_ms *minishell)
@@ -63,14 +108,12 @@ void	prompt(t_ms *minishell)
 
 	while (1)
 	{
-		g_sig = 0;
 		signal(SIGINT, handle_signal_prompt);
 		signal(SIGQUIT, SIG_IGN);
 		full_prompt = ft_strjoin(minishell->current_prompt, " > ");
+		g_sig = 0;
 		input = readline(full_prompt);
 		free(full_prompt);
-		// if (rl_done)
-		// 	rl_done = 0;
 		if (!input)
 		{
 			write(1, "exit\n", 5);
@@ -80,6 +123,12 @@ void	prompt(t_ms *minishell)
 			free(minishell);
 			exit(0);
 		}
+		// if (g_sig == 1)
+		// {
+		// 	minishell->status = 130;
+		// 	free(input);
+		// 	continue;
+		// }
 		if (!parsing_input(input, minishell))
  		{
  			print_error_message("", minishell);
@@ -100,7 +149,7 @@ void	prompt(t_ms *minishell)
 		if (minishell->cmd_list)
 		{
 			execute_pipeline(minishell, minishell->cmd_list);
-			g_sig = 0;
+			// g_sig = 0;
 			free_cmd_list(minishell->cmd_list);
 			minishell->cmd_list = NULL;
 		}

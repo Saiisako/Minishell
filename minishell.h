@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/19 13:44:11 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/19 18:08:57 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,7 +258,7 @@ void	print_echo(t_cmd *cmd);
 // EXIT
 
 int		ft_exit(t_cmd *cmd, t_ms *minishell);
-int		double_sign(char *str);
+int		db_sign(char *str);
 
 // EXPORT
 
@@ -301,6 +301,9 @@ void	free_minishell(t_ms *minishell);
 
 
 void	handle_signal_prompt(int sig);
+void	handle_signal_exec(int sig);
+int		ft_atoll(const char *str, long long *out);
+void	exit_clean(t_ms *ms);
 
 
 #endif
