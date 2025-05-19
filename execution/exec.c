@@ -6,40 +6,11 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:34:45 by skock             #+#    #+#             */
-/*   Updated: 2025/05/19 16:35:46 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/19 19:50:28 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-// int	execute_pipeline(t_ms *ms, t_cmd *cmd)
-// {
-// 	int	pipe_fd[2]; 
-// 	int	prev_p;
-// 	int	last_pid;
-// 	int	redir_ok;
-
-// 	cmd = ms->cmd_list;
-// 	prev_p = -1;
-// 	last_pid = -1;
-// 	while (cmd)
-// 	{
-// 		redir_ok = 1;
-// 		if (process_redirections(cmd, ms))
-// 		{
-// 			ms->status = 1;
-// 			redir_ok = 0;
-// 		}
-// 		if (setup_pipes(cmd, pipe_fd, &prev_p))
-// 			return (1);
-// 		if (redir_ok)
-// 			last_pid = handle_command(ms, cmd, pipe_fd, &prev_p, &ms->status);
-// 		else
-// 			cleanup_pipes(cmd, pipe_fd, &prev_p);
-// 		cmd = cmd->next;
-// 	}
-// 	return (wait_all_children(ms, last_pid, ms->status));
-// }
 
 int	execute_pipeline(t_ms *ms, t_cmd *cmd)
 {

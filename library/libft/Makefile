@@ -32,6 +32,7 @@ SRCS	=	ft_split.c\
 			ft_substr.c\
 			ft_strrchr.c\
 			ft_strchr.c\
+			ft_atoll.c\
 
 OBJS = $(SRCS:.c=.o)
 

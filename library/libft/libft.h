@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 15:21:24 by skock             #+#    #+#             */
-/*   Updated: 2025/04/25 22:00:46 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/19 21:34:15 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,6 @@ char	*ft_strstr(const char *haystack, const char *needle);
 void	ft_strclear(char *str, const char *remove);
 char	*ft_strrchr(const char *str, int c);
 char	*ft_strchr_lib(const char *str, int c);
+int		ft_atoll(const char *str, long long *out);
 
 #endif

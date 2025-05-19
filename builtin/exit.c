@@ -18,32 +18,38 @@ int	ft_exit(t_cmd *cmd, t_ms *minishell)
 	int			exit_status;
 	long long	numeric_value;
 
-	exit_status = 0;	
+	exit_status = 0;
 	token = cmd->token->next;
+	ft_putstr_fd("exit\n", 1);
 	if (token)
 	{
-		ft_putstr_fd("exit\n", 1);
-		if (!db_sign(token->value) || !ft_atoll(token->value, &numeric_value))
-		{
-			ft_putstr_fd("minishell: exit: ", 2);
-			ft_putstr_fd(token->value, 2);
-			ft_putstr_fd(": numeric argument required\n", 2);
-			exit_status = 2;
-		}
-		else if (token->next)
-		{
-			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
-			minishell->status = 1;
+		if (ft_exit_error(token, minishell, &numeric_value))
 			return (1);
-		}
-		else
-			exit_status = (unsigned char)numeric_value;
+		exit_status = (unsigned char)numeric_value;
 	}
-	else
-		ft_putstr_fd("exit\n", 1);
 	exit_clean(minishell);
 	minishell->status = exit_status;
 	exit(exit_status);
+}
+
+int	ft_exit_error(t_token *token, t_ms *ms, long long *numeric_value)
+{
+	if (!db_sign(token->value) || !ft_atoll(token->value, numeric_value))
+	{
+		ft_putstr_fd("minishell: exit: ", 2);
+		ft_putstr_fd(token->value, 2);
+		ft_putstr_fd(": numeric argument required\n", 2);
+		ms->status = 2;
+		exit_clean(ms);
+		exit(ms->status);
+	}
+	else if (token->next)
+	{
+		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+		ms->status = 1;
+		return (1);
+	}
+	return (0);
 }
 
 int	db_sign(char *str)
@@ -64,42 +70,10 @@ int	db_sign(char *str)
 	return (1);
 }
 
-int	ft_atoll(const char *str, long long *out)
-{
-	int			i;
-	int			sign;
-	long long	result;
-
-	i = 0;
-	sign = 1;
-	result = 0;
-	if (str[i] == '-' || str[i] == '+')
-	{
-		if (str[i] == '-')
-			sign = -1;
-		i++;
-	}
-	while (str[i])
-	{
-		if (str[i] < '0' || str[i] > '9')
-			return (0);
-		int digit = str[i] - '0';
-
-		if (sign == 1 && (result > (LLONG_MAX - digit) / 10))
-			return (0);
-		if (sign == -1 && (-result < (LLONG_MIN + digit) / 10))
-			return (0);
-		result = result * 10 + digit;
-		i++;
-	}
-	*out = result * sign;
-	return (1);
-}
-
 void	exit_clean(t_ms *ms)
 {
 	free(ms->pwd);
 	free(ms->current_prompt);
 	free_env(ms);
-	free(ms);
+	free_array(ms->envp);
 }

@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/19 16:35:26 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/19 20:40:20 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,7 @@ void	prompt(t_ms *minishell)
 			free_env(minishell);
 			free(minishell->current_prompt);
 			free(minishell->pwd);
+			free_array(minishell->envp);
 			free(minishell);
 			exit(0);
 		}
@@ -268,7 +269,7 @@ void	setup_minishell(t_ms **minishell, char **envp)
 	if (!*minishell)
 		exit(1);
 	(*minishell)->status = 0;
-	(*minishell)->envp = envp;
+	(*minishell)->envp = dup_envp(envp);
 	(*minishell)->unexpected = false;
 	(*minishell)->is_next_space = false;
 	(*minishell)->first_special = 69;
@@ -288,7 +289,6 @@ void	setup_minishell(t_ms **minishell, char **envp)
 		(*minishell)->current_prompt = ft_strdup("?");
 		(*minishell)->pwd = ft_strdup("?");
 	}
-
 }
 
 int	main(int ac, char **av, char **envp)

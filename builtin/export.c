@@ -41,16 +41,14 @@ char	*concat_env_var(char *key, char *value)
 
 	if (!value)
 		return (ft_strdup(key));
-	result = ft_strdup(key);
+	result = ft_strjoin(key, "=");
 	if (!result)
 		return (NULL);
-	temp = ft_strjoin(result, "=");
+	temp = ft_strjoin(result, value);
 	free(result);
 	if (!temp)
 		return (NULL);
-	result = ft_strjoin(temp, value);
-	free(temp);
-	return (result);
+	return (temp);
 }
 
 int	process_export_arg(t_ms *ms, t_token *arg)

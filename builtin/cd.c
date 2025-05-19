@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 14:08:59 by skock             #+#    #+#             */
-/*   Updated: 2025/05/15 14:27:58 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/19 21:44:50 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,17 +54,12 @@ int	cd(t_cmd *cmd, t_ms *ms)
 	arg = cmd->token->next;
 	if (arg && arg->next)
 	{
-		ft_putstr_fd("minishell: cd: too many arguments\n", 2);;
+		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
 		return (ms->status = 1);
 	}
 	special_cd(arg, ms);
 	if (ms->status == -1)
 	{
-		// if (access(arg->value, F_OK) != 0)
-		// {
-		// 	ft_putstr_fd("AHAHAHAH", 2);
-		// 	return (ms->status = 1);
-		// }
 		if (chdir(arg->value) == 0)
 		{
 			update_pwd(ms);

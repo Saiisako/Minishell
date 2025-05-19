@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 16:50:24 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/17 20:08:46 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/19 20:33:37 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,10 @@ void	update_envp(t_ms *ms)
 	t_env	*env;
 	int		count;
 	int		i;
+	
+	// print_envp(ms->envp);
+	// if (ms->envp)
+	free_array(ms->envp);
 
 	env = ms->env_lst;
 	count = 0;
@@ -72,8 +76,49 @@ void	update_envp(t_ms *ms)
 	while (env)
 	{
 		ms->envp[i] = concat_env_var(env->key, env->value);
+		if (!ms->envp[i])
+		{
+			while (i--)
+				free(ms->envp[i]);
+			free(ms->envp);
+			ms->envp = NULL;
+			return ;
+		}
 		i++;
 		env = env->next;
 	}
 	ms->envp[i] = NULL;
+}
+
+
+void	print_envp(char **envp)
+{
+	int	i = 0;
+
+	if (!envp)
+	{
+		printf("envp is NULL\n");
+		return ;
+	}
+	while (envp[i])
+	{
+		printf("envp maggle : %s\n", envp[i]);
+		i++;
+	}
+}
+
+char	**dup_envp(char **envp)
+{
+	int		count = 0;
+	char	**copy;
+
+	while (envp[count])
+		count++;
+	copy = malloc(sizeof(char *) * (count + 1));
+	if (!copy)
+		return (NULL);
+	for (int i = 0; i < count; i++)
+		copy[i] = strdup(envp[i]);
+	copy[count] = NULL;
+	return (copy);
 }

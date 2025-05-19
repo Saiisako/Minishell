@@ -56,13 +56,19 @@ void	free_minishell(t_ms *minishell)
 		free_token_list(minishell->token);
 	if (minishell->expand)
 		free_token_list(minishell->expand);
-	if (minishell->env_lst)
+
+	if (minishell->env_lst) ////////
 		free_env(minishell);
 	if (minishell->envp)
-	{
-		free_env(minishell);
-		minishell->envp = NULL;
-	}
+		free_array(minishell->envp);
+
+	// if (minishell->env_lst)
+	// 	free_env(minishell);
+	// if (minishell->envp)
+	// {
+	// 	free_env(minishell);
+	// 	minishell->envp = NULL;
+	// }
 	free((void *)minishell);
 }
 
@@ -79,6 +85,7 @@ void	free_array(char **args)
 		i++;
 	}
 	free(args);
+	args = NULL;
 }
 
 
