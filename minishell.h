@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/18 18:45:33 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/19 13:44:11 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 # include <stdbool.h>
 # include "library/libft/libft.h"
 # include <errno.h>
+# include <termios.h>
 
 // int	g_sig = 0;
 

@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/18 19:26:45 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/19 14:28:45 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,10 @@ void	handle_signal_prompt(int sig)
 	if (sig == SIGINT)
 	{
 		g_sig = 1;
+		write(1, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
-		write(1, "\n", 1);
+		// rl_done = 1;
 		rl_redisplay();
 	}
 }
@@ -65,10 +66,11 @@ void	prompt(t_ms *minishell)
 		g_sig = 0;
 		signal(SIGINT, handle_signal_prompt);
 		signal(SIGQUIT, SIG_IGN);
-		
 		full_prompt = ft_strjoin(minishell->current_prompt, " > ");
 		input = readline(full_prompt);
 		free(full_prompt);
+		// if (rl_done)
+		// 	rl_done = 0;
 		if (!input)
 		{
 			write(1, "exit\n", 5);
