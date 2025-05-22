@@ -6,21 +6,11 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 16:14:03 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/16 12:49:33 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/22 18:11:30 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-bool	is_builtin(char *cmd)
-{
-	if (!cmd)
-		return (false);
-	return (!ft_strcmp(cmd, "echo") || !ft_strcmp(cmd, "cd")
-		|| !ft_strcmp(cmd, "pwd") || !ft_strcmp(cmd, "export")
-		|| !ft_strcmp(cmd, "unset") || !ft_strcmp(cmd, "env")
-		|| !ft_strcmp(cmd, "exit"));
-}
 
 void	print_cmd_not_found(char *cmd)
 {
@@ -43,18 +33,16 @@ void	cleanup_pipes(t_cmd *cmd, int pipe_fd[2], int *prev_pipe)
 	}
 	else if (pipe_fd[0] != -1)
 		close(pipe_fd[0]);
-	// if (cmd->next && pipe_fd[0] != -1)
-	// 	close(pipe_fd[0]);
 }
 
 int	setup_pipes(t_cmd *cmd, int *pipe_fd, int *prev_pipe)
 {
-	if (cmd->next && pipe(pipe_fd) == -1) //////////////
+	if (cmd->next && pipe(pipe_fd) == -1)
 	{
 		if (*prev_pipe != -1)
 			close(*prev_pipe);
 		return (perror("pipe"), 1);
-	} ////////////
+	}
 	if (*prev_pipe != -1)
 	{
 		if (cmd->infile_fd == -2)
@@ -90,8 +78,8 @@ void	update_fds(t_cmd *cmd, int *pipe_fd, int *prev_pipe)
 
 int	is_directory(const char *path)
 {
-	DIR *dir;
-	
+	DIR	*dir;
+
 	dir = opendir(path);
 	if (dir)
 	{

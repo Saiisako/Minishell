@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:02:46 by skock             #+#    #+#             */
-/*   Updated: 2025/05/13 15:37:28 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/22 19:29:09 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,21 @@ void	handle_word_token(t_token **tmp, t_ms *minishell)
 
 void	handle_token(t_token **tmp, t_ms *minishell)
 {
+	t_token	*tmp2;
+
+	tmp2 = (*tmp);
 	if ((*tmp)->type == S_QUOTE)
 		*tmp = (*tmp)->next;
 	else if ((*tmp)->type == WORD)
+	{
+		if (minishell->caca == true)
+		{
+			minishell->caca = false;
+			*tmp = (*tmp)->next;
+			return ;
+		}
 		handle_word_token(tmp, minishell);
+	}
 	else if ((*tmp)->type == D_QUOTE)
 	{
 		do_expand((*tmp)->value, minishell, (*tmp)->index);
@@ -71,12 +82,26 @@ void	handle_token(t_token **tmp, t_ms *minishell)
 		*tmp = (*tmp)->next;
 }
 
+void	is_heredoc_token(t_ms *ms)
+{
+	t_token	*tmp;
+
+	tmp = ms->token;
+	while (tmp)
+	{
+		if (tmp->type == HEREDOC && tmp->next->type == WORD)
+			ms->caca = true;
+		tmp = tmp->next;
+	}
+}
+
 void	expand_token(t_token *token, t_ms *minishell)
 {
 	t_token	*tmp;
 
 	tmp = token;
 	minishell->expand = NULL;
+	is_heredoc_token(minishell);
 	while (tmp)
 		handle_token(&tmp, minishell);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/19 21:40:44 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/22 19:18:07 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 # include <errno.h>
 # include <termios.h>
 
-// int	g_sig = 0;
+extern int	g_sig;
 
 typedef enum e_type
 {
@@ -46,6 +46,24 @@ typedef enum e_type
 	D_QUOTE,
 	EXPANDING,
 }	t_type;
+
+// typedef struct s_exec
+// {
+	// 	int			*prev_pipe;
+	// 	int			*status;
+	// 	char		**args;
+	// 	struct s_exec	*next;
+	// }					t_exec;
+	
+	typedef struct s_exec
+{
+	int			pipe_fd[2];
+	int			prev_pipe;
+	int			status;
+	pid_t		last_pid;
+	char		**args;
+	int		redir_ok;
+}					t_exec;
 
 typedef struct s_token
 {
@@ -80,20 +98,21 @@ typedef struct s_env
 typedef struct s_ms
 {
 	int			status;
-	int			pipe_fd[2];
 	char		**envp;
 	bool		unexpected;
 	const char	*prompt_msg;
-	char		*pwd; //
+	char		*pwd;
 	bool		is_next_space;
 	char		*current_prompt;
 	t_env		*env_lst;
 	t_token		*token;
 	t_token		*expand;
+	t_exec		*exec;
 	t_cmd		*cmd_list;
 	t_type		first_special;
 	t_type		second_special;
 	bool		go_cmd;
+	bool		caca;
 }				t_ms;
 
 ///////////////// PARSING /////////////////
@@ -157,7 +176,6 @@ void	word_expand_heredoc(char *value, t_ms *minishell, int *i);
 void	expand_heredoc(t_ms *minishell);
 void	join_expand_heredoc(t_ms *minishell, char **heredoc, int index);
 
-
 // CLEAR
 
 char	*quote_rmv(const char *str);
@@ -176,32 +194,30 @@ int		execute_pipeline(t_ms *ms, t_cmd *cmd);
 void	free_array(char **array);
 int		create_token_chain(t_token *first_token, char **args);
 int		setup_pipes(t_cmd *cmd, int *pipe_fd, int *prev_pipe);
-int		execute_cmd(t_ms *ms, t_cmd *cmd, char **args, int *pipe_fd, int prev, int *status);
 void	update_fds(t_cmd *cmd, int *pipe_fd, int *prev_pipe);
 int		wait_all_children(t_ms *ms, int last_pid, int last_status);
-int		handle_command(t_ms *ms, t_cmd *cmd, int pipe_fd[2], int *prev_pipe, int *status);
-int		handle_empty_cmd(t_cmd *cmd, int *prev_pipe, int pipe_fd[2], t_ms *ms);
 void	print_cmd_not_found(char *cmd);
 void	cleanup_pipes(t_cmd *cmd, int pipe_fd[2], int *prev_pipe);
 
 int		is_directory(const char *path);
-int		handle_redir_error(t_ms *ms, t_cmd *cmd, int pipe_fd[2], int *prev_pipe);
-void	handle_error_exec(t_ms *minishell, char **args, int	errno_code);
-void	exec_redir(t_cmd *cmd, int prev, int *pipe_fd, char **args, t_ms *ms);
+int		execute_cmd(t_ms *minishell, t_cmd *cmd, char **args, t_exec *exec);
+void	exec_redir(t_cmd *cmd, t_exec *exec, char **args, t_ms *ms);
+int		handle_command(t_ms *ms, t_cmd *cmd, t_exec *exec);
+int		redir_error(t_ms *ms, t_cmd *cmd, int pipe_fd[2], int *prev_pipe);
+int		handle_empty_cmd(t_cmd *cmd, int *prev_pipe, int pipe_fd[2], t_ms *ms);
+void	handle_error_exec(t_ms *minishell, char **args, int errno_code);
+void	init_exec_struct(t_exec *exec);
+void	errors_prompt(int param, char **args, t_cmd *cmd);
 
 // SIGNALS
 
-void	handle_signal(int sig);
-void	handle_exit(int sig);
-void	handle_heredoc(void);
+void	handle_signal_prompt(int sig);
+void	handle_signal_exec(int sig);
 
 // REDIRECTION
 
-int	process_redirections(t_cmd *cmd, t_ms *ms);
-
+int		process_redirections(t_cmd *cmd, t_ms *ms);
 void	handle_redirections(t_cmd *cmd, int prev_pipe, int *pipe_fd);
-// int		syntax_error(t_token *token, t_ms *ms);
-// int		open_file(int *fd, char *filename, int flags, t_ms *ms);
 
 // PATH
 
@@ -211,14 +227,21 @@ char	**tokens_to_args(t_token *token);
 int		count_tokens(t_token *t);
 char	*get_env_value(t_env *env, char *key);
 
-// char *ft_strjoin3(char *s1, char *s2, char *s3);
-
 // HEREDOC //
 
 int		create_heredoc(char *limiter, t_ms *minishell);
 int		setup_heredocs(t_cmd *cmd_list, t_ms *minishell);
-void	heredoc_child(int write_fd, char *limiter, t_ms *minishell);
-void	heredoc_signal_handler(int sig);
+// void	heredoc_child(int write_fd, char *limiter, t_ms *minishell);
+
+void	signal_heredoc(int sig);
+// int	here_doc_eof(char *limiter);
+// void free_write(int *pipe_fd, char *input);
+// int	end_heredoc(char *input, int *pipe_fd, t_cmd *cmd);
+// int	do_heredoc(t_cmd *cmd, t_token *curr_token)
+
+
+
+int	do_heredoc(t_cmd *cmd_list, char *limiter);
 
 ///////////////// BUILTIN /////////////////
 
@@ -228,18 +251,15 @@ int		run_builtin_command(t_ms *minishell, t_cmd *temp_cmd, char **args);
 
 // CD
 
-int	cd(t_cmd *cmd, t_ms *ms);
+int		cd(t_cmd *cmd, t_ms *ms);
 void	update_pwd(t_ms *minishell);
-void	go_tilde(t_ms *minishell);
 void	go_back(t_ms *minishell);
-void	go_root(t_ms *minishell);
-void	go_old(t_ms *minishell);
 char	*get_oldpwd(t_ms *minishell);
 char	*get_last_folder(char *path);
 char	*get_user(t_ms *minishell);
 char	*get_last_dir(char *path);
 void	special_cd(t_token *arg, t_ms *ms);
-
+void	print_error_cd(t_token *arg);
 
 // ENV
 
@@ -247,7 +267,6 @@ void	print_env(t_ms *minishell);
 
 // PWD
 
-// void	print_pwd(void);
 void	print_pwd(t_ms *ms);
 
 // ECHO
@@ -256,9 +275,10 @@ void	print_echo(t_cmd *cmd);
 
 // EXIT
 
-int		ft_exit(t_cmd *cmd, t_ms *minishell);
+int		ft_exit(t_cmd *cmd, t_ms *minishell, char **args);
 int		db_sign(char *str);
-int		ft_exit_error(t_token *token, t_ms *ms, long long *numeric_value);
+int		ft_exit_error(t_token *token, t_ms *ms, long long *numeric_value, char **args);
+void	exit_clean(t_ms *ms, char **args);
 
 // EXPORT
 
@@ -275,9 +295,7 @@ char	*concat_env_var(char *key, char *value);
 int		process_export_arg(t_ms *ms, t_token *arg);
 int		ft_export(t_ms *ms, t_cmd *cmd);
 char	**dup_envp(char **envp);
-
-
-void child_cleanup(t_ms *ms, char **args);
+int		count_env_vars(t_ms *ms);
 
 // UNSET
 
@@ -300,13 +318,15 @@ void	free_cmd_list(t_cmd *cmd);
 void	free_minishell(t_ms *minishell);
 
 
-void	handle_signal_prompt(int sig);
-void	handle_signal_exec(int sig);
-void	exit_clean(t_ms *ms);
-void	print_envp(char **envp);
-char	**dup_envp(char **envp);
-
+void	check_exec_errors(t_cmd *cmd, char **args, t_ms *ms);
+void	exec_redir(t_cmd *cmd, t_exec *exec, char **args, t_ms *ms);
+int		run_cmd(t_ms *ms, t_cmd *cmd, t_exec *exec);
+void	print_error_message(const char *msg, t_ms *minishell);
+void	setup_minishell(t_ms **minishell, char **envp);
+int		init_cmd_and_token(t_cmd *cmd, t_token *first_token, char **args);
+int		child_signal(int status, int last_status);
+void	handle_null_input(t_ms *ms);
+void	handle_heredoc_error(t_ms *ms, char *input);
+int		handle_input_prompt(t_ms *minishell, char *input);
 
 #endif
-
-

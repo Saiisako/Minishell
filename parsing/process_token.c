@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_token.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/29 13:16:51 by skock             #+#    #+#             */
-/*   Updated: 2025/05/06 15:22:29 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/21 18:43:38 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ void	special_token(char *input, int *i, t_ms *minishell)
 {
 	const char	*specials[5];
 	int			len;
+	char		*strd;
 	int			j;
 
 	j = 0;
@@ -83,7 +84,8 @@ void	special_token(char *input, int *i, t_ms *minishell)
 		len = ft_strlen(specials[j]);
 		if (ft_strncmp(&input[*i], specials[j], len) == 0)
 		{
-			fill_token_list(minishell, ft_strdup(specials[j]), WORD);
+			strd = ft_strdup(specials[j]);
+			fill_token_list(minishell,	strd, WORD);
 			*i += len;
 			break ;
 		}

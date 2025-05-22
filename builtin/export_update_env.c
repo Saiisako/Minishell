@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 16:50:24 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/19 20:33:37 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/20 12:09:07 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,28 +51,34 @@ int	env_update_or_add(t_env **env_lst, char *key, char *value, t_ms *ms)
 	return (env_add_new(env_lst, key, value, ms));
 }
 
-void	update_envp(t_ms *ms)
+int	count_env_vars(t_ms *ms)
 {
 	t_env	*env;
 	int		count;
-	int		i;
-	
-	// print_envp(ms->envp);
-	// if (ms->envp)
-	free_array(ms->envp);
 
 	env = ms->env_lst;
 	count = 0;
+	free_array(ms->envp);
 	while (env)
 	{
 		count++;
 		env = env->next;
 	}
+	return (count);
+}
+
+void	update_envp(t_ms *ms)
+{
+	t_env	*env;
+	int		i;
+	int		count;
+
+	i = 0;
+	count = count_env_vars(ms);
 	ms->envp = malloc(sizeof(char *) * (count + 1));
 	if (!ms->envp)
 		return ;
 	env = ms->env_lst;
-	i = 0;
 	while (env)
 	{
 		ms->envp[i] = concat_env_var(env->key, env->value);
@@ -90,35 +96,31 @@ void	update_envp(t_ms *ms)
 	ms->envp[i] = NULL;
 }
 
-
-void	print_envp(char **envp)
-{
-	int	i = 0;
-
-	if (!envp)
-	{
-		printf("envp is NULL\n");
-		return ;
-	}
-	while (envp[i])
-	{
-		printf("envp maggle : %s\n", envp[i]);
-		i++;
-	}
-}
-
 char	**dup_envp(char **envp)
 {
-	int		count = 0;
+	int		count;
+	int		i;
 	char	**copy;
 
+	count = 0;
+	i = 0;
 	while (envp[count])
 		count++;
 	copy = malloc(sizeof(char *) * (count + 1));
 	if (!copy)
 		return (NULL);
-	for (int i = 0; i < count; i++)
-		copy[i] = strdup(envp[i]);
+	while (i < count)
+	{
+		copy[i] = ft_strdup(envp[i]);
+		if (!copy[i])
+		{
+			while (--i >= 0)
+				free(copy[i]);
+			free(copy);
+			return (NULL);
+		}
+		i++;
+	}
 	copy[count] = NULL;
 	return (copy);
 }

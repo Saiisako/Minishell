@@ -15,26 +15,31 @@
 void	free_token_list(t_token *token)
 {
 	t_token	*tmp;
+	t_token	*next;
 
-	while (token)
+	tmp = token;
+	while (tmp)
 	{
-		tmp = token->next;
-		free(token->value);
-		free(token);
-		token = tmp;
+		next = tmp->next;
+		if (tmp->value)
+			free(tmp->value);
+		tmp->value = NULL;
+		free(tmp);
+		tmp = next;
 	}
-	// token = NULL;
+	token = NULL;
 }
 
 void	free_cmd_list(t_cmd *cmd)
 {
 	t_cmd	*tmp;
 	t_cmd	*next;
+
 	tmp = cmd;
 	while (tmp)
 	{
 		next = tmp->next;
-		free_token_list(tmp->token); // beaucoup moins d'invalid free mais d'autres leaks sa mere
+		free_token_list(tmp->token);
 		free(tmp->path);
 		if (tmp->infile_fd != -2)
 			close(tmp->infile_fd);
@@ -56,20 +61,11 @@ void	free_minishell(t_ms *minishell)
 		free_token_list(minishell->token);
 	if (minishell->expand)
 		free_token_list(minishell->expand);
-
-	if (minishell->env_lst) ////////
+	if (minishell->env_lst)
 		free_env(minishell);
 	if (minishell->envp)
 		free_array(minishell->envp);
-
-	// if (minishell->env_lst)
-	// 	free_env(minishell);
-	// if (minishell->envp)
-	// {
-	// 	free_env(minishell);
-	// 	minishell->envp = NULL;
-	// }
-	free((void *)minishell);
+	free(minishell);
 }
 
 void	free_array(char **args)
@@ -84,15 +80,16 @@ void	free_array(char **args)
 		free(args[i]);
 		i++;
 	}
+	// printf("Freeing and setting a null: %p\n", args);
 	free(args);
 	args = NULL;
 }
-
 
 void	free_env(t_ms *minishell)
 {
 	t_env	*tmp;
 	t_env	*next_node;
+
 	tmp = minishell->env_lst;
 	while (tmp)
 	{
@@ -102,11 +99,4 @@ void	free_env(t_ms *minishell)
 		free(tmp);
 		tmp = next_node;
 	}
-	// minishell->env_lst = NULL;
 }
-
-// void	free_all_that_shit(t_ms *ms)
-// {
-
-// }
-

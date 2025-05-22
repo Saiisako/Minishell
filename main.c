@@ -3,102 +3,68 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/19 20:40:20 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/22 19:05:43 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	print_error_message(const char *msg, t_ms *minishell)
+int	handle_input_prompt(t_ms *minishell, char *input)
 {
-	char	*special;
-
-	if (minishell->unexpected)
+	if (!input)
+		handle_null_input(minishell);
+	if (!parsing_input(input, minishell))
 	{
-		printf("bash: syntax error near unexpected token 'newline'\n");
-		minishell->unexpected = false;
-		return ;
+		print_error_message("", minishell);
+		free_token_list(minishell->token);
+		// free(input);
+		return (0);
 	}
-	if (minishell->first_special != 69 && minishell->second_special != 69)
+	if (*input)
+		add_history(input);
+	if (setup_heredocs(minishell->cmd_list, minishell) != 0)
 	{
-		if (minishell->second_special == HEREDOC)
-			special = ft_strdup("<<");
-		if (minishell->second_special == APPEND)
-			special = ft_strdup(">>");
-		if (minishell->second_special == REDIR_IN)
-			special = ft_strdup("<");
-		if (minishell->second_special == REDIR_OUT)
-			special = ft_strdup(">");
-		if (minishell->second_special == PIPE)
-			special = ft_strdup("|");
-		printf("bash: syntax error near unexpected token '%s'\n", special);
-		free(special); //
+		handle_heredoc_error(minishell, input);
+		return (0);
 	}
-	else
-		printf("%s\n", msg);
+	return (1);
 }
 
-int	g_sig = 0;
-
-void	handle_signal_prompt(int sig)
+void	handle_heredoc_error(t_ms *ms, char *input)
 {
-	if (sig == SIGINT)
-	{
-		g_sig = 1;
-		write(1, "\n", 1);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
+	free_cmd_list(ms->cmd_list);
+	ms->cmd_list = NULL;
+	free(input);
+	rl_on_new_line();
+	rl_replace_line("", 0);
 }
 
-void	handle_signal_exec(int sig)
+void	handle_null_input(t_ms *ms)
 {
-	if (sig == SIGINT)
-		g_sig = 130;
-	else if (sig == SIGQUIT)
-		g_sig = 131;
+	write(1, "exit\n", 5);
+	free_env(ms);
+	free(ms->current_prompt);
+	free(ms->pwd);
+	// free_cmd_list(ms->cmd_list);
+	free_array(ms->envp);
+	free(ms);
+	exit(0);
 }
 
-
-int	wait_all_children(t_ms *ms, int last_pid, int last_status)
+int verif_parsing(t_ms *ms)
 {
-	t_cmd	*cmd;
-	int		status;
-
-	cmd = ms->cmd_list;
-	while (cmd)
-	{
-		if (cmd->pid > 0)
+	if (ms->cmd_list->token->type == HEREDOC
+		&& ms->cmd_list->token->next->type == WORD
+		&& !ms->cmd_list->token->next->next)
 		{
-			waitpid(cmd->pid, &status, 0);
-			if (cmd->pid == last_pid)
-			{
-				if (WIFEXITED(status))
-					last_status = WEXITSTATUS(status);
-				else if (WIFSIGNALED(status))
-				{
-					last_status = 128 + WTERMSIG(status);
-					if (WTERMSIG(status) == SIGQUIT)
-					{
-						write(1, "Quit (core dumped)\n", 20);
-						g_sig = 131;
-					}
-					else
-					{
-						write(1, "\n", 1);
-						g_sig = 130;
-					}
-				}
-				ms->status = last_status;
-			}
+			if (ms->cmd_list)
+				free_cmd_list(ms->cmd_list);
+			return (1);
 		}
-		cmd = cmd->next;
-	}
-	return (last_status);
+	return (0);
 }
 
 void	prompt(t_ms *minishell)
@@ -114,180 +80,23 @@ void	prompt(t_ms *minishell)
 		g_sig = 0;
 		input = readline(full_prompt);
 		free(full_prompt);
-		if (!input)
+		if (!handle_input_prompt(minishell, input))
 		{
-			write(1, "exit\n", 5);
-			free_env(minishell);
-			free(minishell->current_prompt);
-			free(minishell->pwd);
-			free_array(minishell->envp);
-			free(minishell);
-			exit(0);
-		}
-		// if (g_sig == 1)
-		// {
-		// 	minishell->status = 130;
-		// 	free(input);
-		// 	continue;
-		// }
-		if (!parsing_input(input, minishell))
- 		{
- 			print_error_message("", minishell);
 			free(input);
- 			continue;
- 		}
-		if (input && *input)
-			add_history(input);
-		if (setup_heredocs(minishell->cmd_list, minishell) != 0)
-		{
-			free_cmd_list(minishell->cmd_list);
-			minishell->cmd_list = NULL;
-			free(input);
-			rl_on_new_line();
-			rl_replace_line("", 0);
-			continue;
+			continue ;
 		}
 		if (minishell->cmd_list)
 		{
+			if (verif_parsing(minishell))
+			{
+				free(input);
+				continue ;
+			}
 			execute_pipeline(minishell, minishell->cmd_list);
-			// g_sig = 0;
 			free_cmd_list(minishell->cmd_list);
 			minishell->cmd_list = NULL;
 		}
-		free_token_list(minishell->expand);
 		free(input);
-	}
-}
-
-int	create_token_chain(t_token *first_token, char **args)
-{
-	t_token	*current;
-	t_token	*new_token;
-	int		i;
-
-	current = first_token;
-	i = 1;
-	while (args[i])
-	{
-		new_token = malloc(sizeof(t_token));
-		if (!new_token)
-			return (1);
-		// new_token->value = args[i];
-		new_token->value = ft_strdup(args[i]);
-		if (!new_token->value)
-			return (1);
-		new_token->is_next_space = true;
-		new_token->type = WORD;
-		new_token->index = i;
-		new_token->next = NULL;
-		current->next = new_token;
-		current = new_token;
-		i++;
-	}
-	return (0);
-}
-
-int	run_builtin_command(t_ms *minishell, t_cmd *cmd, char **args)
-{
-	int	result = 0;
-
-	if (!ft_strcmp(args[0], "echo"))
-		print_echo(cmd);
-	else if (!ft_strcmp(args[0], "cd"))
-		result = cd(cmd, minishell);
-	else if (!ft_strcmp(args[0], "pwd"))
-		print_pwd(minishell);
-	else if (!ft_strcmp(args[0], "export"))
-		result = ft_export(minishell, cmd);
-	else if (!ft_strcmp(args[0], "unset"))
-		ft_unset(minishell, cmd);
-	else if (!ft_strcmp(args[0], "env"))
-		print_env(minishell);
-	else if (!ft_strcmp(args[0], "exit"))
-		result = ft_exit(cmd, minishell);
-	else
-		return (minishell->status = 1, 1);
-	minishell->status = result;
-	return (result);
-}
-
-int	execute_builtin(t_ms *minishell, char **args)
-{
-	t_cmd	cmd;
-	t_token	first_token;
-	t_token	*current;
-	int		result;
-
-	if (!args || !args[0])
-		return (1);
-	cmd.path = NULL;
-	cmd.infile_fd = -2;
-	cmd.outfile_fd = -2;
-	cmd.heredoc_fd = -1;
-	cmd.is_pipe = false;
-	cmd.is_redir = false;
-	cmd.pid = -1;
-	cmd.next = NULL;
-
-	first_token.value = args[0];
-	first_token.is_next_space = true;
-	first_token.type = WORD;
-	first_token.index = 0;
-	first_token.next = NULL;
-	
-	if (create_token_chain(&first_token, args))
-		return (1);
-		
-	cmd.token = &first_token;
-	result = run_builtin_command(minishell, &cmd, args);
-	
-	current = first_token.next;
-	while (current)
-	{
-		t_token *to_free = current;
-		current = current->next;
-		free(to_free->value);
-		free(to_free);
-	}
-	return (result);
-}
-
-char	*get_last_dir(char *path)
-{
-	char	*last_slash;
-	if (!path)
-		return ("?");
-	last_slash = ft_strrchr(path, '/');
-	if (!last_slash)
-		return (path);
-	return (last_slash + 1);
-}
-
-void	setup_minishell(t_ms **minishell, char **envp)
-{
-	*minishell = malloc(sizeof(t_ms));
-	if (!*minishell)
-		exit(1);
-	(*minishell)->status = 0;
-	(*minishell)->envp = dup_envp(envp);
-	(*minishell)->unexpected = false;
-	(*minishell)->is_next_space = false;
-	(*minishell)->first_special = 69;
-	(*minishell)->second_special = 69;
-	(*minishell)->go_cmd = true;
-
-	char *cwd = getcwd(NULL, 0);
-	if (cwd)
-	{
-		char *last = get_last_dir(cwd);
-		(*minishell)->current_prompt = ft_strdup(last);
-		(*minishell)->pwd = ft_strdup(cwd);
-		free(cwd);
-	}
-	else
-	{
-		(*minishell)->current_prompt = ft_strdup("?");
-		(*minishell)->pwd = ft_strdup("?");
 	}
 }
 

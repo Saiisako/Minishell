@@ -12,27 +12,32 @@
 
 #include "../minishell.h"
 
-int	ft_exit(t_cmd *cmd, t_ms *minishell)
+int	ft_exit(t_cmd *cmd, t_ms *minishell, char **args)
 {
 	t_token		*token;
 	int			exit_status;
 	long long	numeric_value;
+	int			res;
 
 	exit_status = 0;
 	token = cmd->token->next;
 	ft_putstr_fd("exit\n", 1);
 	if (token)
 	{
-		if (ft_exit_error(token, minishell, &numeric_value))
+		res = ft_exit_error(token, minishell, &numeric_value, args);
+		if (res == 1)
 			return (1);
-		exit_status = (unsigned char)numeric_value;
+		if (res == 2)
+			exit_status = 2;
+		else
+			exit_status = (unsigned char)numeric_value;
 	}
-	exit_clean(minishell);
-	minishell->status = exit_status;
+	exit_clean(minishell, args);
+	// minishell->status = exit_status;
 	exit(exit_status);
 }
 
-int	ft_exit_error(t_token *token, t_ms *ms, long long *numeric_value)
+int	ft_exit_error(t_token *token, t_ms *ms, long long *numeric_value, char ** args)
 {
 	if (!db_sign(token->value) || !ft_atoll(token->value, numeric_value))
 	{
@@ -40,7 +45,8 @@ int	ft_exit_error(t_token *token, t_ms *ms, long long *numeric_value)
 		ft_putstr_fd(token->value, 2);
 		ft_putstr_fd(": numeric argument required\n", 2);
 		ms->status = 2;
-		exit_clean(ms);
+		return (2);
+		exit_clean(ms, args);
 		exit(ms->status);
 	}
 	else if (token->next)
@@ -70,10 +76,14 @@ int	db_sign(char *str)
 	return (1);
 }
 
-void	exit_clean(t_ms *ms)
+void	exit_clean(t_ms *ms, char **args)
 {
 	free(ms->pwd);
 	free(ms->current_prompt);
 	free_env(ms);
 	free_array(ms->envp);
+	free_array(args);
+	free_cmd_list(ms->cmd_list);
+	free(ms->exec);
+	free(ms);
 }

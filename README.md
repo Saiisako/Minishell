@@ -12,151 +12,41 @@ si besoin : TERM environment variable not set.
 env | grep SHLVL
 
 
-==216265== 2 bytes in 1 blocks are still reachable in loss record 1 of 78
-==216265==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==216265==    by 0x4082C9: ft_strdup (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
-==216265==    by 0x402FDA: special_token (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
-==216265==    by 0x403112: process_token (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
-==216265==    by 0x4027AF: parsing_input (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
-==216265==    by 0x401440: prompt (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
-==216265==    by 0x4019FE: main (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
 
-=216265== 11 bytes in 3 blocks are still reachable in loss record 5 of 78
-==216265==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==216265==    by 0x4082C9: ft_strdup (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
-==216265==    by 0x403A14: modify_main_token_lst (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
-==216265==    by 0x40322A: join_expand (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
-==216265==    by 0x4034B5: do_expand (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
-==216265==    by 0x4035E5: handle_word_token (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
-==216265==    by 0x4036B5: handle_token (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
-==216265==    by 0x40376B: expand_token (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
-==216265==    by 0x402803: parsing_input (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
-==216265==    by 0x401440: prompt (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
-==216265==    by 0x4019FE: main (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
+GROS BUG A FIX =  -->
 
-==216265== 32 bytes in 1 blocks are still reachable in loss record 21 of 78
-==216265==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==216265==    by 0x40286C: new_token (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
-==216265==    by 0x402982: fill_token_list (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
-==216265==    by 0x402FEB: special_token (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
-==216265==    by 0x403112: process_token (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
-==216265==    by 0x4027AF: parsing_input (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
-==216265==    by 0x401440: prompt (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
-==216265==    by 0x4019FE: main (in /home/skock/Documents/CC/Circle3/lazyshell/minishell
+j'ai changé des choses dans l'expand.
 
-== 2,272 bytes in 71 blocks are still reachable in loss record 58 of 85
-==238394==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==238394==    by 0x402265: lst_new (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
-==238394==    by 0x40254E: fill_env_cpy (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
-==238394==    by 0x4019F5: main (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
-==238394== 
-==238394== 3,280 bytes in 71 blocks are still reachable in loss record 59 of 85
-==238394==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==238394==    by 0x402426: cpy_right (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
-==238394==    by 0x4022B6: lst_new (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
-==238394==    by 0x40254E: fill_env_cpy (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
-==238394==    by 0x4019F5: main (in /home/skock/Documents/CC/Circle3/lazyshell/minishell)
-
-
-lazyshell > mkdir test
-lazyshell > cd test
-test > mkdir test
-test > cd test
-test > pwd
-/home/skock/Documents/CC/Circle3/lazyshell/test/test
-test > rm -rf ../test
-AddressSanitizer:DEADLYSIGNAL
-=================================================================
-==848065==ERROR: AddressSanitizer: SEGV on unknown address 0x000000000000 (pc 0x0000004e16e3 bp 0x7ffcd038abd0 sp 0x7ffcd038abd0 T0)
-==848065==The signal is caused by a READ memory access.
-==848065==Hint: address points to the zero page.
-    #0 0x4e16e3 in ft_strrchr (/home/skock/Documents/CC/Circle3/lazyshell/minishell+0x4e16e3)
-    #1 0x4cb969 in get_last_dir /home/skock/Documents/CC/Circle3/lazyshell/main.c:199:21
-    #2 0x4cb70c in prompt /home/skock/Documents/CC/Circle3/lazyshell/main.c:73:10
-    #3 0x4ccbe8 in main /home/skock/Documents/CC/Circle3/lazyshell/main.c:229:3
-    #4 0x7f63bc7c3d8f in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
-    #5 0x7f63bc7c3e3f in __libc_start_main csu/../csu/libc-start.c:392:3
-    #6 0x41f384 in _start (/home/skock/Documents/CC/Circle3/lazyshell/minishell+0x41f384)
-
-
-
-	///////
-
-	==1643357== 4,150 (496 direct, 3,654 indirect) bytes in 1 blocks are definitely lost in loss record 62 of 76
-==1643357==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1643357==    by 0x4076C5: update_envp (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x4070EC: ft_export (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x401784: run_builtin_command (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x401934: execute_builtin (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x404C1F: execute_cmd (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x4048F2: handle_command (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x404789: execute_pipeline (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x4015B7: prompt (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x401B7E: main (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-
-
-==1643357== 3,654 bytes in 61 blocks are indirectly lost in loss record 50 of 76
-==1643357==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1643357==    by 0x409159: ft_strjoin (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x406F06: concat_env_var (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x407716: update_envp (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x4070EC: ft_export (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x401784: run_builtin_command (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x401934: execute_builtin (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x404C1F: execute_cmd (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x4048F2: handle_command (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x404789: execute_pipeline (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x4015B7: prompt (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x401B7E: main (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-
-==1643357== 48 bytes in 1 blocks are still reachable in loss record 23 of 76
-==1643357==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1643357==    by 0x401FD1: new_cmd (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x402030: create_cmd_until_pipe (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x40210B: fill_cmd_lst (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x402864: ft_cmd (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x4029CC: parsing_input (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x401500: prompt (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x401B7E: main (in /home/cmontaig/Documents/cursus/Minishell/minishell)
- 
-
- ==1643357== 32 bytes in 1 blocks are still reachable in loss record 18 of 76
-==1643357==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1643357==    by 0x4029FC: new_token (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x402B12: fill_token_list (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x403090: word_token (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x4032D5: process_token (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x40293F: parsing_input (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x401500: prompt (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x401B7E: main (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357== 
-==1643357== 42 bytes in 1 blocks are definitely lost in loss record 19 of 76
-==1643357==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1643357==    by 0x408C49: ft_strdup (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x401AC9: setup_minishell (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x401B68: main (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-
-
-==1643357== 16 bytes in 1 blocks are still reachable in loss record 14 of 76
-==1643357==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1643357==    by 0x4055E0: tokens_to_args (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x404808: handle_command (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x404789: execute_pipeline (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x4015B7: prompt (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x401B7E: main (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-
-==1643357== 5 bytes in 1 blocks are still reachable in loss record 2 of 76
-==1643357==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==1643357==    by 0x408C49: ft_strdup (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x403854: modify_main_token_lst (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x403A3A: join_expand (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x403CF5: do_expand (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x403425: handle_word_token (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x4034F5: handle_token (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x4035AB: expand_token (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x402993: parsing_input (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x401500: prompt (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-==1643357==    by 0x401B7E: main (in /home/cmontaig/Documents/cursus/Minishell/minishell)
-
-SIGNAUX
-Ctrl C doit quitter le heredoc
+==849081== Memcheck, a memory error detector
+==849081== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==849081== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==849081== Command: ./minishell
+==849081== 
+minisacha > << $dwadaw
+> ^C
+minisacha > << $dwadaw
+> $dwadaw
+minisacha > << $dwadaw << caca
+> $dwadaw
+> caca
+ouououo
+==870068== 
+==870068== HEAP SUMMARY:
+==870068==     in use at exit: 220,387 bytes in 527 blocks
+==870068==   total heap usage: 790 allocs, 263 frees, 245,918 bytes allocated
+==870068== 
+==870068== 5 bytes in 1 blocks are still reachable in loss record 4 of 86
+==870068==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==870068==    by 0x4096B9: ft_strdup (in /home/skock/Documents/CC/Circle3/minisacha/minishell)
+==870068==    by 0x4033D4: modify_main_token_lst (expander_end.c:78)
+==870068==    by 0x4035BA: join_expand (expand_2.c:31)
+==870068==    by 0x403875: do_expand (expand_2.c:105)
+==870068==    by 0x402F05: handle_word_token (expander.c:48)
+==870068==    by 0x403014: handle_token (expander.c:74)
+==870068==    by 0x403134: expand_token (expander.c:106)
+==870068==    by 0x402473: parsing_input (tokenizer.c:66)
+==870068==    by 0x401310: handle_input_prompt (main.c:19)
+==870068==    by 0x401567: prompt (main.c:83)
+==870068==    by 0x40163E: main (main.c:113)
+==870068== 
+==870068== 6 bytes in 2 blocks
