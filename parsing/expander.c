@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:02:46 by skock             #+#    #+#             */
-/*   Updated: 2025/05/24 17:47:46 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/24 17:59:49 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,9 @@ void	handle_word_token(t_token **tmp, t_ms *minishell)
 		*tmp = next;
 	}
 	else
+	{
 		*tmp = (*tmp)->next;
+	}
 }
 int	must_be_expand(const char *str)
 {

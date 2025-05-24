@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:37:09 by skock             #+#    #+#             */
-/*   Updated: 2025/05/24 17:50:17 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/24 18:02:32 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void join_expand(t_ms *minishell, int index)
 	tmp = minishell->expand;
 	if (!tmp)
 		return;
-	word_expand = /* ft_strdup( */tmp->value/* ) */;
+	word_expand = ft_strdup(tmp->value);
 	tmp = tmp->next;
 	size--;
 	while (tmp && size >= 0)
@@ -35,7 +35,7 @@ void join_expand(t_ms *minishell, int index)
 		size--;
 	}
 	modify_main_token_lst(minishell, word_expand, index);
-	// free(word_expand);
+	free(word_expand);
 	free_expand_list(minishell);
 }
 
