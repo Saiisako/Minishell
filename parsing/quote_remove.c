@@ -6,13 +6,13 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:32:42 by skock             #+#    #+#             */
-/*   Updated: 2025/04/01 11:59:04 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/24 17:48:25 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*quote_rmv(const char *str)
+char	*quote_rmv(char *str)
 {
 	char	*new_str;
 
@@ -27,6 +27,7 @@ char	*quote_rmv(const char *str)
 		return (new_str);
 	}
 	new_str = ft_substr(str, 1, ft_strlen(str) - 2);
+	free(str);
 	return (new_str);
 }
 
@@ -39,11 +40,13 @@ void	clear_quote(t_ms *minishell)
 	while (tmp)
 	{
 		next = tmp->next;
-		if (tmp->type == D_QUOTE || tmp->type == S_QUOTE)
+		if (tmp->type == S_QUOTE || tmp->type == D_QUOTE)
 		{
 			tmp->value = quote_rmv(tmp->value);
 			tmp->type = WORD;
 		}
+		if (tmp->type == D_QUOTE)
+			tmp->type = WORD;
 		tmp = next;
 	}
 }

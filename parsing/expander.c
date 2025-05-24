@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:02:46 by skock             #+#    #+#             */
-/*   Updated: 2025/05/22 19:29:09 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/24 17:47:46 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,19 @@ void	handle_word_token(t_token **tmp, t_ms *minishell)
 	else
 		*tmp = (*tmp)->next;
 }
+int	must_be_expand(const char *str)
+{
+	int i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '$')
+			return (1);
+		i++;
+	}
+	return (0);
+}
 
 void	handle_token(t_token **tmp, t_ms *minishell)
 {
@@ -63,19 +76,21 @@ void	handle_token(t_token **tmp, t_ms *minishell)
 	tmp2 = (*tmp);
 	if ((*tmp)->type == S_QUOTE)
 		*tmp = (*tmp)->next;
-	else if ((*tmp)->type == WORD)
+	else if ((*tmp)->type == WORD && must_be_expand((*tmp)->value))
 	{
-		if (minishell->caca == true)
+		if (minishell->here_doc_expand == true)
 		{
-			minishell->caca = false;
+			minishell->here_doc_expand = false;
 			*tmp = (*tmp)->next;
 			return ;
 		}
 		handle_word_token(tmp, minishell);
 	}
-	else if ((*tmp)->type == D_QUOTE)
+	else if ((*tmp)->type == D_QUOTE && must_be_expand((*tmp)->value))
 	{
-		do_expand((*tmp)->value, minishell, (*tmp)->index);
+		(*tmp)->value = quote_rmv((*tmp)->value);
+		(*tmp)->type = WORD;
+		do_expand_dquote((*tmp)->value, minishell, (*tmp)->index);
 		*tmp = (*tmp)->next;
 	}
 	else
@@ -90,7 +105,7 @@ void	is_heredoc_token(t_ms *ms)
 	while (tmp)
 	{
 		if (tmp->type == HEREDOC && tmp->next->type == WORD)
-			ms->caca = true;
+			ms->here_doc_expand = true;
 		tmp = tmp->next;
 	}
 }

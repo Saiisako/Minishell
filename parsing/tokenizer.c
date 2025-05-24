@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/05/16 13:32:32 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/24 17:49:02 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,22 +18,32 @@ int	parsing_error(t_ms *minishell)
 
 	tmp = minishell->token;
 	if (verif_first_token(minishell))
+	{
+		printf("DEBUG0\n");
 		return (0);
+	}
 	while (tmp && tmp->next)
 	{
 		if (tmp->type != 1 && tmp->next->type != 1 && tmp->type != PIPE)
 		{
 			minishell->first_special = tmp->type;
 			minishell->second_special = tmp->next->type;
+			printf("DEBUG1\n");
 			return (0);
 		}
 		tmp = tmp->next;
 	}
 	if (tmp && tmp->type != 1)
+	{
+		printf("DEBUG2\n");
 		return (0);
+	}
 	tmp = minishell->token;
 	if (tmp && tmp->type == PIPE)
+	{
+		printf("DEBUG3\n");
 		return (0);
+	}
 	return (1);
 }
 

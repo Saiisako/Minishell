@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 20:22:07 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/22 19:18:29 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/24 17:22:00 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	setup_minishell(t_ms **minishell, char **envp)
 	(*minishell)->second_special = 69;
 	(*minishell)->exec = NULL;
 	(*minishell)->go_cmd = true;
-	(*minishell)->caca = false;
+	(*minishell)->here_doc_expand = false;
 	cwd = getcwd(NULL, 0);
 	if (cwd)
 	{

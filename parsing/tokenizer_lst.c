@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:20:19 by skock             #+#    #+#             */
-/*   Updated: 2025/04/05 14:42:27 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/24 14:31:23 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,9 @@ t_token	*new_token(char *str, t_ms *minishell, t_type type)
 	static int	i = 1;
 
 	token = malloc(sizeof(t_token));
-	token->value = str;
+	token->value = ft_strdup(str);
 	token->next = NULL;
+	token->prev = NULL;
 	token->type = type;
 	token->index = i++;
 	token->is_next_space = false;
@@ -43,6 +44,7 @@ void	token_add_back(t_token **lst, t_token *new)
 		while (last->next != NULL)
 			last = last->next;
 		last->next = new;
+		new->prev = last;
 	}
 }
 

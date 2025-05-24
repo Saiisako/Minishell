@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   expand_2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:37:09 by skock             #+#    #+#             */
-/*   Updated: 2025/05/17 20:13:58 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/24 17:50:17 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	join_expand(t_ms *minishell, int index)
+void join_expand(t_ms *minishell, int index)
 {
 	int		size;
 	char	*word_expand;
@@ -21,16 +21,24 @@ void	join_expand(t_ms *minishell, int index)
 	expand(minishell);
 	size = expand_size(minishell);
 	tmp = minishell->expand;
-	word_expand = tmp->value;
-	while (tmp->next && tmp && size >= 0)
+	if (!tmp)
+		return;
+	word_expand = /* ft_strdup( */tmp->value/* ) */;
+	tmp = tmp->next;
+	size--;
+	while (tmp && size >= 0)
 	{
-		word_expand = ft_strjoin(word_expand, tmp->next->value);
+		char *tmpdbg = word_expand;
+		word_expand = ft_strjoin(word_expand, tmp->value);
+		free(tmpdbg);
 		tmp = tmp->next;
 		size--;
 	}
 	modify_main_token_lst(minishell, word_expand, index);
+	// free(word_expand);
 	free_expand_list(minishell);
 }
+
 
 void	expand_env(t_env *tmp_env, t_token **tmp2, int *found)
 {
@@ -77,6 +85,35 @@ void	expand(t_ms *minishell)
 }
 
 void	do_expand(char *value, t_ms *minishell, int index)
+{
+	int	i;
+
+	i = 0;
+	while (value[i])
+	{
+		if (value[i] == '$' && value[i + 1] == '?')
+		{
+			fill_expand_lst(minishell, ft_itoa(minishell->status));
+			i += 2;
+		}
+		if (value[i] == '$')
+		{
+			dollar_expand(value, minishell, &i);
+			if (!value[i])
+				break ;
+		}
+		else if (value[i] != '$')
+		{
+			word_expand(value, minishell, &i);
+			if (!value[i])
+				break ;
+		}
+		i++;
+	}
+	join_expand(minishell, index);
+}
+
+void	do_expand_dquote(char *value, t_ms *minishell, int index)
 {
 	int	i;
 

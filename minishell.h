@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/22 19:18:07 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/24 17:22:00 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ typedef struct s_token
 	t_type			type;
 	int				index;
 	struct s_token	*next;
+	struct s_token	*prev;
 }					t_token;
 
 typedef struct s_cmd
@@ -112,7 +113,7 @@ typedef struct s_ms
 	t_type		first_special;
 	t_type		second_special;
 	bool		go_cmd;
-	bool		caca;
+	bool		here_doc_expand;
 }				t_ms;
 
 ///////////////// PARSING /////////////////
@@ -156,6 +157,7 @@ void	merge_inception(t_ms *minishell);
 
 void	expand_token(t_token *token, t_ms *minishell);
 void	do_expand(char *value, t_ms *minishell, int index);
+void	do_expand_dquote(char *value, t_ms *minishell, int index);
 void	modify_main_token_lst(t_ms *minishell, char *word, int index);
 int		expand_size(t_ms *minishell);
 void	dollar_expand(char *value, t_ms *minishell, int *i);
@@ -178,7 +180,7 @@ void	join_expand_heredoc(t_ms *minishell, char **heredoc, int index);
 
 // CLEAR
 
-char	*quote_rmv(const char *str);
+char	*quote_rmv(char *str);
 void	clear_quote(t_ms *minishell);
 
 // CMD_LST

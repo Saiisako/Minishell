@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/29 13:16:51 by skock             #+#    #+#             */
-/*   Updated: 2025/05/21 18:43:38 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/24 13:52:31 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	double_quote(char *input, int *i, t_ms *minishell)
 	if (input[(*i) + 1] != ' ' && input[(*i) + 1] != '\0')
 		minishell->is_next_space = true;
 	fill_token_list(minishell, token, D_QUOTE);
+	free(token);
 	return (1);
 }
 
@@ -45,6 +46,7 @@ int	single_quote(char *input, int *i, t_ms *minishell)
 	if (input[(*i) + 1] != ' ' && input[(*i) + 1] != '\0')
 		minishell->is_next_space = true;
 	fill_token_list(minishell, token, S_QUOTE);
+	free(token);
 	return (1);
 }
 
@@ -63,6 +65,7 @@ void	word_token(char *input, int *i, t_ms *minishell)
 	if (input[(*i)] != ' ' && input[(*i)] != '\0')
 		minishell->is_next_space = true;
 	fill_token_list(minishell, token, WORD);
+	free(token);
 	(*i)--;
 }
 
@@ -85,7 +88,7 @@ void	special_token(char *input, int *i, t_ms *minishell)
 		if (ft_strncmp(&input[*i], specials[j], len) == 0)
 		{
 			strd = ft_strdup(specials[j]);
-			fill_token_list(minishell,	strd, WORD);
+			fill_token_list(minishell, strd, WORD);
 			*i += len;
 			break ;
 		}

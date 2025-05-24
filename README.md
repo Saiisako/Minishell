@@ -26,9 +26,9 @@ minisacha > << $dwadaw
 > ^C
 minisacha > << $dwadaw
 > $dwadaw
-minisacha > << $dwadaw << caca
+minisacha > << $dwadaw << here_doc_expand
 > $dwadaw
-> caca
+> here_doc_expand
 ouououo
 ==870068== 
 ==870068== HEAP SUMMARY:
