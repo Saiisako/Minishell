@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/29 13:16:51 by skock             #+#    #+#             */
-/*   Updated: 2025/05/24 13:52:31 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/24 18:15:25 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ void	special_token(char *input, int *i, t_ms *minishell)
 		{
 			strd = ft_strdup(specials[j]);
 			fill_token_list(minishell, strd, WORD);
+			free(strd);
 			*i += len;
 			break ;
 		}

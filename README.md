@@ -12,3 +12,4 @@ si besoin : TERM environment variable not set.
 env | grep SHLVL
 
 IL FAUT FIX {echo $?}
+

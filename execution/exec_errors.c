@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 20:19:36 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/22 19:01:20 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/24 18:19:14 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,6 @@ int	handle_empty_cmd(t_cmd *cmd, int *prev_pipe, int pipe_fd[2], t_ms *ms)
 	}
 	else if (child_pid > 0)
 		cmd->pid = child_pid;
-	printf("ouououo\n");
 	cleanup_pipes(cmd, pipe_fd, prev_pipe);
 	return (child_pid);
 }

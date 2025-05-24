@@ -6,29 +6,30 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:37:09 by skock             #+#    #+#             */
-/*   Updated: 2025/05/24 18:02:32 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/24 18:28:55 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void join_expand(t_ms *minishell, int index)
+void	join_expand(t_ms *minishell, int index)
 {
 	int		size;
 	char	*word_expand;
+	char	*tmpdbg;
 	t_token	*tmp;
 
 	expand(minishell);
 	size = expand_size(minishell);
 	tmp = minishell->expand;
 	if (!tmp)
-		return;
+		return ;
 	word_expand = ft_strdup(tmp->value);
 	tmp = tmp->next;
 	size--;
 	while (tmp && size >= 0)
 	{
-		char *tmpdbg = word_expand;
+		tmpdbg = word_expand;
 		word_expand = ft_strjoin(word_expand, tmp->value);
 		free(tmpdbg);
 		tmp = tmp->next;
@@ -38,7 +39,6 @@ void join_expand(t_ms *minishell, int index)
 	free(word_expand);
 	free_expand_list(minishell);
 }
-
 
 void	expand_env(t_env *tmp_env, t_token **tmp2, int *found)
 {
