@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 20:22:07 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/24 17:22:00 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/25 16:29:16 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,12 @@ void	setup_minishell(t_ms **minishell, char **envp)
 	(*minishell)->envp = dup_envp(envp);
 	(*minishell)->unexpected = false;
 	(*minishell)->is_next_space = false;
-	(*minishell)->first_special = 69;
-	(*minishell)->second_special = 69;
+	(*minishell)->first_special = 42;
+	(*minishell)->second_special = 42;
 	(*minishell)->exec = NULL;
 	(*minishell)->go_cmd = true;
 	(*minishell)->here_doc_expand = false;
+	(*minishell)->is_pipe_error = false;
 	cwd = getcwd(NULL, 0);
 	if (cwd)
 	{

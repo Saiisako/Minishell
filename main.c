@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/25 16:13:28 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/25 16:27:31 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,22 +46,21 @@ void	handle_null_input(t_ms *ms)
 	free_env(ms);
 	free(ms->current_prompt);
 	free(ms->pwd);
-	// free_cmd_list(ms->cmd_list);
 	free_array(ms->envp);
 	free(ms);
 	exit(0);
 }
 
-int verif_parsing(t_ms *ms)
+int	verif_parsing(t_ms *ms)
 {
 	if (ms->cmd_list->token->type == HEREDOC
 		&& ms->cmd_list->token->next->type == WORD
 		&& !ms->cmd_list->token->next->next)
-		{
-			if (ms->cmd_list)
-				free_cmd_list(ms->cmd_list);
-			return (1);
-		}
+	{
+		if (ms->cmd_list)
+			free_cmd_list(ms->cmd_list);
+		return (1);
+	}
 	return (0);
 }
 
