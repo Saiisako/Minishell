@@ -2,14 +2,6 @@ Hello ! Welcome inside the amazing world of bash !
 
 This 42 project has been made in collaboration with Chloé Montaigut.
 
-echo $?$? ne fonctionne pas comme prevu.
-
-le echo hola ||| caca
-segfault
-le echo hola || caca
-invalid free
-
-
 <!-- BUILTIN -->
 
 export, si on export par exemple :

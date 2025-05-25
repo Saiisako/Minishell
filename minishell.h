@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/24 17:22:00 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/25 16:22:19 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ typedef enum e_type
 	// 	char		**args;
 	// 	struct s_exec	*next;
 	// }					t_exec;
-	
+
 	typedef struct s_exec
 {
 	int			pipe_fd[2];
@@ -114,6 +114,7 @@ typedef struct s_ms
 	t_type		second_special;
 	bool		go_cmd;
 	bool		here_doc_expand;
+	bool		is_pipe_error;
 }				t_ms;
 
 ///////////////// PARSING /////////////////
@@ -156,8 +157,8 @@ void	merge_inception(t_ms *minishell);
 // EXPANDER
 
 void	expand_token(t_token *token, t_ms *minishell);
-void	do_expand(char *value, t_ms *minishell, int index);
-void	do_expand_dquote(char *value, t_ms *minishell, int index);
+void	do_expand(char *value, t_ms *minishell);
+void	do_expand_dquote(char *value, t_ms *minishell);
 void	modify_main_token_lst(t_ms *minishell, char *word, int index);
 int		expand_size(t_ms *minishell);
 void	dollar_expand(char *value, t_ms *minishell, int *i);

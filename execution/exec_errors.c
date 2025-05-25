@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 20:19:36 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/24 18:19:14 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/25 16:13:51 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,17 @@ int	redir_error(t_ms *ms, t_cmd *cmd, int pipe_fd[2], int *prev_pipe)
 	return (pid);
 }
 
+void	next_print(t_ms *ms, const char *msg)
+{
+	if (ms->is_pipe_error == true)
+	{
+		ms->is_pipe_error = false;
+		printf("Invalid Token entered '||'\n");
+	}
+	else
+		printf("%s\n", msg);
+}
+
 void	print_error_message(const char *msg, t_ms *minishell)
 {
 	char	*special;
@@ -145,7 +156,7 @@ void	print_error_message(const char *msg, t_ms *minishell)
 		free(special);
 	}
 	else
-		printf("%s\n", msg);
+		next_print(minishell, msg);
 }
 
 int	handle_empty_cmd(t_cmd *cmd, int *prev_pipe, int pipe_fd[2], t_ms *ms)

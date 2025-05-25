@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:37:09 by skock             #+#    #+#             */
-/*   Updated: 2025/05/24 18:28:55 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/25 16:23:05 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	expand(t_ms *minishell)
 	return ;
 }
 
-void	do_expand(char *value, t_ms *minishell, int index)
+void	do_expand(char *value, t_ms *minishell)
 {
 	int	i;
 
@@ -95,6 +95,7 @@ void	do_expand(char *value, t_ms *minishell, int index)
 		{
 			fill_expand_lst(minishell, ft_itoa(minishell->status));
 			i += 2;
+			continue ;
 		}
 		if (value[i] == '$')
 		{
@@ -110,10 +111,9 @@ void	do_expand(char *value, t_ms *minishell, int index)
 		}
 		i++;
 	}
-	join_expand(minishell, index);
 }
 
-void	do_expand_dquote(char *value, t_ms *minishell, int index)
+void	do_expand_dquote(char *value, t_ms *minishell)
 {
 	int	i;
 
@@ -124,6 +124,7 @@ void	do_expand_dquote(char *value, t_ms *minishell, int index)
 		{
 			fill_expand_lst(minishell, ft_itoa(minishell->status));
 			i += 2;
+			continue ;
 		}
 		if (value[i] == '$')
 		{
@@ -139,5 +140,4 @@ void	do_expand_dquote(char *value, t_ms *minishell, int index)
 		}
 		i++;
 	}
-	join_expand(minishell, index);
 }

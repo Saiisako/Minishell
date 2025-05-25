@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:02:46 by skock             #+#    #+#             */
-/*   Updated: 2025/05/25 10:14:35 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/25 16:21:56 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ void	handle_word_token(t_token **tmp, t_ms *minishell)
 		*tmp = (*tmp)->next;
 		return ;
 	}
-	do_expand((*tmp)->value, minishell, (*tmp)->index);
+	do_expand((*tmp)->value, minishell);
+	join_expand(minishell, (*tmp)->index);
 	if (!ft_strcmp((*tmp)->value, ""))
 	{
 		next = (*tmp)->next;
@@ -90,7 +91,8 @@ void	handle_token(t_token **tmp, t_ms *minishell)
 	{
 		(*tmp)->value = quote_rmv((*tmp)->value);
 		(*tmp)->type = WORD;
-		do_expand_dquote((*tmp)->value, minishell, (*tmp)->index);
+		do_expand_dquote((*tmp)->value, minishell);
+		join_expand(minishell, (*tmp)->index);
 		*tmp = (*tmp)->next;
 	}
 	else
