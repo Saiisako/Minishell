@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/05/24 18:22:59 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/25 10:58:32 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	parsing_input(char *input, t_ms *minishell)
 	clear_quote(minishell);
 	merge_inception(minishell);
 	if (!parsing_error(minishell))
-		return (0);
+	return (0);
 	ft_cmd(minishell);
 	return (1);
 }

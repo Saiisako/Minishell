@@ -2,14 +2,19 @@ Hello ! Welcome inside the amazing world of bash !
 
 This 42 project has been made in collaboration with Chloé Montaigut.
 
+echo $?$? ne fonctionne pas comme prevu.
 
-- si le path n'existe pas doit renvoyer un message d'erreur ! a mon avis comme chaque chose de l'env dailleurs
-gerer des les debut les caractere speciaux
+le echo hola ||| caca
+segfault
+le echo hola || caca
+invalid free
 
 
-env -i recup CWD
-si besoin : TERM environment variable not set.
-env | grep SHLVL
+<!-- BUILTIN -->
 
-IL FAUT FIX {echo $?}
+export, si on export par exemple :
+caca=pipi ca donne une ligne correct
+caca=caca ca donne une nouvelle ligne au lieu de simplement modifier caca et le remplacer par caca.
 
+// c'est un remplacement strict si la ligne d'apres c'est caca=p alors ca remplace par ca.
+// on doit pouvoir remplacer n'importe quel variable de l'env.

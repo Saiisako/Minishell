@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 11:23:31 by skock             #+#    #+#             */
-/*   Updated: 2025/05/24 18:18:47 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/25 10:13:53 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,14 @@ int	verif_first_token(t_ms *minishell)
 	if (tmp && tmp->type != WORD && tmp->type != D_QUOTE
 		&& tmp->type != S_QUOTE && !tmp->next)
 	{
+		minishell->unexpected = true;
+		return (1);
+	}
+	else if (tmp && tmp->type != WORD && tmp->type != D_QUOTE
+		&& tmp->type != S_QUOTE)
+	{
+		if (tmp->type == HEREDOC && tmp->next->type == WORD)
+			return (0);
 		minishell->unexpected = true;
 		return (1);
 	}

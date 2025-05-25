@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/24 19:11:21 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/25 10:08:57 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ int	handle_input_prompt(t_ms *minishell, char *input)
 {
 	if (!input)
 		handle_null_input(minishell);
-	if (!*input)
-		return (0);
+	// if (!*input)
+	// 	return (0);
 	if (!parsing_input(input, minishell))
 	{
 		print_error_message("", minishell);

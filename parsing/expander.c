@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:02:46 by skock             #+#    #+#             */
-/*   Updated: 2025/05/24 18:27:00 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/25 10:14:35 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,9 +74,6 @@ int	must_be_expand(const char *str)
 
 void	handle_token(t_token **tmp, t_ms *minishell)
 {
-	t_token	*tmp2;
-
-	tmp2 = (*tmp);
 	if ((*tmp)->type == S_QUOTE)
 		*tmp = (*tmp)->next;
 	else if ((*tmp)->type == WORD && must_be_expand((*tmp)->value))
@@ -105,7 +102,7 @@ void	is_heredoc_token(t_ms *ms)
 	t_token	*tmp;
 
 	tmp = ms->token;
-	while (tmp->next)
+	while (tmp && tmp->next)
 	{
 		if (tmp->type == HEREDOC && tmp->next->type == WORD)
 			ms->here_doc_expand = true;
