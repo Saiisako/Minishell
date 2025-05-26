@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 20:19:36 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/25 16:13:51 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/26 14:27:29 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,46 +117,6 @@ int	redir_error(t_ms *ms, t_cmd *cmd, int pipe_fd[2], int *prev_pipe)
 	cmd->pid = pid;
 	cleanup_pipes(cmd, pipe_fd, prev_pipe);
 	return (pid);
-}
-
-void	next_print(t_ms *ms, const char *msg)
-{
-	if (ms->is_pipe_error == true)
-	{
-		ms->is_pipe_error = false;
-		printf("Invalid Token entered '||'\n");
-	}
-	else
-		printf("%s\n", msg);
-}
-
-void	print_error_message(const char *msg, t_ms *minishell)
-{
-	char	*special;
-
-	if (minishell->unexpected)
-	{
-		printf("bash: syntax error near unexpected token 'newline'\n");
-		minishell->unexpected = false;
-		return ;
-	}
-	if (minishell->first_special != 69 && minishell->second_special != 69)
-	{
-		if (minishell->second_special == HEREDOC)
-			special = ft_strdup("<<");
-		if (minishell->second_special == APPEND)
-			special = ft_strdup(">>");
-		if (minishell->second_special == REDIR_IN)
-			special = ft_strdup("<");
-		if (minishell->second_special == REDIR_OUT)
-			special = ft_strdup(">");
-		if (minishell->second_special == PIPE)
-			special = ft_strdup("|");
-		printf("bash: syntax error near unexpected token '%s'\n", special);
-		free(special);
-	}
-	else
-		next_print(minishell, msg);
 }
 
 int	handle_empty_cmd(t_cmd *cmd, int *prev_pipe, int pipe_fd[2], t_ms *ms)

@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:02:46 by skock             #+#    #+#             */
-/*   Updated: 2025/05/25 16:21:56 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/26 11:38:53 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,19 +97,6 @@ void	handle_token(t_token **tmp, t_ms *minishell)
 	}
 	else
 		*tmp = (*tmp)->next;
-}
-
-void	is_heredoc_token(t_ms *ms)
-{
-	t_token	*tmp;
-
-	tmp = ms->token;
-	while (tmp && tmp->next)
-	{
-		if (tmp->type == HEREDOC && tmp->next->type == WORD)
-			ms->here_doc_expand = true;
-		tmp = tmp->next;
-	}
 }
 
 void	expand_token(t_token *token, t_ms *minishell)

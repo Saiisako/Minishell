@@ -33,7 +33,9 @@ SRCS	=	main.c\
 			execution/init_structures.c\
 			execution/run_builtin.c\
 			execution/exec_errors.c\
+			execution/exec_error2.c\
 			execution/signals.c\
+			execution/signal2.c\
 			builtin/env.c\
 			builtin/pwd.c\
 			builtin/cd.c\

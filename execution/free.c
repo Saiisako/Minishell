@@ -80,7 +80,6 @@ void	free_array(char **args)
 		free(args[i]);
 		i++;
 	}
-	// printf("Freeing and setting a null: %p\n", args);
 	free(args);
 	args = NULL;
 }

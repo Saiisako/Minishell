@@ -6,11 +6,24 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 15:22:23 by skock             #+#    #+#             */
-/*   Updated: 2025/04/05 15:22:45 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/26 11:39:06 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	is_heredoc_token(t_ms *ms)
+{
+	t_token	*tmp;
+
+	tmp = ms->token;
+	while (tmp && tmp->next)
+	{
+		if (tmp->type == HEREDOC && tmp->next->type == WORD)
+			ms->here_doc_expand = true;
+		tmp = tmp->next;
+	}
+}
 
 t_token	*new_expand(char *str)
 {

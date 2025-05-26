@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/25 16:27:31 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/26 14:35:27 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,22 @@ int	verif_parsing(t_ms *ms)
 	return (0);
 }
 
+bool spagetti(char *input, t_ms *minishell)
+{
+	if (minishell->cmd_list)
+	{
+		if (verif_parsing(minishell))
+		{
+			free(input);
+			return (true);
+		}
+		execute_pipeline(minishell, minishell->cmd_list);
+		free_cmd_list(minishell->cmd_list);
+		minishell->cmd_list = NULL;
+	}
+	return (false);
+}
+
 void	prompt(t_ms *minishell)
 {
 	char	*input;
@@ -82,17 +98,8 @@ void	prompt(t_ms *minishell)
 			free(input);
 			continue ;
 		}
-		if (minishell->cmd_list)
-		{
-			if (verif_parsing(minishell))
-			{
-				free(input);
-				continue ;
-			}
-			execute_pipeline(minishell, minishell->cmd_list);
-			free_cmd_list(minishell->cmd_list);
-			minishell->cmd_list = NULL;
-		}
+		if (spagetti(input, minishell))
+			continue ;
 		free(input);
 	}
 }

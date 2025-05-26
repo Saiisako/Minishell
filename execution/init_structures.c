@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 20:22:07 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/25 16:29:16 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/26 14:25:13 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,22 +23,11 @@ void	init_exec_struct(t_exec *exec)
 	exec->args = NULL;
 }
 
-void	setup_minishell(t_ms **minishell, char **envp)
+void	setup_cwd(t_ms **minishell)
 {
 	char	*cwd;
 	char	*last;
 
-	*minishell = malloc(sizeof(t_ms));
-	(*minishell)->status = 0;
-	(*minishell)->envp = dup_envp(envp);
-	(*minishell)->unexpected = false;
-	(*minishell)->is_next_space = false;
-	(*minishell)->first_special = 42;
-	(*minishell)->second_special = 42;
-	(*minishell)->exec = NULL;
-	(*minishell)->go_cmd = true;
-	(*minishell)->here_doc_expand = false;
-	(*minishell)->is_pipe_error = false;
 	cwd = getcwd(NULL, 0);
 	if (cwd)
 	{
@@ -52,6 +41,22 @@ void	setup_minishell(t_ms **minishell, char **envp)
 		(*minishell)->current_prompt = ft_strdup("?");
 		(*minishell)->pwd = ft_strdup("?");
 	}
+}
+
+void	setup_minishell(t_ms **minishell, char **envp)
+{
+	*minishell = malloc(sizeof(t_ms));
+	(*minishell)->status = 0;
+	(*minishell)->envp = dup_envp(envp);
+	(*minishell)->first_special = 42;
+	(*minishell)->second_special = 42;
+	(*minishell)->exec = NULL;
+	(*minishell)->unexpected = false;
+	(*minishell)->is_next_space = false;
+	(*minishell)->go_cmd = true;
+	(*minishell)->here_doc_expand = false;
+	(*minishell)->is_pipe_error = false;
+	setup_cwd(minishell);
 }
 
 int	create_token_chain(t_token *first_token, char **args)

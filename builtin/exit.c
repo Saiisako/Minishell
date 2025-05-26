@@ -33,11 +33,11 @@ int	ft_exit(t_cmd *cmd, t_ms *minishell, char **args)
 			exit_status = (unsigned char)numeric_value;
 	}
 	exit_clean(minishell, args);
-	// minishell->status = exit_status;
 	exit(exit_status);
 }
 
-int	ft_exit_error(t_token *token, t_ms *ms, long long *numeric_value, char ** args)
+int	ft_exit_error(t_token *token, t_ms *ms,
+	long long *numeric_value, char **args)
 {
 	if (!db_sign(token->value) || !ft_atoll(token->value, numeric_value))
 	{

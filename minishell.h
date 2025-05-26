@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/25 16:22:19 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/26 14:29:05 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,22 +47,14 @@ typedef enum e_type
 	EXPANDING,
 }	t_type;
 
-// typedef struct s_exec
-// {
-	// 	int			*prev_pipe;
-	// 	int			*status;
-	// 	char		**args;
-	// 	struct s_exec	*next;
-	// }					t_exec;
-
-	typedef struct s_exec
+typedef struct s_exec
 {
 	int			pipe_fd[2];
 	int			prev_pipe;
 	int			status;
 	pid_t		last_pid;
 	char		**args;
-	int		redir_ok;
+	int			redir_ok;
 }					t_exec;
 
 typedef struct s_token
@@ -170,9 +162,9 @@ void	join_expand(t_ms *minishell, int index);
 void	expand(t_ms *minishell);
 void	expand_env(t_env *tmp_env, t_token **tmp2, int *found);
 
-
 // HEREDOC EXPANDER
 
+void	is_heredoc_token(t_ms *ms);
 void	do_expand_heredoc(char **value, t_ms *minishell);
 void	dollar_expand_heredoc(char *value, t_ms *minishell, int *i);
 void	word_expand_heredoc(char *value, t_ms *minishell, int *i);
@@ -237,14 +229,14 @@ int		setup_heredocs(t_cmd *cmd_list, t_ms *minishell);
 // void	heredoc_child(int write_fd, char *limiter, t_ms *minishell);
 
 void	signal_heredoc(int sig);
+int		here_doc_eof(void);
+
 // int	here_doc_eof(char *limiter);
 // void free_write(int *pipe_fd, char *input);
 // int	end_heredoc(char *input, int *pipe_fd, t_cmd *cmd);
 // int	do_heredoc(t_cmd *cmd, t_token *curr_token)
 
-
-
-int	do_heredoc(t_cmd *cmd_list, char *limiter);
+int		do_heredoc(t_cmd *cmd_list, char *limiter);
 
 ///////////////// BUILTIN /////////////////
 
@@ -280,7 +272,8 @@ void	print_echo(t_cmd *cmd);
 
 int		ft_exit(t_cmd *cmd, t_ms *minishell, char **args);
 int		db_sign(char *str);
-int		ft_exit_error(t_token *token, t_ms *ms, long long *numeric_value, char **args);
+int		ft_exit_error(t_token *token, t_ms *ms, long long *numeric_value,
+			char **args);
 void	exit_clean(t_ms *ms, char **args);
 
 // EXPORT
@@ -319,7 +312,6 @@ void	free_env(t_ms *minishell); //
 void	free_token_list(t_token *token);
 void	free_cmd_list(t_cmd *cmd);
 void	free_minishell(t_ms *minishell);
-
 
 void	check_exec_errors(t_cmd *cmd, char **args, t_ms *ms);
 void	exec_redir(t_cmd *cmd, t_exec *exec, char **args, t_ms *ms);
