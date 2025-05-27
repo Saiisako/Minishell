@@ -21,10 +21,6 @@ void	free_token_list(t_token *token)
 	while (tmp)
 	{
 		next = tmp->next;
-		if (!ft_strcmp(tmp->value, "\"\""))
-		{
-			printf("here\n");
-		}
 		if (tmp->value)
 			free(tmp->value);
 		tmp->value = NULL;

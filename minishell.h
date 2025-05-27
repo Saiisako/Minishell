@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/26 14:29:05 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/27 14:37:05 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ typedef struct s_ms
 // ENV(LIST && UTILS)
 
 t_env	*lst_new(t_ms *ms);
+t_env	*lst_newpwd(t_ms *ms);
 void	ft_lstadd_back(t_env **lst, t_env *new);
 char	*cpy_left(char	*env_var);
 char	*cpy_right(char *env_var);
@@ -226,7 +227,6 @@ char	*get_env_value(t_env *env, char *key);
 
 int		create_heredoc(char *limiter, t_ms *minishell);
 int		setup_heredocs(t_cmd *cmd_list, t_ms *minishell);
-// void	heredoc_child(int write_fd, char *limiter, t_ms *minishell);
 
 void	signal_heredoc(int sig);
 int		here_doc_eof(void);
@@ -254,6 +254,9 @@ char	*get_last_folder(char *path);
 char	*get_user(t_ms *minishell);
 char	*get_last_dir(char *path);
 void	special_cd(t_token *arg, t_ms *ms);
+int		old_pwdexist(t_env *env);
+int		is_user_exist(t_env *env);
+void	update_oldpwd(t_env *env_lst, char *old_pwd_value);
 void	print_error_cd(t_token *arg);
 
 // ENV

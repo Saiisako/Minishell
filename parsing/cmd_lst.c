@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_lst.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 19:00:38 by skock             #+#    #+#             */
-/*   Updated: 2025/05/17 16:27:21 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/27 14:35:51 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,4 +86,18 @@ void	fill_cmd_lst(t_ms *minishell)
 			tmp = tmp->next;
 	}
 	minishell->cmd_list = cmd_list;
+}
+
+t_env	*lst_newpwd(t_ms *ms)
+{
+	t_env		*env;
+	static int	i = 0;
+
+	env = malloc(sizeof(t_env));
+	env->index = i + 1;
+	env->key = ft_strdup("PWD");
+	env->value = ft_strdup(ms->pwd);
+	env->next = NULL;
+	i++;
+	return (env);
 }

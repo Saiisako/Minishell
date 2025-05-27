@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 14:08:59 by skock             #+#    #+#             */
-/*   Updated: 2025/05/27 11:57:42 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/27 14:47:04 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,13 @@ void	special_cd(t_token *arg, t_ms *ms)
 	}
 	else if (!ft_strcmp(arg->value, "-"))
 	{
-		chdir(get_oldpwd(ms));
-		update_pwd(ms);
+		if (!old_pwdexist(ms->env_lst))
+			return ;
+		else
+		{
+			chdir(get_oldpwd(ms));
+			update_pwd(ms);
+		}
 	}
 	else if (!ft_strcmp(arg->value, ".."))
 		go_back(ms);
@@ -67,7 +72,7 @@ int	cd(t_cmd *cmd, t_ms *ms)
 void	print_error_cd(t_token *arg)
 {
 	ft_putstr_fd("minishell: cd: ", 2);
-	ft_printf("%s: ", arg->value);
+	printf("%s: ", arg->value);
 	ft_putstr_fd("No such file or directory\n", 2);
 }
 

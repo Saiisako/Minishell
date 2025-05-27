@@ -6,29 +6,11 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:59:40 by skock             #+#    #+#             */
-/*   Updated: 2025/05/27 11:58:25 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/27 14:33:33 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-void	update_oldpwd(t_env *env_lst, char *old_pwd_value)
-{
-	t_env	*old;
-
-	old = env_lst;
-	while (old)
-	{
-		if (!ft_strcmp(old->key, "OLDPWD"))
-		{
-			free(old->value);
-			old->value = old_pwd_value;
-			return ;
-		}
-		old = old->next;
-	}
-	free(old_pwd_value);
-}
 
 void	update_pwd(t_ms *minishell)
 {
@@ -88,7 +70,7 @@ char	*get_user(t_ms *minishell)
 	t_env	*tmp;
 
 	tmp = minishell->env_lst;
-	if (!minishell->env_lst)
+	if (!is_user_exist(minishell->env_lst))
 		return (NULL);
 	while (tmp)
 	{

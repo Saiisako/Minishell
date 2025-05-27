@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:58:43 by skock             #+#    #+#             */
-/*   Updated: 2025/05/12 14:25:44 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/27 14:35:44 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,13 @@ void	fill_env_cpy(t_ms *ms, char **envp)
 			return ;
 		ft_lstadd_back(&ms->env_lst, env);
 		i++;
+	}
+	if (!ms->env_lst)
+	{
+		env = lst_newpwd(ms);
+		if (!env)
+			return ;
+		ft_lstadd_back(&ms->env_lst, env);
 	}
 }
 

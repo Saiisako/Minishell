@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:58:30 by skock             #+#    #+#             */
-/*   Updated: 2025/05/06 15:21:23 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/27 14:46:56 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ void	print_env(t_ms *minishell)
 	{
 		if (tmp->value)
 		{
-			ft_printf("%s", tmp->key);
-			ft_printf("=");
-			ft_printf("%s\n", tmp->value);
+			printf("%s", tmp->key);
+			printf("=");
+			printf("%s\n", tmp->value);
 			tmp = tmp->next;
 		}
 		else

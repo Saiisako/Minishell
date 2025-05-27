@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 15:21:35 by skock             #+#    #+#             */
-/*   Updated: 2025/05/10 16:34:08 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/27 14:46:08 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	print_expand(t_ms *minishell)
 	tmp = minishell->expand;
 	while (tmp)
 	{
-		ft_printf("node = %s|\n", tmp->value);
+		printf("node = %s|\n", tmp->value);
 		tmp = tmp->next;
 	}
 }
