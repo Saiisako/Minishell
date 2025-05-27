@@ -6,11 +6,11 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/29 13:20:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/26 14:28:32 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/26 14:39:57 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 void	print_tokens(t_token *tokens)
 {

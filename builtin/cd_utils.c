@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:59:40 by skock             #+#    #+#             */
-/*   Updated: 2025/05/20 20:51:17 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/27 11:58:25 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,8 @@ char	*get_user(t_ms *minishell)
 	t_env	*tmp;
 
 	tmp = minishell->env_lst;
+	if (!minishell->env_lst)
+		return (NULL);
 	while (tmp)
 	{
 		if (!ft_strcmp(tmp->key, "HOME"))

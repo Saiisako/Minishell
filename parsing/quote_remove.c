@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:32:42 by skock             #+#    #+#             */
-/*   Updated: 2025/05/24 17:48:25 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/27 12:31:10 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,12 @@ char	*quote_rmv(char *str)
 {
 	char	*new_str;
 
+	if (!ft_strcmp(str, "\"\"") || !ft_strcmp(str, "\'\'"))
+	{
+		free(str);
+		new_str = ft_strdup("");
+		return (new_str);
+	}
 	if (str[0] == '\"' && str[1] == '\"')
 	{
 		new_str = ft_calloc(sizeof(char), 1);

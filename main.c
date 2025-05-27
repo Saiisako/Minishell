@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/26 14:35:27 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/27 11:29:43 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,26 +31,6 @@ int	handle_input_prompt(t_ms *minishell, char *input)
 	return (1);
 }
 
-void	handle_heredoc_error(t_ms *ms, char *input)
-{
-	free_cmd_list(ms->cmd_list);
-	ms->cmd_list = NULL;
-	free(input);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-}
-
-void	handle_null_input(t_ms *ms)
-{
-	write(1, "exit\n", 5);
-	free_env(ms);
-	free(ms->current_prompt);
-	free(ms->pwd);
-	free_array(ms->envp);
-	free(ms);
-	exit(0);
-}
-
 int	verif_parsing(t_ms *ms)
 {
 	if (ms->cmd_list->token->type == HEREDOC
@@ -64,7 +44,7 @@ int	verif_parsing(t_ms *ms)
 	return (0);
 }
 
-bool spagetti(char *input, t_ms *minishell)
+bool	exec(char *input, t_ms *minishell)
 {
 	if (minishell->cmd_list)
 	{
@@ -98,7 +78,7 @@ void	prompt(t_ms *minishell)
 			free(input);
 			continue ;
 		}
-		if (spagetti(input, minishell))
+		if (exec(input, minishell))
 			continue ;
 		free(input);
 	}

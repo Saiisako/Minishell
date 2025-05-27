@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 14:08:59 by skock             #+#    #+#             */
-/*   Updated: 2025/05/20 11:08:53 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/27 11:57:42 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ char	*get_oldpwd(t_ms *minishell)
 	t_env	*tmp;
 
 	tmp = minishell->env_lst;
+	if (!minishell->env_lst)
+		return (NULL);
 	while (tmp)
 	{
 		if (!ft_strcmp(tmp->key, "OLDPWD"))
