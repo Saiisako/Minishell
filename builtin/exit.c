@@ -32,6 +32,8 @@ int	ft_exit(t_cmd *cmd, t_ms *minishell, char **args)
 		else
 			exit_status = (unsigned char)numeric_value;
 	}
+	if (cmd->token && cmd->token->next)
+		free_token_list(cmd->token->next);
 	exit_clean(minishell, args);
 	exit(exit_status);
 }
@@ -45,7 +47,6 @@ int	ft_exit_error(t_token *token, t_ms *ms,
 		ft_putstr_fd(token->value, 2);
 		ft_putstr_fd(": numeric argument required\n", 2);
 		ms->status = 2;
-		return (2);
 		exit_clean(ms, args);
 		exit(ms->status);
 	}
@@ -85,5 +86,8 @@ void	exit_clean(t_ms *ms, char **args)
 	free_array(args);
 	free_cmd_list(ms->cmd_list);
 	free(ms->exec);
+	if (ms->expand)
+		free_token_list(ms->expand);
 	free(ms);
 }
+

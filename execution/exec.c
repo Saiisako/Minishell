@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:34:45 by skock             #+#    #+#             */
-/*   Updated: 2025/05/24 13:42:50 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/27 18:47:22 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ int	execute_pipeline(t_ms *ms, t_cmd *cmd)
 
 	signal(SIGINT, handle_signal_exec);
 	signal(SIGQUIT, handle_signal_exec);
+	signal(SIGPIPE, SIG_IGN);
 	exec = malloc(sizeof(t_exec));
 	if (!exec)
 		return (1);
@@ -28,10 +29,14 @@ int	execute_pipeline(t_ms *ms, t_cmd *cmd)
 	while (cmd)
 	{
 		if (run_cmd(ms, cmd, exec))
+		{
+			free(exec);
 			return (1);
+		}
 		cmd = cmd->next;
 	}
 	result = wait_all_children(ms, exec->last_pid, ms->status);
+	signal(SIGPIPE, SIG_DFL);
 	free(exec);
 	return (result);
 }

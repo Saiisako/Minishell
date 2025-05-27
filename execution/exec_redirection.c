@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 16:15:22 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/20 13:05:16 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/27 19:32:26 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,9 @@ int	process_redirections(t_cmd *cmd, t_ms *ms)
 				&& cmd->outfile_fd != -2)
 				close(cmd->outfile_fd);
 			if (open_redirection(cmd, token, type) == -1)
+			{
 				return (handle_redirection_error(cmd, ms, token));
+			}
 			token = token->next;
 		}
 		token = token->next;
