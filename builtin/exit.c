@@ -84,6 +84,7 @@ void	exit_clean(t_ms *ms, char **args)
 	free_array(ms->envp);
 	free_array(args);
 	free_cmd_list(ms->cmd_list);
+	free(ms->const_pwd);
 	free(ms->exec);
 	if (ms->expand)
 		free_token_list(ms->expand);

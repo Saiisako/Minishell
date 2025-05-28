@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:59:40 by skock             #+#    #+#             */
-/*   Updated: 2025/05/27 14:33:33 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/28 15:12:46 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,6 @@ char	*get_user(t_ms *minishell)
 	t_env	*tmp;
 
 	tmp = minishell->env_lst;
-	if (!is_user_exist(minishell->env_lst))
-		return (NULL);
 	while (tmp)
 	{
 		if (!ft_strcmp(tmp->key, "HOME"))
@@ -81,6 +79,26 @@ char	*get_user(t_ms *minishell)
 		tmp = tmp->next;
 	}
 	return (tmp->value);
+}
+
+char	*search_home(t_ms *minishell)
+{
+	int		i;
+	char	*home;
+	int		count;
+
+	home = minishell->const_pwd;
+	i = 0;
+	count = 0;
+	while (home[i])
+	{
+		if (home[i] == '/')
+		count++;
+		if (count == 3)
+		break ;
+		i++;
+	}
+	return (ft_substr(minishell->const_pwd, 0, i));
 }
 
 char	*get_last_dir(char *path)

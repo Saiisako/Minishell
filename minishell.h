@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/28 12:24:39 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/28 15:14:41 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ typedef struct s_ms
 	bool		unexpected;
 	const char	*prompt_msg;
 	char		*pwd;
+	char		*const_pwd;
 	bool		is_next_space;
 	char		*current_prompt;
 	t_env		*env_lst;
@@ -107,6 +108,7 @@ typedef struct s_ms
 	t_type		second_special;
 	bool		go_cmd;
 	bool		here_doc_expand;
+	bool		env_i;
 }				t_ms;
 
 ///////////////// PARSING /////////////////
@@ -252,10 +254,10 @@ char	*get_last_folder(char *path);
 char	*get_user(t_ms *minishell);
 char	*get_last_dir(char *path);
 void	special_cd(t_token *arg, t_ms *ms);
-int		old_pwdexist(t_env *env);
-int		is_user_exist(t_env *env);
 void	update_oldpwd(t_env *env_lst, char *old_pwd_value);
 void	print_error_cd(t_token *arg);
+char	*search_home(t_ms *minishell);
+
 
 // ENV
 

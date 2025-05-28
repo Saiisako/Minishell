@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_structures.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 20:22:07 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/27 18:06:14 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/28 15:11:02 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void	setup_cwd(t_ms **minishell)
 		last = get_last_dir(cwd);
 		(*minishell)->current_prompt = ft_strdup(last);
 		(*minishell)->pwd = ft_strdup(cwd);
+		(*minishell)->const_pwd = ft_strdup(cwd);
 		free(cwd);
 	}
 	else
@@ -55,6 +56,7 @@ void	setup_minishell(t_ms **minishell, char **envp)
 	(*minishell)->is_next_space = false;
 	(*minishell)->go_cmd = true;
 	(*minishell)->here_doc_expand = false;
+	(*minishell)->env_i = false;
 	(*minishell)->parse_error = 99;
 	setup_cwd(minishell);
 }

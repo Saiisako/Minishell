@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 14:08:59 by skock             #+#    #+#             */
-/*   Updated: 2025/05/27 14:47:04 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/28 15:13:46 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,27 @@ void	special_cd(t_token *arg, t_ms *ms)
 		chdir(get_user(ms));
 		update_pwd(ms);
 	}
-	else if (!ft_strcmp(arg->value, "-"))
+	else if (!ft_strcmp(arg->value, ".."))
+		go_back(ms);
+	else if (!ft_strcmp(arg->value, "/"))
 	{
-		if (!old_pwdexist(ms->env_lst))
-			return ;
-		else
-		{
-			chdir(get_oldpwd(ms));
-			update_pwd(ms);
-		}
+		chdir("/");
+		update_pwd(ms);
+	}
+	else
+		ms->status = -1;
+}
+
+void	special_cd_env_i(t_token *arg, t_ms *ms)
+{
+	char *home;
+
+	if (!arg || (arg->value && !ft_strcmp(arg->value, "~")))
+	{
+		home = search_home(ms);
+		chdir(home);
+		free(home);
+		update_pwd(ms);
 	}
 	else if (!ft_strcmp(arg->value, ".."))
 		go_back(ms);
@@ -52,28 +64,49 @@ int	cd(t_cmd *cmd, t_ms *ms)
 		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
 		return (ms->status = 1);
 	}
-	special_cd(arg, ms);
-	if (ms->status == -1)
+	if (ms->env_i == true)
 	{
-		if (chdir(arg->value) == 0)
+		special_cd_env_i(arg, ms);
+		if (ms->status == -1)
 		{
-			update_pwd(ms);
-			ms->status = 0;
+			if (chdir(arg->value) == 0)
+			{
+				update_pwd(ms);
+				ms->status = 0;
+			}
+			else
+			{
+				print_error_cd(arg);
+				return (ms->status = 1);
+			}
 		}
-		else
-		{
-			print_error_cd(arg);
-			return (ms->status = 1);
-		}
+		return (ms->status);
 	}
-	return (ms->status);
+	else
+	{
+		special_cd(arg, ms);
+		if (ms->status == -1)
+		{
+			if (chdir(arg->value) == 0)
+			{
+				update_pwd(ms);
+				ms->status = 0;
+			}
+			else
+			{
+				print_error_cd(arg);
+				return (ms->status = 1);
+			}
+		}
+		return (ms->status);
+	} 
 }
 
 void	print_error_cd(t_token *arg)
 {
 	ft_putstr_fd("minishell: cd: ", 2);
-	printf("%s: ", arg->value);
-	ft_putstr_fd("No such file or directory\n", 2);
+	ft_putstr_fd(arg->value, 2);
+	ft_putstr_fd(": No such file or directory\n", 2);
 }
 
 char	*get_oldpwd(t_ms *minishell)

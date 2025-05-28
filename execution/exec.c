@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:34:45 by skock             #+#    #+#             */
-/*   Updated: 2025/05/27 18:47:22 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/28 15:23:58 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ int	execute_cmd(t_ms *minishell, t_cmd *cmd, char **args, t_exec *exec)
 		exec_redir(cmd, exec, args, minishell);
 		free(minishell->current_prompt);
 		free(minishell->pwd);
+		free(minishell->const_pwd);
 		rl_clear_history();
 		exit(EXIT_FAILURE);
 	}
@@ -135,6 +136,7 @@ void	exec_redir(t_cmd *cmd, t_exec *exec, char **args, t_ms *ms)
 		free_token_list(ms->expand);
 		free_cmd_list(ms->cmd_list);
 		free(ms->exec);
+		free(ms->const_pwd);
 		free(ms);
 		exit(ret);
 	}

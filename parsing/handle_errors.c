@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_errors.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 14:42:17 by skock             #+#    #+#             */
-/*   Updated: 2025/05/26 14:47:48 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/28 15:24:32 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	handle_null_input(t_ms *ms)
 	free(ms->current_prompt);
 	free(ms->pwd);
 	free_array(ms->envp);
+	free(ms->const_pwd);
 	free(ms);
 	exit(0);
 }

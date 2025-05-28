@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:58:43 by skock             #+#    #+#             */
-/*   Updated: 2025/05/27 14:35:44 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/28 15:01:20 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ void	fill_env_cpy(t_ms *ms, char **envp)
 		if (!env)
 			return ;
 		ft_lstadd_back(&ms->env_lst, env);
+		ms->env_i = true;
 	}
 }
 
