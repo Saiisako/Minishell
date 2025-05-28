@@ -65,6 +65,10 @@ void	free_minishell(t_ms *minishell)
 		free_env(minishell);
 	if (minishell->envp)
 		free_array(minishell->envp);
+	if(minishell->current_prompt)
+		free(minishell->current_prompt);
+	if(minishell->pwd)
+		free(minishell->pwd);
 	free(minishell);
 }
 
@@ -98,4 +102,16 @@ void	free_env(t_ms *minishell)
 		free(tmp);
 		tmp = next_node;
 	}
+}
+
+void	basic_free(t_ms *ms, char **args)
+{
+	free_array(ms->envp);
+	free_env(ms);
+	free_array(args);
+	free_cmd_list(ms->cmd_list);
+	free(ms->current_prompt);
+	free(ms->pwd);
+	free(ms->exec);
+	free(ms);
 }

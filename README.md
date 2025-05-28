@@ -22,10 +22,10 @@ cat >>
 
 
 ca aussi : 
-env | dwauhdkawhdkuawhd
-./Makefile
-permission denied + leak still reachable
-exit -666
-still reachable
+<!-- env | dwauhdkawhdkuawhd  -->
+<!-- ./Makefile -->
+<!-- permission denied + leak still reachable -->
+<!-- exit -666
+still reachable -->
 cat < ls
 cat <pwd

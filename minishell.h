@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/28 12:04:36 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/28 12:24:39 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,6 +198,7 @@ int		setup_pipes(t_cmd *cmd, int *pipe_fd, int *prev_pipe);
 void	update_fds(t_cmd *cmd, int *pipe_fd, int *prev_pipe);
 int		wait_all_children(t_ms *ms, int last_pid, int last_status);
 void	print_cmd_not_found(char *cmd);
+void	basic_free(t_ms *ms, char **args);
 void	cleanup_pipes(t_cmd *cmd, int pipe_fd[2], int *prev_pipe);
 
 int		is_directory(const char *path);
