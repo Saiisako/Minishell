@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 14:08:59 by skock             #+#    #+#             */
-/*   Updated: 2025/05/28 15:31:50 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/28 15:39:11 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ int	cd(t_cmd *cmd, t_ms *ms)
 		special_cd(arg, ms);
 		ms->status = return_status(ms, arg);
 	}
+	return (ms->status);
 }
 
 void	go_back(t_ms *minishell)
