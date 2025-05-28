@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 20:19:36 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/27 19:31:58 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/28 14:57:41 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ void	handle_error_exec(t_ms *minishell, char **args, int errno_code)
 	}
 	else if (errno_code == ENOENT)
 	{
-		printf("EEROR EXEC HANDLE\n");
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(args[0], 2);
 		ft_putstr_fd(": No such file or directory\n", 2);
@@ -33,7 +32,6 @@ void	handle_error_exec(t_ms *minishell, char **args, int errno_code)
 	{
 		ft_putstr_fd("minishell: ", 2);
 		perror(args[0]);
-		// free_array(args);
 		free_minishell(minishell);
 		exit(EXIT_FAILURE);
 	}
@@ -58,7 +56,6 @@ void	errors_prompt(int param, char **args, t_cmd *cmd)
 	}
 	else if (param == 2)
 	{
-		printf("EEROR PROMPOT\n");
 		ft_putstr_fd("minishell:", 2);
 		ft_putstr_fd(args[0], 2);
 		ft_putstr_fd(": No such file or directory\n", 2);

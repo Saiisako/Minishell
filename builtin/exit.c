@@ -46,9 +46,8 @@ int	ft_exit_error(t_token *token, t_ms *ms,
 		ft_putstr_fd("minishell: exit: ", 2);
 		ft_putstr_fd(token->value, 2);
 		ft_putstr_fd(": numeric argument required\n", 2);
-		ms->status = 2;
 		exit_clean(ms, args);
-		exit(ms->status);
+		exit(2);
 	}
 	else if (token->next)
 	{
