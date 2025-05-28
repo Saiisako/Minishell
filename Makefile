@@ -1,6 +1,6 @@
 NAME = minishell
 CC = cc
-FLAGS = -Wall -Werror -Wextra -g3 -O3 #-fsanitize=address
+FLAGS = -Wall -Werror -Wextra -g3 -O3 -fsanitize=address
 RM = rm -rf
 LIBFT = library/libft/libft.a
 LIBFT_FLAGS = -L./library/libft -lft
@@ -25,6 +25,7 @@ SRCS	=	main.c\
 			parsing/expand_heredoc.c\
 			parsing/type_manager.c\
 			parsing/malloc_file.c\
+			parsing/parsing_errors.c\
 			execution/exec.c\
 			execution/free.c\
 			execution/create_path.c\
@@ -34,7 +35,6 @@ SRCS	=	main.c\
 			execution/init_structures.c\
 			execution/run_builtin.c\
 			execution/exec_errors.c\
-			execution/exec_error2.c\
 			execution/signals.c\
 			execution/signal2.c\
 			builtin/env.c\

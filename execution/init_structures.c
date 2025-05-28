@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 20:22:07 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/26 14:25:13 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/27 18:06:14 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	setup_minishell(t_ms **minishell, char **envp)
 	(*minishell)->is_next_space = false;
 	(*minishell)->go_cmd = true;
 	(*minishell)->here_doc_expand = false;
-	(*minishell)->is_pipe_error = false;
+	(*minishell)->parse_error = 99;
 	setup_cwd(minishell);
 }
 

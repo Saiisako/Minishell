@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:18:40 by skock             #+#    #+#             */
-/*   Updated: 2025/05/27 12:30:51 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/28 12:01:33 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,22 +19,11 @@ int	parsing_error(t_ms *minishell)
 	tmp = minishell->token;
 	if (verif_first_token(minishell))
 		return (0);
-	while (tmp && tmp->next)
-	{
-		if (tmp->type == PIPE && tmp->next->type == PIPE)
-			return (minishell->is_pipe_error = true, 0);
-		else if (tmp->type != 1 && tmp->next->type != 1 && tmp->type != PIPE)
-		{
-			minishell->first_special = tmp->type;
-			minishell->second_special = tmp->next->type;
-			return (0);
-		}
-		tmp = tmp->next;
-	}
-	if (tmp && tmp->type != 1)
+	else if (verif_several_pipes(minishell))
 		return (0);
-	tmp = minishell->token;
-	if (tmp && tmp->type == PIPE)
+	else if (verif_consecutives_tokens(minishell))
+		return (0);
+	else if (verif_last_token(minishell))
 		return (0);
 	return (1);
 }

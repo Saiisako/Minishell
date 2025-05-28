@@ -6,33 +6,11 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 11:23:31 by skock             #+#    #+#             */
-/*   Updated: 2025/05/25 10:13:53 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/27 18:22:59 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int	verif_first_token(t_ms *minishell)
-{
-	t_token	*tmp;
-
-	tmp = minishell->token;
-	if (tmp && tmp->type != WORD && tmp->type != D_QUOTE
-		&& tmp->type != S_QUOTE && !tmp->next)
-	{
-		minishell->unexpected = true;
-		return (1);
-	}
-	else if (tmp && tmp->type != WORD && tmp->type != D_QUOTE
-		&& tmp->type != S_QUOTE)
-	{
-		if (tmp->type == HEREDOC && tmp->next->type == WORD)
-			return (0);
-		minishell->unexpected = true;
-		return (1);
-	}
-	return (0);
-}
 
 void	select_is_space(t_ms *minishell)
 {

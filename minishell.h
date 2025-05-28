@@ -6,7 +6,7 @@
 /*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/27 14:37:05 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/28 12:04:36 by skock            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ typedef struct s_env
 typedef struct s_ms
 {
 	int			status;
+	int			parse_error;
 	char		**envp;
 	bool		unexpected;
 	const char	*prompt_msg;
@@ -106,7 +107,6 @@ typedef struct s_ms
 	t_type		second_special;
 	bool		go_cmd;
 	bool		here_doc_expand;
-	bool		is_pipe_error;
 }				t_ms;
 
 ///////////////// PARSING /////////////////
@@ -132,19 +132,16 @@ t_token	*new_token(char *str, t_ms *minishell, t_type type);
 int		double_quote(char *input, int *i, t_ms *minishell);
 int		single_quote(char *input, int *i, t_ms *minishell);
 int		parsing_input(char *input, t_ms *minishell);
-int		parsing_input(char *input, t_ms *minishell);
 int		process_token(char *input, int *i, t_ms *minishell);
 void	word_token(char *input, int *i, t_ms *minishell);
 void	token_add_back(t_token **lst, t_token *new);
 void	special_token(char *input, int *i, t_ms *minishell);
 void	fill_token_list(t_ms *minishell, char *str, t_type type);
-int		verif_first_token(t_ms *minishell);
 void	select_is_space(t_ms *minishell);
 void	select_type(t_ms *minishell);
 
 // MERGER
 
-void	merge_token(t_ms *minishell);
 void	merge_inception(t_ms *minishell);
 
 // EXPANDER
@@ -183,6 +180,14 @@ void	fill_cmd_lst(t_ms *minishell);
 void	cut_weird(t_cmd *cmd);
 t_cmd	*create_cmd_until_pipe(t_token *tmp);
 t_cmd	*new_cmd(void);
+
+// ERRORS
+
+int		verif_several_pipes(t_ms *minishell);
+int		verif_consecutives_tokens(t_ms *minishell);
+int		verif_first_token(t_ms *minishell);
+bool	what_type(t_type type);
+int		verif_last_token(t_ms *minishell);
 
 ///////////////// EXECUTION /////////////////
 
@@ -225,17 +230,9 @@ char	*get_env_value(t_env *env, char *key);
 
 // HEREDOC //
 
-int		create_heredoc(char *limiter, t_ms *minishell);
 int		setup_heredocs(t_cmd *cmd_list, t_ms *minishell);
-
 void	signal_heredoc(int sig);
 int		here_doc_eof(void);
-
-// int	here_doc_eof(char *limiter);
-// void free_write(int *pipe_fd, char *input);
-// int	end_heredoc(char *input, int *pipe_fd, t_cmd *cmd);
-// int	do_heredoc(t_cmd *cmd, t_token *curr_token)
-
 int		do_heredoc(t_cmd *cmd_list, char *limiter);
 
 ///////////////// BUILTIN /////////////////
@@ -319,7 +316,6 @@ void	free_minishell(t_ms *minishell);
 void	check_exec_errors(t_cmd *cmd, char **args, t_ms *ms);
 void	exec_redir(t_cmd *cmd, t_exec *exec, char **args, t_ms *ms);
 int		run_cmd(t_ms *ms, t_cmd *cmd, t_exec *exec);
-void	print_error_message(const char *msg, t_ms *minishell);
 void	setup_minishell(t_ms **minishell, char **envp);
 int		init_cmd_and_token(t_cmd *cmd, t_token *first_token, char **args);
 int		child_signal(int status, int last_status);
