@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:59:40 by skock             #+#    #+#             */
-/*   Updated: 2025/05/28 15:12:46 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/28 15:32:09 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,9 +93,9 @@ char	*search_home(t_ms *minishell)
 	while (home[i])
 	{
 		if (home[i] == '/')
-		count++;
+			count++;
 		if (count == 3)
-		break ;
+			break ;
 		i++;
 	}
 	return (ft_substr(minishell->const_pwd, 0, i));

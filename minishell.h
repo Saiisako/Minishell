@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/28 15:14:41 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/28 15:31:47 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -249,7 +249,6 @@ int		run_builtin_command(t_ms *minishell, t_cmd *temp_cmd, char **args);
 int		cd(t_cmd *cmd, t_ms *ms);
 void	update_pwd(t_ms *minishell);
 void	go_back(t_ms *minishell);
-char	*get_oldpwd(t_ms *minishell);
 char	*get_last_folder(char *path);
 char	*get_user(t_ms *minishell);
 char	*get_last_dir(char *path);
@@ -257,7 +256,6 @@ void	special_cd(t_token *arg, t_ms *ms);
 void	update_oldpwd(t_env *env_lst, char *old_pwd_value);
 void	print_error_cd(t_token *arg);
 char	*search_home(t_ms *minishell);
-
 
 // ENV
 

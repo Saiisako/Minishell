@@ -51,29 +51,6 @@ void	free_cmd_list(t_cmd *cmd)
 	cmd = NULL;
 }
 
-void	free_minishell(t_ms *minishell)
-{
-	if (!minishell)
-		return ;
-	if (minishell->cmd_list)
-		free_cmd_list(minishell->cmd_list);
-	if (minishell->token)
-		free_token_list(minishell->token);
-	if (minishell->expand)
-		free_token_list(minishell->expand);
-	if (minishell->env_lst)
-		free_env(minishell);
-	if (minishell->envp)
-		free_array(minishell->envp);
-	if	(minishell->current_prompt)
-		free(minishell->current_prompt);
-	if	(minishell->pwd)
-		free(minishell->pwd);
-	if (minishell->const_pwd)
-		free(minishell->const_pwd);
-	free(minishell);
-}
-
 void	free_array(char **args)
 {
 	int	i;
@@ -108,7 +85,8 @@ void	free_env(t_ms *minishell)
 
 void	basic_free(t_ms *ms, char **args)
 {
-	free_array(ms->envp);
+	if (ms->envp)
+		free_array(ms->envp);
 	free_env(ms);
 	free_array(args);
 	free_cmd_list(ms->cmd_list);

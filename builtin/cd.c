@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 14:08:59 by skock             #+#    #+#             */
-/*   Updated: 2025/05/28 15:13:46 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/28 15:31:50 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	special_cd(t_token *arg, t_ms *ms)
 
 void	special_cd_env_i(t_token *arg, t_ms *ms)
 {
-	char *home;
+	char	*home;
 
 	if (!arg || (arg->value && !ft_strcmp(arg->value, "~")))
 	{
@@ -52,6 +52,24 @@ void	special_cd_env_i(t_token *arg, t_ms *ms)
 		ms->status = -1;
 }
 
+int	return_status(t_ms *ms, t_token *arg)
+{
+	if (ms->status == -1)
+	{
+		if (chdir(arg->value) == 0)
+		{
+			update_pwd(ms);
+			ms->status = 0;
+		}
+		else
+		{
+			print_error_cd(arg);
+			return (ms->status = 1);
+		}
+	}
+	return (ms->status);
+}
+
 int	cd(t_cmd *cmd, t_ms *ms)
 {
 	t_token	*arg;
@@ -67,62 +85,13 @@ int	cd(t_cmd *cmd, t_ms *ms)
 	if (ms->env_i == true)
 	{
 		special_cd_env_i(arg, ms);
-		if (ms->status == -1)
-		{
-			if (chdir(arg->value) == 0)
-			{
-				update_pwd(ms);
-				ms->status = 0;
-			}
-			else
-			{
-				print_error_cd(arg);
-				return (ms->status = 1);
-			}
-		}
-		return (ms->status);
+		ms->status = return_status(ms, arg);
 	}
 	else
 	{
 		special_cd(arg, ms);
-		if (ms->status == -1)
-		{
-			if (chdir(arg->value) == 0)
-			{
-				update_pwd(ms);
-				ms->status = 0;
-			}
-			else
-			{
-				print_error_cd(arg);
-				return (ms->status = 1);
-			}
-		}
-		return (ms->status);
-	} 
-}
-
-void	print_error_cd(t_token *arg)
-{
-	ft_putstr_fd("minishell: cd: ", 2);
-	ft_putstr_fd(arg->value, 2);
-	ft_putstr_fd(": No such file or directory\n", 2);
-}
-
-char	*get_oldpwd(t_ms *minishell)
-{
-	t_env	*tmp;
-
-	tmp = minishell->env_lst;
-	if (!minishell->env_lst)
-		return (NULL);
-	while (tmp)
-	{
-		if (!ft_strcmp(tmp->key, "OLDPWD"))
-			break ;
-		tmp = tmp->next;
+		ms->status = return_status(ms, arg);
 	}
-	return (tmp->value);
 }
 
 void	go_back(t_ms *minishell)

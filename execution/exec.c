@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:34:45 by skock             #+#    #+#             */
-/*   Updated: 2025/05/28 15:23:58 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/28 15:34:33 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,17 +127,8 @@ void	exec_redir(t_cmd *cmd, t_exec *exec, char **args, t_ms *ms)
 	if (is_builtin(args[0]))
 	{
 		ret = execute_builtin(ms, args);
-		free_array(args);
-		if (ms->envp)
-			free_array(ms->envp);
-		free_env(ms);
-		free(ms->current_prompt);
-		free(ms->pwd);
 		free_token_list(ms->expand);
-		free_cmd_list(ms->cmd_list);
-		free(ms->exec);
-		free(ms->const_pwd);
-		free(ms);
+		basic_free(ms, args);
 		exit(ret);
 	}
 	check_exec_errors(cmd, args, ms);

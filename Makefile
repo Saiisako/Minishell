@@ -28,6 +28,7 @@ SRCS	=	main.c\
 			parsing/parsing_errors.c\
 			execution/exec.c\
 			execution/free.c\
+			execution/free2.c\
 			execution/create_path.c\
 			execution/exec_utils.c\
 			execution/exec_redirection.c\

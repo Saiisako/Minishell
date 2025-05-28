@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 14:24:48 by skock             #+#    #+#             */
-/*   Updated: 2025/05/28 15:08:12 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/28 15:31:38 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,4 +28,11 @@ void	update_oldpwd(t_env *env_lst, char *old_pwd_value)
 		old = old->next;
 	}
 	free(old_pwd_value);
+}
+
+void	print_error_cd(t_token *arg)
+{
+	ft_putstr_fd("minishell: cd: ", 2);
+	ft_putstr_fd(arg->value, 2);
+	ft_putstr_fd(": No such file or directory\n", 2);
 }

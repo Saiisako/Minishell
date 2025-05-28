@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 20:19:36 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/28 14:57:41 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/28 15:35:07 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ int	redir_error(t_ms *ms, t_cmd *cmd, int pipe_fd[2], int *prev_pipe)
 	if (pid == 0)
 	{
 		if (*prev_pipe != -1)
-		close(*prev_pipe);
+			close(*prev_pipe);
 		if (cmd->next)
 		{
 			close(pipe_fd[0]);
@@ -126,7 +126,7 @@ int	redir_error(t_ms *ms, t_cmd *cmd, int pipe_fd[2], int *prev_pipe)
 int	handle_empty_cmd(t_cmd *cmd, int *prev_pipe, int pipe_fd[2], t_ms *ms)
 {
 	int	child_pid;
-	
+
 	if (!cmd->is_redir)
 	{
 		ft_putstr_fd(": command not found\n", 2);
