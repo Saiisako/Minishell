@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/28 15:31:47 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/28 16:48:50 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -320,6 +320,8 @@ int		run_cmd(t_ms *ms, t_cmd *cmd, t_exec *exec);
 void	setup_minishell(t_ms **minishell, char **envp);
 int		init_cmd_and_token(t_cmd *cmd, t_token *first_token, char **args);
 int		child_signal(int status, int last_status);
+void	signal_pipe(int sig);
+void	ft_signal(void);
 void	handle_null_input(t_ms *ms);
 void	handle_heredoc_error(t_ms *ms, char *input);
 int		handle_input_prompt(t_ms *minishell, char *input);

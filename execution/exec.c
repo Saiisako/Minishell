@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:34:45 by skock             #+#    #+#             */
-/*   Updated: 2025/05/28 15:34:33 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/28 16:49:04 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ int	execute_pipeline(t_ms *ms, t_cmd *cmd)
 	int		result;
 	t_exec	*exec;
 
-	signal(SIGINT, handle_signal_exec);
-	signal(SIGQUIT, handle_signal_exec);
-	signal(SIGPIPE, SIG_IGN);
+	ft_signal();
+	if (g_sig == 13)
+		signal(SIGPIPE, SIG_IGN);
 	exec = malloc(sizeof(t_exec));
 	if (!exec)
 		return (1);

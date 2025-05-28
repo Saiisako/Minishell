@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 14:13:55 by skock             #+#    #+#             */
-/*   Updated: 2025/05/26 14:14:59 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/28 15:57:37 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	child_signal(int status, int last_status)
 			write(1, "Quit (core dumped)\n", 20);
 			g_sig = 131;
 		}
-		else
+		else if (WTERMSIG(status) == SIGINT)
 		{
 			write(1, "\n", 1);
 			g_sig = 130;
