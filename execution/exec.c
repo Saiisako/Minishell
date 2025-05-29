@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:34:45 by skock             #+#    #+#             */
-/*   Updated: 2025/05/28 16:49:04 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/29 20:03:37 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,8 @@ int	handle_command(t_ms *ms, t_cmd *cmd, t_exec *exec)
 	args = tokens_to_args(cmd->token);
 	if (!args || !args[0])
 	{
-		pid = handle_empty_cmd(cmd, &exec->prev_pipe, exec->pipe_fd, ms);
 		free_array(args);
+		pid = handle_empty_cmd(cmd, &exec->prev_pipe, exec->pipe_fd, ms);
 		return (pid);
 	}
 	if (!is_builtin(args[0]))

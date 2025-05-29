@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 20:19:36 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/28 15:35:07 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/29 20:01:55 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,7 @@ int	handle_empty_cmd(t_cmd *cmd, int *prev_pipe, int pipe_fd[2], t_ms *ms)
 	if (child_pid == 0)
 	{
 		handle_redirections(cmd, *prev_pipe, pipe_fd);
+		basic_free(ms, NULL);
 		exit(EXIT_SUCCESS);
 	}
 	else if (child_pid > 0)

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 11:15:11 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/26 14:19:06 by skock            ###   ########.fr       */
+/*   Updated: 2025/05/29 20:01:06 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	setup_heredocs(t_cmd *cmd_list, t_ms *minishell)
+int	setup_heredocs(t_cmd *cmd_list)
 {
 	t_token	*token;
 	int		fd;
@@ -24,7 +24,7 @@ int	setup_heredocs(t_cmd *cmd_list, t_ms *minishell)
 		{
 			if (token->type == HEREDOC && token->next && token->next->value)
 			{
-				fd = do_heredoc(minishell->cmd_list, token->next->value);
+				fd = do_heredoc(cmd_list, token->next->value);
 				if (fd == -1)
 					return (1);
 				cmd_list->heredoc_fd = fd;

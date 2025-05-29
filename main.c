@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/28 12:22:30 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/29 20:01:16 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	handle_input_prompt(t_ms *minishell, char *input)
 		return (0);
 	}
 	add_history(input);
-	if (setup_heredocs(minishell->cmd_list, minishell) != 0)
+	if (setup_heredocs(minishell->cmd_list) != 0)
 	{
 		handle_heredoc_error(minishell, input);
 		return (0);

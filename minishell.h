@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/28 16:48:50 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/29 20:01:31 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,7 +233,7 @@ char	*get_env_value(t_env *env, char *key);
 
 // HEREDOC //
 
-int		setup_heredocs(t_cmd *cmd_list, t_ms *minishell);
+int		setup_heredocs(t_cmd *cmd_list);
 void	signal_heredoc(int sig);
 int		here_doc_eof(void);
 int		do_heredoc(t_cmd *cmd_list, char *limiter);

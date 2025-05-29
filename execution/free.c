@@ -88,7 +88,8 @@ void	basic_free(t_ms *ms, char **args)
 	if (ms->envp)
 		free_array(ms->envp);
 	free_env(ms);
-	free_array(args);
+	if (args)
+		free_array(args);
 	free_cmd_list(ms->cmd_list);
 	free(ms->current_prompt);
 	free(ms->pwd);
