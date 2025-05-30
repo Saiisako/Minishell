@@ -6,11 +6,13 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/29 20:01:16 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/30 13:02:29 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	g_sig = 0;
 
 int	handle_input_prompt(t_ms *minishell, char *input)
 {

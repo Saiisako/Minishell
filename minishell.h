@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/29 20:01:31 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/30 13:04:00 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,29 +194,39 @@ int		verif_last_token(t_ms *minishell);
 ///////////////// EXECUTION /////////////////
 
 int		execute_pipeline(t_ms *ms, t_cmd *cmd);
-void	free_array(char **array);
 int		create_token_chain(t_token *first_token, char **args);
 int		setup_pipes(t_cmd *cmd, int *pipe_fd, int *prev_pipe);
 void	update_fds(t_cmd *cmd, int *pipe_fd, int *prev_pipe);
 int		wait_all_children(t_ms *ms, int last_pid, int last_status);
-void	print_cmd_not_found(char *cmd);
 void	basic_free(t_ms *ms, char **args);
 void	cleanup_pipes(t_cmd *cmd, int pipe_fd[2], int *prev_pipe);
-
 int		is_directory(const char *path);
 int		execute_cmd(t_ms *minishell, t_cmd *cmd, char **args, t_exec *exec);
 void	exec_redir(t_cmd *cmd, t_exec *exec, char **args, t_ms *ms);
 int		handle_command(t_ms *ms, t_cmd *cmd, t_exec *exec);
+void	init_exec_struct(t_exec *exec);
+void	exec_redir(t_cmd *cmd, t_exec *exec, char **args, t_ms *ms);
+int		run_cmd(t_ms *ms, t_cmd *cmd, t_exec *exec);
+void	setup_minishell(t_ms **minishell, char **envp);
+int		init_cmd_and_token(t_cmd *cmd, t_token *first_token, char **args);
+int		handle_input_prompt(t_ms *minishell, char *input);
+
+// ERROR HANDLING
+
 int		redir_error(t_ms *ms, t_cmd *cmd, int pipe_fd[2], int *prev_pipe);
+void	errors_prompt(int param, char **args, t_cmd *cmd);
 int		handle_empty_cmd(t_cmd *cmd, int *prev_pipe, int pipe_fd[2], t_ms *ms);
 void	handle_error_exec(t_ms *minishell, char **args, int errno_code);
-void	init_exec_struct(t_exec *exec);
-void	errors_prompt(int param, char **args, t_cmd *cmd);
+void	print_cmd_not_found(char *cmd);
+void	check_exec_errors(t_cmd *cmd, char **args, t_ms *ms);
+void	handle_null_input(t_ms *ms);
+void	handle_heredoc_error(t_ms *ms, char *input);
 
 // SIGNALS
 
 void	handle_signal_prompt(int sig);
 void	handle_signal_exec(int sig);
+int		child_signal(int status, int last_status);
 
 // REDIRECTION
 
@@ -309,21 +319,10 @@ void	print_expand(t_ms *minishell);
 ///////////////// FREE /////////////////
 
 void	free_expand_list(t_ms *minishell);
-void	free_env(t_ms *minishell); //
+void	free_env(t_ms *minishell);
 void	free_token_list(t_token *token);
 void	free_cmd_list(t_cmd *cmd);
 void	free_minishell(t_ms *minishell);
-
-void	check_exec_errors(t_cmd *cmd, char **args, t_ms *ms);
-void	exec_redir(t_cmd *cmd, t_exec *exec, char **args, t_ms *ms);
-int		run_cmd(t_ms *ms, t_cmd *cmd, t_exec *exec);
-void	setup_minishell(t_ms **minishell, char **envp);
-int		init_cmd_and_token(t_cmd *cmd, t_token *first_token, char **args);
-int		child_signal(int status, int last_status);
-void	signal_pipe(int sig);
-void	ft_signal(void);
-void	handle_null_input(t_ms *ms);
-void	handle_heredoc_error(t_ms *ms, char *input);
-int		handle_input_prompt(t_ms *minishell, char *input);
+void	free_array(char **array);
 
 #endif

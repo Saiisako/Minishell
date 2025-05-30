@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 16:14:03 by cmontaig          #+#    #+#             */
-/*   Updated: 2025/05/28 16:14:59 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/30 12:51:22 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,15 @@ void	cleanup_pipes(t_cmd *cmd, int pipe_fd[2], int *prev_pipe)
 	}
 	if (cmd->next)
 	{
+		if (pipe_fd[1] != -1)
+			close(pipe_fd[1]);
 		*prev_pipe = pipe_fd[0];
-		close(pipe_fd[1]);
 	}
-	else if (pipe_fd[0] != -1)
-		close(pipe_fd[0]);
+	else
+	{
+		if (pipe_fd[0] != -1)
+			close(pipe_fd[0]);
+	}
 }
 
 int	setup_pipes(t_cmd *cmd, int *pipe_fd, int *prev_pipe)

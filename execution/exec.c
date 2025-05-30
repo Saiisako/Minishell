@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:34:45 by skock             #+#    #+#             */
-/*   Updated: 2025/05/29 20:03:37 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/30 12:52:55 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,8 @@ int	execute_pipeline(t_ms *ms, t_cmd *cmd)
 	int		result;
 	t_exec	*exec;
 
-	ft_signal();
-	if (g_sig == 13)
-		signal(SIGPIPE, SIG_IGN);
+	signal(SIGINT, handle_signal_exec);
+	signal(SIGQUIT, handle_signal_exec);
 	exec = malloc(sizeof(t_exec));
 	if (!exec)
 		return (1);
@@ -36,7 +35,6 @@ int	execute_pipeline(t_ms *ms, t_cmd *cmd)
 		cmd = cmd->next;
 	}
 	result = wait_all_children(ms, exec->last_pid, ms->status);
-	signal(SIGPIPE, SIG_DFL);
 	free(exec);
 	return (result);
 }
@@ -79,7 +77,6 @@ int	handle_command(t_ms *ms, t_cmd *cmd, t_exec *exec)
 		{
 			print_cmd_not_found(args[0]);
 			free_array(args);
-			cleanup_pipes(cmd, exec->pipe_fd, &exec->prev_pipe);
 			return (ms->status = 127, -1);
 		}
 	}
