@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:43:47 by skock             #+#    #+#             */
-/*   Updated: 2025/05/30 13:02:29 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/05/31 17:33:55 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,8 @@ void	prompt(t_ms *minishell)
 		g_sig = 0;
 		input = readline(full_prompt);
 		free(full_prompt);
+		if (g_sig == 1)
+			minishell->status = 130;
 		if (!handle_input_prompt(minishell, input))
 		{
 			free(input);
