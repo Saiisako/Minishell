@@ -6,7 +6,7 @@
 /*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 10:44:02 by skock             #+#    #+#             */
-/*   Updated: 2025/05/30 13:04:00 by cmontaig         ###   ########.fr       */
+/*   Updated: 2025/06/01 16:05:34 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -278,6 +278,7 @@ void	print_pwd(t_ms *ms);
 // ECHO
 
 void	print_echo(t_cmd *cmd);
+int		is_echo_n_flag(const char *str);
 
 // EXIT
 

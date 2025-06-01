@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_errors.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skock <skock@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cmontaig <cmontaig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 11:49:23 by skock             #+#    #+#             */
-/*   Updated: 2025/05/28 12:11:27 by skock            ###   ########.fr       */
+/*   Updated: 2025/06/01 16:06:11 by cmontaig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ int	verif_last_token(t_ms *minishell)
 	t_token	*tmp;
 
 	tmp = minishell->token;
-	while (tmp)
+	while (tmp->next)
 		tmp = tmp->next;
 	if (tmp && tmp->type == PIPE)
 	{
