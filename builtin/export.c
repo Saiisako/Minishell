@@ -85,7 +85,7 @@ int	ft_export(t_ms *ms, t_cmd *cmd)
 	if (!arg)
 	{
 		export_print_sorted(ms->env_lst);
-		return (ms->status = 1, 1);
+		return (ms->status = 0, 0);
 	}
 	while (arg)
 	{
